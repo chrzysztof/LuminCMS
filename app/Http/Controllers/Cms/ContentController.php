@@ -188,6 +188,14 @@ class ContentController extends Controller
                 'published_at' => $content->published_at?->format('Y-m-d\TH:i'),
                 'updated_at' => $content->updated_at?->toIso8601String(),
             ] : null,
+            'taxonomies' => $type->taxonomies()->orderBy('label_plural')->get()->map(fn ($t) => [
+                'key' => $t->key,
+                'label' => $t->label,
+                'label_plural' => $t->label_plural,
+                'terms' => collect($t->flatTerms())->map(fn ($x) => ['id' => $x['id'], 'name' => $x['name'], 'depth' => $x['depth']])->values(),
+            ])->values(),
+            'termIds' => $content ? $content->terms()->pluck('terms.id')->all() : [],
+            'canManageTerms' => $request->user()->can('manage_categories'),
             'seo' => (object) ($content?->seo ?? []),
             'seoSite' => $this->seoSite($type, $content),
             'values' => (object) $values,
@@ -217,6 +225,8 @@ class ContentController extends Controller
                     ['after:now'],
                 )],
             'fields' => ['nullable', 'array'],
+            'term_ids' => ['nullable', 'array'],
+            'term_ids.*' => ['integer', Rule::exists('terms', 'id')->whereIn('taxonomy_id', $type->taxonomies()->pluck('taxonomies.id'))],
             'seo' => ['nullable', 'array'],
             'seo.title' => ['nullable', 'string', 'max:200'],
             'seo.description' => ['nullable', 'string', 'max:400'],
@@ -252,7 +262,9 @@ class ContentController extends Controller
             'template' => $content->template ?: 'default',
             'parent' => $data['parent_id'] ?? null,
             'status' => $data['status'],
-            'term' => $content->exists ? $content->terms()->pluck('terms.id')->all() : [],
+            'term' => $request->has('term_ids')
+                ? array_map('intval', $data['term_ids'] ?? [])
+                : ($content->exists ? $content->terms()->pluck('terms.id')->all() : []),
         ];
 
         $definitions = FieldGroup::forContext($context)->flatMap(fn (FieldGroup $g) => $g->fields ?? [])->values()->all();
@@ -290,6 +302,11 @@ class ContentController extends Controller
             'fields' => $fields,
             'seo' => $this->cleanSeo($data['seo'] ?? []),
         ])->save();
+
+        // Terminy przypisujemy tylko, gdy formularz je przysłał (np. nie ma ich w edytorze wizualnym).
+        if ($request->has('term_ids')) {
+            $content->terms()->sync(array_map('intval', $data['term_ids'] ?? []));
+        }
 
         // Nowa treść (live=false) tylko zwalnia swój adres z automatycznych przekierowań.
         app(RedirectManager::class)->recordMoves($before + [$content->id => ['path' => '', 'live' => false]]);

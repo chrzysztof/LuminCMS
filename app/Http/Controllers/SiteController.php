@@ -9,6 +9,7 @@ use App\Cms\Redirects\RedirectManager;
 use App\Cms\Roles\ContentAccess;
 use App\Cms\Seo\SeoResolver;
 use App\Cms\Settings\Settings;
+use App\Cms\Shortcodes\Shortcodes;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ class SiteController extends Controller
         private readonly SeoResolver $seo,
         private readonly RedirectManager $redirects,
         private readonly Settings $settings,
+        private readonly Shortcodes $shortcodes,
     ) {}
 
     public function show(Request $request): View|RedirectResponse
@@ -53,7 +55,7 @@ class SiteController extends Controller
             // Podgląd = noindex i brak canonical; kod odpowiedzi zostaje 404.
             return response()->view('site.show', [
                 'content' => $page,
-                'html' => (string) $page->html_cache,
+                'html' => $this->shortcodes->render($page->html_cache, $page),
                 'preview' => true,
                 'seo' => $this->seo->forContent($page, preview: true),
             ], 404);
@@ -83,7 +85,7 @@ class SiteController extends Controller
     {
         return view('site.show', [
             'content' => $content,
-            'html' => (string) $content->html_cache,
+            'html' => $this->shortcodes->render($content->html_cache, $content),
             'preview' => $preview,
             'seo' => $this->seo->forContent($content, $preview),
         ]);

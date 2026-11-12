@@ -9,6 +9,8 @@ use App\Cms\Fields\LocationMatcher;
 use App\Cms\Fields\Types;
 use App\Cms\Roles\RoleRegistry;
 use App\Cms\Settings\Settings;
+use App\Cms\Shortcodes\BuiltInShortcodes;
+use App\Cms\Shortcodes\Shortcodes;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -64,6 +66,12 @@ class CmsServiceProvider extends ServiceProvider
 
     public function register(): void
     {
+        $this->app->singleton(Shortcodes::class, function () {
+            $shortcodes = new Shortcodes;
+            BuiltInShortcodes::register($shortcodes);
+
+            return $shortcodes;
+        });
         $this->app->singleton(ConditionalLogic::class);
         $this->app->singleton(LocationMatcher::class);
         $this->app->singleton(FieldValidator::class);

@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { FieldList } from '@/components/cms/fields';
 import { MediaPicker } from '@/components/cms/media-picker';
 import { SeoPanel, type SeoValues } from '@/components/cms/seo-panel';
+import { TermsPanel, type TaxonomyOption } from '@/components/cms/terms-panel';
 import { StatusBadge } from '@/components/cms/status-badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -50,6 +51,9 @@ type Props = {
     groups: FieldGroupData[];
     media: Record<number, MediaItem>;
     parents: { id: number; title: string }[];
+    taxonomies: TaxonomyOption[];
+    termIds: number[];
+    canManageTerms: boolean;
     canPublish: boolean;
     canDelete: boolean;
 };
@@ -66,6 +70,9 @@ export default function ContentEdit({
     groups,
     media: initialMedia,
     parents,
+    taxonomies,
+    termIds,
+    canManageTerms,
     canPublish,
     canDelete,
 }: Props) {
@@ -81,6 +88,7 @@ export default function ContentEdit({
         featured_media_id:
             content?.featured_media_id ?? (null as number | null),
         published_at: content?.published_at ?? '',
+        term_ids: termIds,
         fields: values as Record<string, FieldValue>,
         seo: seo as SeoValues,
     });
@@ -439,6 +447,13 @@ export default function ContentEdit({
                                 )}
                             </CardContent>
                         </Card>
+
+                        <TermsPanel
+                            taxonomies={taxonomies}
+                            value={form.data.term_ids}
+                            canManage={canManageTerms}
+                            onChange={(ids) => form.setData('term_ids', ids)}
+                        />
 
                         {supports('thumbnail') && (
                             <Card className="gap-4">

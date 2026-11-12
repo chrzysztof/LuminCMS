@@ -11,6 +11,7 @@ import {
     Image as ImageIcon,
     LayoutGrid,
     Newspaper,
+    Tags,
     type LucideIcon,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
@@ -56,6 +57,15 @@ export function AppSidebar() {
     const structureItems: NavItem[] = [
         { title: t('Pola własne'), href: cmsUrl.fieldIndex, icon: ListTree },
     ];
+    const taxonomyItems: NavItem[] = can('manage_categories')
+        ? [
+              {
+                  title: t('Kategorie i tagi'),
+                  href: cmsUrl.taxonomies,
+                  icon: Tags,
+              },
+          ]
+        : [];
     const settingsItems: NavItem[] = [
         ...(can('manage_options')
             ? [{ title: t('Witryna'), href: cmsUrl.siteSettings, icon: Globe }]
@@ -105,8 +115,11 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainItems} />
-                {contentItems.length > 0 && (
-                    <NavMain label={t('Treści')} items={contentItems} />
+                {contentItems.length + taxonomyItems.length > 0 && (
+                    <NavMain
+                        label={t('Treści')}
+                        items={[...contentItems, ...taxonomyItems]}
+                    />
                 )}
                 {libraryItems.length > 0 && (
                     <NavMain label={t('Biblioteka')} items={libraryItems} />

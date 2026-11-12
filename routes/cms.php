@@ -9,6 +9,7 @@ use App\Http\Controllers\Cms\RedirectController;
 use App\Http\Controllers\Cms\RelationController;
 use App\Http\Controllers\Cms\SeoSettingsController;
 use App\Http\Controllers\Cms\SiteSettingsController;
+use App\Http\Controllers\Cms\TaxonomyController;
 use App\Http\Controllers\Cms\UserController;
 use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
@@ -56,6 +57,18 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
         Route::post('fields/{group}/toggle', [FieldGroupController::class, 'toggle'])->name('fields.toggle');
         Route::post('fields/{group}/duplicate', [FieldGroupController::class, 'duplicate'])->name('fields.duplicate');
         Route::get('fields/{group}/export', [FieldGroupController::class, 'export'])->name('fields.export');
+    });
+
+    Route::middleware('can:manage_categories')->group(function () {
+        Route::get('taxonomies', [TaxonomyController::class, 'index'])->name('taxonomies.index');
+        Route::post('taxonomies/{taxonomy:key}/terms', [TaxonomyController::class, 'storeTerm'])->name('taxonomies.terms.store');
+        Route::put('taxonomies/{taxonomy:key}/terms/{term}', [TaxonomyController::class, 'updateTerm'])->name('taxonomies.terms.update');
+        Route::delete('taxonomies/{taxonomy:key}/terms/{term}', [TaxonomyController::class, 'destroyTerm'])->name('taxonomies.terms.destroy');
+    });
+    Route::middleware('can:manage_options')->group(function () {
+        Route::post('taxonomies', [TaxonomyController::class, 'store'])->name('taxonomies.store');
+        Route::put('taxonomies/{taxonomy:key}', [TaxonomyController::class, 'update'])->name('taxonomies.update');
+        Route::delete('taxonomies/{taxonomy:key}', [TaxonomyController::class, 'destroy'])->name('taxonomies.destroy');
     });
 
     Route::middleware('can:upload_files')->group(function () {

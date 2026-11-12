@@ -3,6 +3,7 @@
 namespace App\Cms\Fields\Types;
 
 use App\Cms\Fields\AbstractFieldType;
+use App\Cms\Shortcodes\Shortcodes;
 use App\Cms\Support\HtmlSanitizer;
 use Illuminate\Support\HtmlString;
 
@@ -52,6 +53,6 @@ class WysiwygField extends AbstractFieldType
 
     public function format(mixed $value, array $field): mixed
     {
-        return $value === null ? null : new HtmlString((string) $value);
+        return $value === null ? null : new HtmlString(app(Shortcodes::class)->render((string) $value));
     }
 }

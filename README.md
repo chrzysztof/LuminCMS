@@ -28,6 +28,18 @@ The admin panel ships in eleven languages: Polski, English, Deutsch, Español, �
 
 Translations live in `lang/{locale}.json` (UI strings, keyed by source text) and `lang/{locale}/*.php` (framework messages). In React use `t('Text', { name })`; in PHP use `__('Text')`. Adding a language means registering it in `App\Cms\I18n\Locales` and adding its JSON file. The public site and labels stored in the database (content types, field groups) are not translated yet.
 
+## Taxonomies and shortcodes
+
+**Taxonomies** (Content → Categories and tags): hierarchical (categories) or flat (tags) term lists, manageable in the admin, with custom taxonomies attachable to any content type. Terms are assigned in the content editor sidebar, and also drive field-group location rules.
+
+**Shortcodes** work in page output and in rich-text field values: `[name attr="value"]`, `[name]content[/name]`, and `[[name]]` to print a literal `[name]`. Content of `<code>`, `<pre>`, `<script>` and `<style>` is left untouched. Built in: `[year]`, `[date format="d.m.Y"]`, `[site_name]`, `[site_url]`, `[button url="/contact" style="secondary" new="1"]Label[/button]`, `[field name="phone" id="12"]`, `[link id="12"]Text[/link]`, `[posts type="post" limit="5" taxonomy="category" term="news" orderby="date" order="desc"]` and `[terms taxonomy="category"]`. Register your own:
+
+```php
+app(\App\Cms\Shortcodes\Shortcodes::class)->add('hello', fn (array $attrs, string $content, ?Content $current) => '<b>'.e($attrs['name'] ?? 'world').'</b>');
+```
+
+Handlers return trusted HTML, so escape attribute values yourself.
+
 ## Requirements
 
 - PHP 8.3+
