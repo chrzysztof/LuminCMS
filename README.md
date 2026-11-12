@@ -14,6 +14,7 @@ Lumin is built on Laravel 13 with a React admin panel and server-rendered public
 - **Redirects and 404 handling** — 301/302/307/308/410 redirects, automatic redirects when a page URL changes, a 404 monitor and a customizable 404 page.
 - **Site settings** — Google Analytics 4, Tag Manager and Meta Pixel with a cookie-consent banner, social profiles, custom head and footer code.
 - **Users and roles** — the familiar five roles (Administrator, Editor, Author, Contributor, Subscriber) with the same capability model: contributors submit posts for review, authors publish their own, editors manage all content, administrators manage settings and users. Includes a user manager, last-administrator protection, content reassignment on delete and configurable public registration.
+- **Scheduled publishing** — pick a future date and the content goes live automatically (a per-minute scheduler command; one cron entry: `* * * * * php artisan schedule:run`).
 - **Shortcodes and JSON importer** _(planned)_.
 - **Fast by default** — server-rendered Blade templates on the public site, cached builder output, a lightweight front end.
 

@@ -209,7 +209,13 @@ class ContentController extends Controller
             'excerpt' => ['nullable', 'string', 'max:5000'],
             'parent_id' => ['nullable', 'integer', Rule::exists('contents', 'id')->where('content_type_id', $type->id)],
             'featured_media_id' => ['nullable', 'integer', Rule::exists('media', 'id')],
-            'published_at' => ['nullable', 'date', Rule::requiredIf($request->input('status') === Content::STATUS_SCHEDULED)],
+            'published_at' => ['nullable', 'date', Rule::requiredIf($request->input('status') === Content::STATUS_SCHEDULED),
+                // Nowy termin planowania musi być w przyszłości (istniejący, niezmieniony może już minąć).
+                Rule::when(
+                    $request->input('status') === Content::STATUS_SCHEDULED
+                        && ! ($content->status === Content::STATUS_SCHEDULED && $content->published_at?->format('Y-m-d\TH:i') === $request->input('published_at')),
+                    ['after:now'],
+                )],
             'fields' => ['nullable', 'array'],
             'seo' => ['nullable', 'array'],
             'seo.title' => ['nullable', 'string', 'max:200'],
