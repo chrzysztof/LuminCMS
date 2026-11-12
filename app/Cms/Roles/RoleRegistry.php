@@ -19,12 +19,19 @@ class RoleRegistry
 
     public const SUBSCRIBER = 'subscriber';
 
+    /** Role dla zewnętrznych firm SEO. */
+    public const SEO_MANAGER = 'seo_manager';
+
+    public const SEO_SPECIALIST = 'seo_specialist';
+
     /** Akcje na treści; pełna nazwa uprawnienia to "{akcja}_{post|page}s", np. edit_others_pages. */
     public const CONTENT_ACTIONS = ['edit', 'edit_others', 'edit_published', 'publish', 'delete', 'delete_others', 'delete_published'];
 
     public const LABELS = [
         self::ADMINISTRATOR => 'Administrator',
         self::EDITOR => 'Redaktor',
+        self::SEO_MANAGER => 'SEO Manager',
+        self::SEO_SPECIALIST => 'SEO Specjalista',
         self::AUTHOR => 'Autor',
         self::CONTRIBUTOR => 'Współpracownik',
         self::SUBSCRIBER => 'Subskrybent',
@@ -33,6 +40,8 @@ class RoleRegistry
     public const DESCRIPTIONS = [
         self::ADMINISTRATOR => 'Pełna kontrola nad witryną: ustawienia, pola własne, użytkownicy i całość treści.',
         self::EDITOR => 'Zarządza wszystkimi treściami (także cudzymi), publikuje i usuwa strony oraz wpisy.',
+        self::SEO_MANAGER => 'Dla zewnętrznej firmy SEO: edytuje i publikuje wszystkie treści, zarządza ustawieniami SEO i przekierowaniami oraz mediami. Bez dostępu do pól własnych, ustawień witryny i użytkowników.',
+        self::SEO_SPECIALIST => 'Dla zewnętrznego specjalisty SEO: edytuje treści i ich ustawienia SEO, ale nie publikuje, nie usuwa i nie zmienia ustawień witryny. Zmiany opublikowanych treści zapisują się bez zmiany ich statusu.',
         self::AUTHOR => 'Publikuje własne wpisy, dodaje pliki do biblioteki mediów i zarządza swoimi treściami.',
         self::CONTRIBUTOR => 'Pisze własne wpisy i wysyła je do recenzji, ale nie może ich publikować ani dodawać plików.',
         self::SUBSCRIBER => 'Może tylko zarządzać własnym profilem.',
@@ -43,6 +52,7 @@ class RoleRegistry
         'read' => 'Odczyt i własny profil',
         'upload_files' => 'Biblioteka mediów (wgrywanie plików)',
         'manage_categories' => 'Zarządzanie kategoriami i tagami',
+        'manage_seo' => 'Ustawienia SEO i przekierowania',
         'manage_options' => 'Ustawienia witryny, SEO, przekierowania i pola własne',
         'list_users' => 'Podgląd listy użytkowników',
         'create_users' => 'Dodawanie użytkowników',
@@ -62,14 +72,21 @@ class RoleRegistry
             'edit_pages', 'edit_others_pages', 'edit_published_pages', 'publish_pages',
             'delete_pages', 'delete_others_pages', 'delete_published_pages',
         ];
+        $seoSpecialist = [
+            'read', 'edit_posts', 'edit_others_posts', 'edit_published_posts',
+            'edit_pages', 'edit_others_pages', 'edit_published_pages',
+        ];
+        $seoManager = [...$seoSpecialist, 'publish_posts', 'publish_pages', 'upload_files', 'manage_categories', 'manage_seo'];
         $administrator = [
             ...$editor,
-            'manage_options', 'list_users', 'create_users', 'edit_users', 'delete_users', 'promote_users',
+            'manage_seo', 'manage_options', 'list_users', 'create_users', 'edit_users', 'delete_users', 'promote_users',
         ];
 
         return [
             self::ADMINISTRATOR => $administrator,
             self::EDITOR => $editor,
+            self::SEO_MANAGER => $seoManager,
+            self::SEO_SPECIALIST => $seoSpecialist,
             self::AUTHOR => $author,
             self::CONTRIBUTOR => $contributor,
             self::SUBSCRIBER => ['read'],

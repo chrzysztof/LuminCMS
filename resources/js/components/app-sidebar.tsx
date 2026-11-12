@@ -56,13 +56,19 @@ export function AppSidebar() {
         { title: 'Pola własne', href: cmsUrl.fieldIndex, icon: ListTree },
     ];
     const settingsItems: NavItem[] = [
-        { title: 'Witryna', href: cmsUrl.siteSettings, icon: Globe },
-        { title: 'SEO', href: cmsUrl.seoSettings, icon: Search },
-        {
-            title: 'Przekierowania',
-            href: cmsUrl.redirectIndex,
-            icon: ArrowRightLeft,
-        },
+        ...(can('manage_options')
+            ? [{ title: 'Witryna', href: cmsUrl.siteSettings, icon: Globe }]
+            : []),
+        ...(can('manage_seo')
+            ? [
+                  { title: 'SEO', href: cmsUrl.seoSettings, icon: Search },
+                  {
+                      title: 'Przekierowania',
+                      href: cmsUrl.redirectIndex,
+                      icon: ArrowRightLeft,
+                  },
+              ]
+            : []),
     ];
     const libraryItems: NavItem[] = can('upload_files')
         ? [{ title: 'Media', href: cmsUrl.library, icon: ImageIcon }]
@@ -110,7 +116,7 @@ export function AppSidebar() {
                 {userItems.length > 0 && (
                     <NavMain label="Użytkownicy" items={userItems} />
                 )}
-                {can('manage_options') && (
+                {settingsItems.length > 0 && (
                     <NavMain label="Ustawienia" items={settingsItems} />
                 )}
             </SidebarContent>

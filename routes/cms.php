@@ -28,7 +28,7 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
     Route::put('content/{type:key}/{content}/builder', [BuilderController::class, 'save'])->name('content.builder.save');
     Route::get('content/{type:key}/{content}/preview', [SiteController::class, 'preview'])->name('content.preview');
 
-    Route::middleware('can:manage_options')->group(function () {
+    Route::middleware('can:manage_seo')->group(function () {
         Route::get('redirects', [RedirectController::class, 'index'])->name('redirects.index');
         Route::post('redirects', [RedirectController::class, 'store'])->name('redirects.store');
         Route::delete('redirects/logs', [RedirectController::class, 'clearLogs'])->name('redirects.logs.clear');
@@ -37,10 +37,12 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
         Route::put('redirects/{redirect}', [RedirectController::class, 'update'])->name('redirects.update');
         Route::delete('redirects/{redirect}', [RedirectController::class, 'destroy'])->name('redirects.destroy');
         Route::post('redirects/{redirect}/toggle', [RedirectController::class, 'toggle'])->name('redirects.toggle');
-        Route::get('settings/site', [SiteSettingsController::class, 'edit'])->name('settings.site');
-        Route::put('settings/site', [SiteSettingsController::class, 'update'])->name('settings.site.update');
         Route::get('settings/seo', [SeoSettingsController::class, 'edit'])->name('settings.seo');
         Route::put('settings/seo', [SeoSettingsController::class, 'update'])->name('settings.seo.update');
+    });
+    Route::middleware('can:manage_options')->group(function () {
+        Route::get('settings/site', [SiteSettingsController::class, 'edit'])->name('settings.site');
+        Route::put('settings/site', [SiteSettingsController::class, 'update'])->name('settings.site.update');
     });
     Route::get('relations/{group}', RelationController::class)->name('relations')->middleware('can:edit_posts');
     Route::middleware('can:manage_options')->group(function () {

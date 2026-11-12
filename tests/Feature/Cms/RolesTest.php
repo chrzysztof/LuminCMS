@@ -280,4 +280,46 @@ class RolesTest extends TestCase
 
         $this->assertSame(1, $this->get(route('dashboard'))->viewData('page')['props']['stats']['published']);
     }
+
+    public function test_seo_roles_for_external_agencies(): void
+    {
+        $this->assertTrue(RoleRegistry::grants('seo_manager', 'manage_seo'));
+        $this->assertTrue(RoleRegistry::grants('seo_manager', 'publish_pages'));
+        $this->assertFalse(RoleRegistry::grants('seo_manager', 'manage_options'));
+        $this->assertFalse(RoleRegistry::grants('seo_manager', 'delete_pages'));
+        $this->assertFalse(RoleRegistry::grants('seo_manager', 'list_users'));
+        $this->assertTrue(RoleRegistry::grants('seo_specialist', 'edit_others_pages'));
+        $this->assertFalse(RoleRegistry::grants('seo_specialist', 'publish_pages'));
+        $this->assertFalse(RoleRegistry::grants('seo_specialist', 'manage_seo'));
+        $this->assertTrue(RoleRegistry::grants('administrator', 'manage_seo'));
+        $this->assertFalse(RoleRegistry::grants('editor', 'manage_seo'));
+    }
+
+    public function test_seo_manager_access_areas(): void
+    {
+        $this->as('seo_manager');
+
+        $this->get(route('cms.settings.seo'))->assertOk();
+        $this->get(route('cms.redirects.index'))->assertOk();
+        $this->get(route('cms.settings.site'))->assertForbidden();
+        $this->get(route('cms.fields.index'))->assertForbidden();
+        $this->get(route('cms.users.index'))->assertForbidden();
+    }
+
+    public function test_seo_specialist_edits_published_content_without_changing_status(): void
+    {
+        $this->as('seo_specialist');
+        $page = $this->content(User::factory()->create(), 'published', 'page');
+
+        $this->get(route('cms.settings.seo'))->assertForbidden();
+        $this->delete(route('cms.content.destroy', ['page', $page]))->assertForbidden();
+
+        $this->put(route('cms.content.update', ['page', $page]), $this->payload([
+            'title' => $page->title, 'status' => 'draft', 'seo' => ['title' => 'Nowy tytuł SEO'],
+        ]))->assertRedirect();
+
+        $page->refresh();
+        $this->assertSame('published', $page->status);
+        $this->assertSame('Nowy tytuł SEO', $page->seo['title']);
+    }
 }

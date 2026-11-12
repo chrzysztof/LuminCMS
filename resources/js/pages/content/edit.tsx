@@ -332,7 +332,16 @@ export default function ContentEdit({
                                         }
                                     >
                                         <option value="draft">Szkic</option>
-                                        {canPublish ? (
+                                        {!canPublish &&
+                                        content &&
+                                        (content.status === 'published' ||
+                                            content.status === 'scheduled') ? (
+                                            <option value={content.status}>
+                                                {content.status === 'published'
+                                                    ? 'Opublikowana'
+                                                    : 'Zaplanowana'}
+                                            </option>
+                                        ) : canPublish ? (
                                             <>
                                                 <option value="published">
                                                     Opublikowana

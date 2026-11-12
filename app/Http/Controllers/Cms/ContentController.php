@@ -229,10 +229,18 @@ class ContentController extends Controller
             'seo.focus_keyword' => ['nullable', 'string', 'max:100'],
         ]);
 
-        // Bez uprawnienia publish_* treść trafia do recenzji zamiast zostać opublikowana (jak w WordPressie).
-        if (! $this->access->canPublish($request->user(), $type)
-            && in_array($data['status'], [Content::STATUS_PUBLISHED, Content::STATUS_SCHEDULED], true)) {
-            $data['status'] = Content::STATUS_PENDING;
+        // Bez uprawnienia publish_* użytkownik nie publikuje ani nie wycofuje treści (jak w WordPressie):
+        // już opublikowana treść zachowuje status (SEO Specjalista poprawia opis bez wycofywania strony),
+        // a nowa trafia do recenzji.
+        if (! $this->access->canPublish($request->user(), $type)) {
+            $live = [Content::STATUS_PUBLISHED, Content::STATUS_SCHEDULED];
+
+            if ($content->exists && in_array($content->status, $live, true)) {
+                $data['status'] = $content->status;
+                $data['published_at'] = $content->published_at?->format('Y-m-d\TH:i');
+            } elseif (in_array($data['status'], $live, true)) {
+                $data['status'] = Content::STATUS_PENDING;
+            }
         }
 
         if ($content->exists && ! empty($data['parent_id']) && $data['parent_id'] === $content->id) {
