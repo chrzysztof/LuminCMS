@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { api } from '@/lib/api';
 import type { FieldDefinition } from '@/types/cms';
+import { t } from '@/lib/i18n';
 
 type Item = { id: number; label: string; meta: string | null };
 
@@ -82,7 +83,7 @@ export function RelationControl({
     if (!base) {
         return (
             <p className="text-sm text-muted-foreground">
-                Zapisz grupę pól, aby wybierać powiązane pozycje.
+                {t('Zapisz grupę pól, aby wybierać powiązane pozycje.')}
             </p>
         );
     }
@@ -121,7 +122,7 @@ export function RelationControl({
                                 <>
                                     <button
                                         type="button"
-                                        aria-label="W górę"
+                                        aria-label={t('W górę')}
                                         disabled={i === 0}
                                         onClick={() => move(i, -1)}
                                         className="disabled:opacity-30"
@@ -130,7 +131,7 @@ export function RelationControl({
                                     </button>
                                     <button
                                         type="button"
-                                        aria-label="W dół"
+                                        aria-label={t('W dół')}
                                         disabled={i === ids.length - 1}
                                         onClick={() => move(i, 1)}
                                         className="disabled:opacity-30"
@@ -141,7 +142,7 @@ export function RelationControl({
                             )}
                             <button
                                 type="button"
-                                aria-label="Usuń"
+                                aria-label={t('Usuń')}
                                 onClick={() => set(ids.filter((x) => x !== id))}
                             >
                                 <X className="size-4" />
@@ -159,8 +160,8 @@ export function RelationControl({
                         value={query}
                         placeholder={
                             !multiple && ids.length
-                                ? 'Zmień wybór…'
-                                : 'Szukaj i dodaj…'
+                                ? t('Zmień wybór…')
+                                : t('Szukaj i dodaj…')
                         }
                         onFocus={() => setOpen(true)}
                         onChange={(e) => {
@@ -175,8 +176,8 @@ export function RelationControl({
                                 .length === 0 && (
                                 <li className="px-3 py-2 text-sm text-muted-foreground">
                                     {failed
-                                        ? 'Nie udało się pobrać opcji.'
-                                        : 'Brak wyników.'}
+                                        ? t('Nie udało się pobrać opcji.')
+                                        : t('Brak wyników.')}
                                 </li>
                             )}
                             {results

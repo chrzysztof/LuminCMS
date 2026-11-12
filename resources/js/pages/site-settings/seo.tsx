@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { cmsUrl } from '@/lib/cms-urls';
 import { applyTemplate } from '@/lib/seo';
 import type { MediaItem } from '@/types/cms';
+import { t } from '@/lib/i18n';
 
 type Seo = {
     site_name: string;
@@ -78,7 +79,7 @@ export default function SeoSettings({
 
     return (
         <>
-            <Head title="Ustawienia SEO" />
+            <Head title={t('Ustawienia SEO')} />
             <form
                 onSubmit={submit}
                 className="flex flex-1 flex-col gap-5 p-4 md:p-6"
@@ -86,27 +87,29 @@ export default function SeoSettings({
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                         <h1 className="text-2xl font-semibold tracking-tight">
-                            Ustawienia SEO
+                            {t('Ustawienia SEO')}
                         </h1>
                         <p className="text-sm text-muted-foreground">
-                            Wartości domyślne dla całej witryny.
+                            {t('Wartości domyślne dla całej witryny.')}
                         </p>
                     </div>
                     <Button type="submit" disabled={processing}>
                         {processing && <Loader2 className="animate-spin" />}{' '}
-                        Zapisz
+                        {t('Zapisz')}
                     </Button>
                 </div>
 
                 <div className="grid max-w-3xl gap-5">
                     <Card className="gap-4">
                         <CardHeader>
-                            <CardTitle className="text-base">Witryna</CardTitle>
+                            <CardTitle className="text-base">
+                                {t('Witryna')}
+                            </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             {field(
                                 'site_name',
-                                'Nazwa witryny',
+                                t('Nazwa witryny'),
                                 undefined,
                                 <Input
                                     id="s-site_name"
@@ -118,8 +121,8 @@ export default function SeoSettings({
                             )}
                             {field(
                                 'tagline',
-                                'Slogan',
-                                'Używany w tytule strony głównej.',
+                                t('Slogan'),
+                                t('Używany w tytule strony głównej.'),
                                 <Input
                                     id="s-tagline"
                                     value={data.tagline}
@@ -130,8 +133,10 @@ export default function SeoSettings({
                             )}
                             {field(
                                 'description',
-                                'Domyślny opis',
-                                'Gdy treść nie ma własnego opisu ani zajawki.',
+                                t('Domyślny opis'),
+                                t(
+                                    'Gdy treść nie ma własnego opisu ani zajawki.',
+                                ),
                                 <textarea
                                     id="s-description"
                                     rows={3}
@@ -148,13 +153,13 @@ export default function SeoSettings({
                     <Card className="gap-4">
                         <CardHeader>
                             <CardTitle className="text-base">
-                                Tytuły stron
+                                {t('Tytuły stron')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             {field(
                                 'title_template',
-                                'Szablon tytułu',
+                                t('Szablon tytułu'),
                                 'Znaczniki: %title%, %site%, %tagline%, %sep%.',
                                 <Input
                                     id="s-title_template"
@@ -166,7 +171,7 @@ export default function SeoSettings({
                             )}
                             {field(
                                 'separator',
-                                'Separator',
+                                t('Separator'),
                                 undefined,
                                 <Input
                                     id="s-separator"
@@ -178,11 +183,11 @@ export default function SeoSettings({
                                 />,
                             )}
                             <p className="rounded-md bg-muted/60 p-3 text-sm">
-                                Przykład:{' '}
+                                {t('Przykład:')}{' '}
                                 <strong>
                                     {applyTemplate(
                                         data.title_template,
-                                        'O nas',
+                                        t('O nas'),
                                         data,
                                     )}
                                 </strong>
@@ -193,7 +198,7 @@ export default function SeoSettings({
                     <Card className="gap-4">
                         <CardHeader>
                             <CardTitle className="text-base">
-                                Media społecznościowe
+                                {t('Media społecznościowe')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -211,7 +216,9 @@ export default function SeoSettings({
                                 />,
                             )}
                             <div className="space-y-2">
-                                <Label>Domyślny obraz do udostępniania</Label>
+                                <Label>
+                                    {t('Domyślny obraz do udostępniania')}
+                                </Label>
                                 {image && (
                                     <div className="relative w-full max-w-xs overflow-hidden rounded-lg border">
                                         <img
@@ -221,7 +228,7 @@ export default function SeoSettings({
                                         />
                                         <button
                                             type="button"
-                                            aria-label="Usuń obraz"
+                                            aria-label={t('Usuń obraz')}
                                             onClick={() => {
                                                 setImage(null);
                                                 set(
@@ -242,7 +249,9 @@ export default function SeoSettings({
                                     onClick={() => setPicking(true)}
                                 >
                                     <ImagePlus />{' '}
-                                    {image ? 'Zmień obraz' : 'Wybierz obraz'}
+                                    {image
+                                        ? t('Zmień obraz')
+                                        : t('Wybierz obraz')}
                                 </Button>
                                 <MediaPicker
                                     open={picking}
@@ -263,7 +272,7 @@ export default function SeoSettings({
                     <Card className="gap-4">
                         <CardHeader>
                             <CardTitle className="text-base">
-                                Indeksowanie
+                                {t('Indeksowanie')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-3">
@@ -277,17 +286,18 @@ export default function SeoSettings({
                                     }
                                 />
                                 <span>
-                                    Zniechęcaj wyszukiwarki do indeksowania
-                                    witryny
+                                    {t(
+                                        'Zniechęcaj wyszukiwarki do indeksowania witryny',
+                                    )}
                                     <span className="block text-xs text-muted-foreground">
-                                        Przydatne podczas budowy strony: dodaje
-                                        noindex, blokuje robots.txt i opróżnia
-                                        sitemapę.
+                                        {t(
+                                            'Przydatne podczas budowy strony: dodaje noindex, blokuje robots.txt i opróżnia sitemapę.',
+                                        )}
                                     </span>
                                 </span>
                             </label>
                             <p className="text-sm text-muted-foreground">
-                                Mapa witryny:{' '}
+                                {t('Mapa witryny:')}{' '}
                                 <a
                                     className="underline"
                                     href={sitemapUrl}
@@ -297,7 +307,7 @@ export default function SeoSettings({
                                     {sitemapUrl}
                                 </a>
                                 <br />
-                                Robots:{' '}
+                                {t('Robots:')}{' '}
                                 <a
                                     className="underline"
                                     href={robotsUrl}

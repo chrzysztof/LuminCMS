@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cmsUrl } from '@/lib/cms-urls';
+import { t } from '@/lib/i18n';
 
 type Site = {
     ga_id: string;
@@ -30,7 +31,7 @@ const nativeClass =
 const social: [keyof Site, string, string][] = [
     ['facebook', 'Facebook', 'https://facebook.com/…'],
     ['instagram', 'Instagram', 'https://instagram.com/…'],
-    ['x', 'X / Twitter', 'https://x.com/…'],
+    ['x', t('X / Twitter'), 'https://x.com/…'],
     ['youtube', 'YouTube', 'https://youtube.com/@…'],
     ['linkedin', 'LinkedIn', 'https://linkedin.com/company/…'],
     ['tiktok', 'TikTok', 'https://tiktok.com/@…'],
@@ -102,7 +103,7 @@ export default function SiteSettings({ site }: { site: Site }) {
 
     return (
         <>
-            <Head title="Ustawienia witryny" />
+            <Head title={t('Ustawienia witryny')} />
             <form
                 onSubmit={submit}
                 className="flex flex-1 flex-col gap-5 p-4 md:p-6"
@@ -110,16 +111,17 @@ export default function SiteSettings({ site }: { site: Site }) {
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                         <h1 className="text-2xl font-semibold tracking-tight">
-                            Ustawienia witryny
+                            {t('Ustawienia witryny')}
                         </h1>
                         <p className="text-sm text-muted-foreground">
-                            Analityka, piksele, profile społecznościowe i własny
-                            kod.
+                            {t(
+                                'Analityka, piksele, profile społecznościowe i własny kod.',
+                            )}
                         </p>
                     </div>
                     <Button type="submit" disabled={processing}>
                         {processing && <Loader2 className="animate-spin" />}{' '}
-                        Zapisz
+                        {t('Zapisz')}
                     </Button>
                 </div>
 
@@ -127,7 +129,7 @@ export default function SiteSettings({ site }: { site: Site }) {
                     <Card className="gap-4">
                         <CardHeader>
                             <CardTitle className="text-base">
-                                Analityka i piksele
+                                {t('Analityka i piksele')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -148,19 +150,25 @@ export default function SiteSettings({ site }: { site: Site }) {
                             )}
                             {check(
                                 'consent_required',
-                                'Wymagaj zgody na cookies',
-                                'Skrypty ładują się dopiero po kliknięciu „Akceptuję” w banerze; w stopce pojawia się link do zmiany decyzji.',
+                                t('Wymagaj zgody na cookies'),
+                                t(
+                                    'Skrypty ładują się dopiero po kliknięciu „Akceptuję” w banerze; w stopce pojawia się link do zmiany decyzji.',
+                                ),
                             )}
                             {text(
                                 'privacy_url',
-                                'Polityka prywatności',
+                                t('Polityka prywatności'),
                                 '/polityka-prywatnosci',
-                                'Link w banerze zgody (ścieżka albo pełny adres).',
+                                t(
+                                    'Link w banerze zgody (ścieżka albo pełny adres).',
+                                ),
                             )}
                             {check(
                                 'track_logged_in',
-                                'Śledź także zalogowanych użytkowników',
-                                'Domyślnie wyłączone, żeby Twoja praca w panelu nie zaburzała statystyk.',
+                                t('Śledź także zalogowanych użytkowników'),
+                                t(
+                                    'Domyślnie wyłączone, żeby Twoja praca w panelu nie zaburzała statystyk.',
+                                ),
                             )}
                         </CardContent>
                     </Card>
@@ -168,7 +176,7 @@ export default function SiteSettings({ site }: { site: Site }) {
                     <Card className="gap-4">
                         <CardHeader>
                             <CardTitle className="text-base">
-                                Media społecznościowe
+                                {t('Media społecznościowe')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="grid gap-4 sm:grid-cols-2">
@@ -178,8 +186,9 @@ export default function SiteSettings({ site }: { site: Site }) {
                                 </div>
                             ))}
                             <p className="text-xs text-muted-foreground sm:col-span-2">
-                                Adresy trafiają do danych strukturalnych
-                                (JSON-LD) jako profile organizacji.
+                                {t(
+                                    'Adresy trafiają do danych strukturalnych (JSON-LD) jako profile organizacji.',
+                                )}
                             </p>
                         </CardContent>
                     </Card>
@@ -187,18 +196,18 @@ export default function SiteSettings({ site }: { site: Site }) {
                     <Card className="gap-4">
                         <CardHeader>
                             <CardTitle className="text-base">
-                                Własny kod
+                                {t('Własny kod')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <p className="rounded-md bg-amber-50 p-2 text-xs text-amber-900 dark:bg-amber-950 dark:text-amber-200">
-                                Kod jest wstawiany bez zmian na każdej
-                                publicznej stronie. Wklejaj tylko zaufane
-                                skrypty; ten kod nie czeka na zgodę na cookies.
+                                {t(
+                                    'Kod jest wstawiany bez zmian na każdej publicznej stronie. Wklejaj tylko zaufane skrypty; ten kod nie czeka na zgodę na cookies.',
+                                )}
                             </p>
                             <div className="grid gap-1.5">
                                 <Label htmlFor="site-custom_head">
-                                    Kod w &lt;head&gt;
+                                    {t('Kod w &lt;head&gt;')}
                                 </Label>
                                 <textarea
                                     id="site-custom_head"
@@ -217,7 +226,7 @@ export default function SiteSettings({ site }: { site: Site }) {
                             </div>
                             <div className="grid gap-1.5">
                                 <Label htmlFor="site-custom_body_end">
-                                    Kod przed &lt;/body&gt;
+                                    {t('Kod przed &lt;/body&gt;')}
                                 </Label>
                                 <textarea
                                     id="site-custom_body_end"

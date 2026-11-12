@@ -55,7 +55,7 @@ class FieldGroupController extends Controller
     {
         $group = FieldGroup::create($this->validated($request, null) + ['menu_order' => (int) FieldGroup::max('menu_order') + 1]);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Grupa pól została zapisana.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Grupa pól została zapisana.')]);
 
         return to_route('cms.fields.edit', $group);
     }
@@ -64,7 +64,7 @@ class FieldGroupController extends Controller
     {
         $group->update($this->validated($request, $group));
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Zapisano.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Zapisano.')]);
 
         return back();
     }
@@ -73,7 +73,7 @@ class FieldGroupController extends Controller
     {
         $group->delete();
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Grupa pól została usunięta. Zapisane wartości w treściach zostają w bazie.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Grupa pól została usunięta. Zapisane wartości w treściach zostają w bazie.')]);
 
         return to_route('cms.fields.index');
     }
@@ -92,7 +92,7 @@ class FieldGroupController extends Controller
         $copy->title = $group->title.' (kopia)';
         $copy->save();
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Zduplikowano grupę.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Zduplikowano grupę.')]);
 
         return to_route('cms.fields.edit', $copy);
     }
@@ -112,7 +112,7 @@ class FieldGroupController extends Controller
         $data = json_decode($payload, true);
 
         if (! is_array($data) || ! is_array($data['field_groups'] ?? null) || $data['field_groups'] === []) {
-            throw ValidationException::withMessages(['json' => 'Nieprawidłowy plik: oczekiwano obiektu z listą „field_groups”.']);
+            throw ValidationException::withMessages(['json' => __('Nieprawidłowy plik: oczekiwano obiektu z listą „field_groups”.')]);
         }
 
         $created = 0;
@@ -197,7 +197,7 @@ class FieldGroupController extends Controller
             'label_placement' => ['required', Rule::in(['top', 'left'])],
             'instruction_placement' => ['required', Rule::in(['label', 'field'])],
             'active' => ['boolean'],
-        ], [], ['title' => 'tytuł', 'fields.*.name' => 'nazwa pola', 'fields.*.type' => 'typ pola']);
+        ], [], ['title' => __('tytuł'), 'fields.*.name' => __('nazwa pola'), 'fields.*.type' => __('typ pola')]);
 
         $validator->after(function ($v) use ($input) {
             $names = [];
@@ -227,7 +227,7 @@ class FieldGroupController extends Controller
                 foreach ((array) ($field['conditional_logic'] ?? []) as $andGroup) {
                     foreach ((array) $andGroup as $rule) {
                         if (isset($rule['field']) && ! isset($names[$rule['field']])) {
-                            $v->errors()->add("fields.{$i}.conditional_logic", 'Warunek odwołuje się do nieistniejącego pola.');
+                            $v->errors()->add("fields.{$i}.conditional_logic", __('Warunek odwołuje się do nieistniejącego pola.'));
                         }
                     }
                 }
@@ -265,7 +265,7 @@ class FieldGroupController extends Controller
         $subs = $field['sub_fields'] ?? [];
 
         if (! is_array($subs) || $depth > 3 || count($subs) > 50) {
-            $validator->errors()->add("{$path}.sub_fields", 'Zbyt głębokie zagnieżdżenie lub zbyt wiele pól podrzędnych.');
+            $validator->errors()->add("{$path}.sub_fields", __('Zbyt głębokie zagnieżdżenie lub zbyt wiele pól podrzędnych.'));
 
             return;
         }
@@ -277,7 +277,7 @@ class FieldGroupController extends Controller
             $type = is_array($sub) && $this->registry->has($sub['type'] ?? '') ? $this->registry->get($sub['type']) : null;
 
             if (! $type) {
-                $validator->errors()->add("{$sp}.type", 'Nieznany typ pola.');
+                $validator->errors()->add("{$sp}.type", __('Nieznany typ pola.'));
 
                 continue;
             }
@@ -285,7 +285,7 @@ class FieldGroupController extends Controller
             $name = (string) ($sub['name'] ?? '');
 
             if ($name !== '' && ! preg_match('/^[a-z][a-z0-9_]*$/', $name)) {
-                $validator->errors()->add("{$sp}.name", 'Nazwa pola: małe litery, cyfry i podkreślenia.');
+                $validator->errors()->add("{$sp}.name", __('Nazwa pola: małe litery, cyfry i podkreślenia.'));
             }
 
             if ($type->storesData() && $name === '') {
@@ -306,7 +306,7 @@ class FieldGroupController extends Controller
             foreach ((array) ($sub['conditional_logic'] ?? []) as $andGroup) {
                 foreach ((array) $andGroup as $rule) {
                     if (isset($rule['field']) && ! isset($names[$rule['field']])) {
-                        $validator->errors()->add("{$path}.sub_fields.{$j}.conditional_logic", 'Warunek odwołuje się do nieistniejącego pola.');
+                        $validator->errors()->add("{$path}.sub_fields.{$j}.conditional_logic", __('Warunek odwołuje się do nieistniejącego pola.'));
                     }
                 }
             }
@@ -360,10 +360,10 @@ class FieldGroupController extends Controller
     private function describeLocation(array $groups): string
     {
         if ($groups === []) {
-            return 'Brak reguł (grupa nigdzie się nie pokazuje)';
+            return __('Brak reguł (grupa nigdzie się nie pokazuje)');
         }
 
-        $labels = ['content_type' => 'Typ treści', 'status' => 'Status', 'template' => 'Szablon', 'parent' => 'Strona nadrzędna', 'term' => 'Termin'];
+        $labels = ['content_type' => __('Typ treści'), 'status' => __('Status'), 'template' => __('Szablon'), 'parent' => __('Strona nadrzędna'), 'term' => __('Termin')];
 
         return collect($groups)->map(fn ($rules) => collect($rules)->map(
             fn ($r) => ($labels[$r['param'] ?? ''] ?? $r['param'] ?? '?').' '.($r['operator'] === '!=' ? '≠' : '=').' '.($r['value'] ?? ''),

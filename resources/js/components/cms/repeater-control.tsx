@@ -11,6 +11,7 @@ import { FieldList } from '@/components/cms/fields';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { FieldDefinition, MediaItem } from '@/types/cms';
+import { t } from '@/lib/i18n';
 
 type Row = Record<string, unknown>;
 
@@ -88,14 +89,14 @@ export function RepeaterControl({
         const text =
             typeof raw === 'string' ? raw.replace(/<[^>]+>/g, '').trim() : '';
 
-        return text ? text.slice(0, 60) : `Wiersz ${i + 1}`;
+        return text ? text.slice(0, 60) : t('Wiersz {n}', { n: i + 1 });
     };
 
     return (
         <div className="space-y-3">
             {rows.length === 0 && (
                 <p className="rounded-md border border-dashed p-4 text-center text-sm text-muted-foreground">
-                    Brak wierszy.
+                    {t('Brak wierszy.')}
                 </p>
             )}
             {rows.map((row, i) => {
@@ -139,7 +140,7 @@ export function RepeaterControl({
                                 type="button"
                                 variant="ghost"
                                 size="icon"
-                                aria-label="W górę"
+                                aria-label={t('W górę')}
                                 disabled={i === 0}
                                 onClick={() => move(i, -1)}
                             >
@@ -149,7 +150,7 @@ export function RepeaterControl({
                                 type="button"
                                 variant="ghost"
                                 size="icon"
-                                aria-label="W dół"
+                                aria-label={t('W dół')}
                                 disabled={i === rows.length - 1}
                                 onClick={() => move(i, 1)}
                             >
@@ -159,7 +160,7 @@ export function RepeaterControl({
                                 type="button"
                                 variant="ghost"
                                 size="icon"
-                                aria-label="Duplikuj wiersz"
+                                aria-label={t('Duplikuj wiersz')}
                                 disabled={rows.length >= max}
                                 onClick={() => duplicate(i)}
                             >
@@ -169,7 +170,7 @@ export function RepeaterControl({
                                 type="button"
                                 variant="ghost"
                                 size="icon"
-                                aria-label="Usuń wiersz"
+                                aria-label={t('Usuń wiersz')}
                                 className="text-destructive"
                                 disabled={rows.length <= min}
                                 onClick={() => remove(i)}
@@ -204,7 +205,7 @@ export function RepeaterControl({
                 disabled={rows.length >= max}
                 onClick={add}
             >
-                <Plus /> {String(field.button_label || 'Dodaj wiersz')}
+                <Plus /> {String(field.button_label || t('Dodaj wiersz'))}
             </Button>
         </div>
     );

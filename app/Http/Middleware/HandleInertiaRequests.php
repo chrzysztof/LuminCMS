@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Cms\Content\ContentType;
+use App\Cms\I18n\Locales;
 use App\Cms\Roles\ContentAccess;
 use App\Cms\Roles\RoleRegistry;
 use Illuminate\Http\Request;
@@ -41,6 +42,8 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'name' => config('app.name'),
+            'locale' => app()->getLocale(),
+            'locales' => Locales::SUPPORTED,
             'auth' => [
                 'user' => $request->user(),
                 'role' => $request->user()?->role,

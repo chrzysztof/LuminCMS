@@ -27,7 +27,7 @@ class RedirectManager
 
         if (preg_match('~^https?://([^/]+)(.*)$~i', $input, $m)) {
             if (strcasecmp($m[1], parse_url(url('/'), PHP_URL_HOST).(parse_url(url('/'), PHP_URL_PORT) ? ':'.parse_url(url('/'), PHP_URL_PORT) : '')) !== 0) {
-                throw new InvalidArgumentException('Adres źródłowy musi należeć do tej witryny.');
+                throw new InvalidArgumentException(__('Adres źródłowy musi należeć do tej witryny.'));
             }
             $input = $m[2];
         }
@@ -45,15 +45,15 @@ class RedirectManager
         $first = explode('/', ltrim($source, '/'))[0];
 
         if ($source === '/') {
-            throw new InvalidArgumentException('Strony głównej nie można przekierować.');
+            throw new InvalidArgumentException(__('Strony głównej nie można przekierować.'));
         }
 
         if (in_array($first, self::RESERVED, true)) {
-            throw new InvalidArgumentException('Ten adres jest zarezerwowany dla panelu lub systemu.');
+            throw new InvalidArgumentException(__('Ten adres jest zarezerwowany dla panelu lub systemu.'));
         }
 
         if (Redirect::where('source', $source)->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))->exists()) {
-            throw new InvalidArgumentException('Dla tego adresu istnieje już przekierowanie.');
+            throw new InvalidArgumentException(__('Dla tego adresu istnieje już przekierowanie.'));
         }
 
         if ($code === 410) {
@@ -63,21 +63,21 @@ class RedirectManager
         $target = trim((string) $target);
 
         if ($target === '') {
-            throw new InvalidArgumentException('Podaj adres docelowy.');
+            throw new InvalidArgumentException(__('Podaj adres docelowy.'));
         }
 
         if (preg_match('~^https?://~i', $target)) {
             if (! filter_var($target, FILTER_VALIDATE_URL)) {
-                throw new InvalidArgumentException('Nieprawidłowy adres docelowy.');
+                throw new InvalidArgumentException(__('Nieprawidłowy adres docelowy.'));
             }
         } elseif (str_starts_with($target, '/') && ! str_starts_with($target, '//')) {
             $target = '/'.ltrim($target, '/');
         } else {
-            throw new InvalidArgumentException('Adres docelowy: ścieżka zaczynająca się od „/” albo pełny adres http(s).');
+            throw new InvalidArgumentException(__('Adres docelowy: ścieżka zaczynająca się od „/” albo pełny adres http(s).'));
         }
 
         if ($this->isInternal($target) && $this->leadsBackTo($target, $source, $ignoreId)) {
-            throw new InvalidArgumentException('Takie przekierowanie utworzyłoby pętlę.');
+            throw new InvalidArgumentException(__('Takie przekierowanie utworzyłoby pętlę.'));
         }
 
         return [$source, $target];

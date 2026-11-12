@@ -11,7 +11,7 @@ class RelationshipField extends PostObjectField
 
     public function label(): string
     {
-        return 'Powiązane treści';
+        return __('Powiązane treści');
     }
 
     protected function multiple(array $field): bool

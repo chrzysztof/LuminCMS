@@ -11,6 +11,7 @@ import { cmsUrl } from '@/lib/cms-urls';
 import { formatDate } from '@/lib/format';
 import { dashboard } from '@/routes';
 import type { ContentStatus } from '@/types/cms';
+import { t } from '@/lib/i18n';
 
 type Props = {
     stats: {
@@ -31,22 +32,26 @@ type Props = {
 
 export default function Dashboard({ stats, recent }: Props) {
     const tiles = [
-        { label: 'Opublikowane', value: stats.published, icon: FileText },
-        { label: 'Szkice', value: stats.drafts, icon: FilePen },
-        { label: 'Zaplanowane', value: stats.scheduled, icon: CalendarClock },
-        { label: 'Pliki w mediach', value: stats.media, icon: ImageIcon },
+        { label: t('Opublikowane'), value: stats.published, icon: FileText },
+        { label: t('Szkice'), value: stats.drafts, icon: FilePen },
+        {
+            label: t('Zaplanowane'),
+            value: stats.scheduled,
+            icon: CalendarClock,
+        },
+        { label: t('Pliki w mediach'), value: stats.media, icon: ImageIcon },
     ].filter((t) => t.value !== null);
 
     return (
         <>
-            <Head title="Pulpit" />
+            <Head title={t('Pulpit')} />
             <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
                 <div>
                     <h1 className="text-2xl font-semibold tracking-tight">
-                        Pulpit
+                        {t('Pulpit')}
                     </h1>
                     <p className="text-sm text-muted-foreground">
-                        Podsumowanie Twojej witryny
+                        {t('Podsumowanie Twojej witryny')}
                     </p>
                 </div>
 
@@ -73,14 +78,15 @@ export default function Dashboard({ stats, recent }: Props) {
                 <Card>
                     <CardHeader>
                         <CardTitle className="text-base">
-                            Ostatnio edytowane
+                            {t('Ostatnio edytowane')}
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
                         {recent.length === 0 ? (
                             <p className="py-6 text-center text-sm text-muted-foreground">
-                                Nie masz jeszcze żadnych treści. Dodaj pierwszą
-                                stronę z menu po lewej.
+                                {t(
+                                    'Nie masz jeszcze żadnych treści. Dodaj pierwszą stronę z menu po lewej.',
+                                )}
                             </p>
                         ) : (
                             <div className="divide-y">
@@ -117,5 +123,5 @@ export default function Dashboard({ stats, recent }: Props) {
 }
 
 Dashboard.layout = {
-    breadcrumbs: [{ title: 'Pulpit', href: dashboard() }],
+    breadcrumbs: [{ title: t('Pulpit'), href: dashboard() }],
 };

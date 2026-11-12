@@ -1,5 +1,6 @@
 // Credit: https://usehooks-ts.com/
 import { useState } from 'react';
+import { t } from '@/lib/i18n';
 
 export type CopiedValue = string | null;
 export type CopyFn = (text: string) => Promise<boolean>;
@@ -10,7 +11,7 @@ export function useClipboard(): UseClipboardReturn {
 
     const copy: CopyFn = async (text) => {
         if (!navigator?.clipboard) {
-            console.warn('Clipboard not supported');
+            console.warn(t('Clipboard not supported'));
 
             return false;
         }
@@ -21,7 +22,7 @@ export function useClipboard(): UseClipboardReturn {
 
             return true;
         } catch (error) {
-            console.warn('Copy failed', error);
+            console.warn(t('Copy failed'), error);
             setCopiedText(null);
 
             return false;

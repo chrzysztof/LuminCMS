@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { api } from '@/lib/api';
 import { formatBytes } from '@/lib/format';
 import type { MediaItem } from '@/types/cms';
+import { t } from '@/lib/i18n';
 
 type MediaSizeRow = {
     id: number;
@@ -70,7 +71,7 @@ export function MediaDetails({ media, onChange, onDeleted }: Props) {
                     body: { alt, title, caption },
                 }),
             );
-            toast.success('Zapisano.');
+            toast.success(t('Zapisano.'));
         });
 
     const setFocal = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -92,7 +93,9 @@ export function MediaDetails({ media, onChange, onDeleted }: Props) {
     const remove = () => {
         if (
             !confirm(
-                'Usunąć ten plik na stałe? Pola, które go używają, utracą obraz.',
+                t(
+                    'Usunąć ten plik na stałe? Pola, które go używają, utracą obraz.',
+                ),
             )
         )
             return;
@@ -109,7 +112,7 @@ export function MediaDetails({ media, onChange, onDeleted }: Props) {
                     <div
                         className="relative cursor-crosshair overflow-hidden rounded-lg bg-muted"
                         onClick={setFocal}
-                        title="Kliknij, aby ustawić punkt ogniskowy"
+                        title={t('Kliknij, aby ustawić punkt ogniskowy')}
                     >
                         <img
                             src={media.url}
@@ -125,8 +128,9 @@ export function MediaDetails({ media, onChange, onDeleted }: Props) {
                         />
                     </div>
                     <p className="text-xs text-muted-foreground">
-                        Kliknij obraz, aby ustawić punkt ogniskowy (środek
-                        kadrowania).
+                        {t(
+                            'Kliknij obraz, aby ustawić punkt ogniskowy (środek kadrowania).',
+                        )}
                     </p>
                 </div>
             ) : (
@@ -136,13 +140,13 @@ export function MediaDetails({ media, onChange, onDeleted }: Props) {
             )}
 
             <dl className="grid grid-cols-2 gap-x-3 text-xs text-muted-foreground">
-                <dt>Plik</dt>
+                <dt>{t('Plik')}</dt>
                 <dd className="truncate text-foreground">{media.filename}</dd>
-                <dt>Rozmiar</dt>
+                <dt>{t('Rozmiar')}</dt>
                 <dd className="text-foreground">{formatBytes(media.size)}</dd>
                 {media.original_width && (
                     <>
-                        <dt>Wymiary</dt>
+                        <dt>{t('Wymiary')}</dt>
                         <dd className="text-foreground">
                             {media.original_width}×{media.original_height}
                         </dd>
@@ -152,16 +156,18 @@ export function MediaDetails({ media, onChange, onDeleted }: Props) {
 
             <div className="space-y-3">
                 <div className="grid gap-1.5">
-                    <Label htmlFor="m-alt">Tekst alternatywny (ALT)</Label>
+                    <Label htmlFor="m-alt">
+                        {t('Tekst alternatywny (ALT)')}
+                    </Label>
                     <Input
                         id="m-alt"
                         value={alt}
                         onChange={(e) => setAlt(e.target.value)}
-                        placeholder="Opisz, co jest na obrazie"
+                        placeholder={t('Opisz, co jest na obrazie')}
                     />
                 </div>
                 <div className="grid gap-1.5">
-                    <Label htmlFor="m-title">Tytuł</Label>
+                    <Label htmlFor="m-title">{t('Tytuł')}</Label>
                     <Input
                         id="m-title"
                         value={title}
@@ -169,7 +175,7 @@ export function MediaDetails({ media, onChange, onDeleted }: Props) {
                     />
                 </div>
                 <div className="grid gap-1.5">
-                    <Label htmlFor="m-caption">Podpis</Label>
+                    <Label htmlFor="m-caption">{t('Podpis')}</Label>
                     <Input
                         id="m-caption"
                         value={caption}
@@ -182,13 +188,14 @@ export function MediaDetails({ media, onChange, onDeleted }: Props) {
                     disabled={!dirty || saving}
                     onClick={() => void save()}
                 >
-                    {saving && <Loader2 className="animate-spin" />} Zapisz
+                    {saving && <Loader2 className="animate-spin" />}{' '}
+                    {t('Zapisz')}
                 </Button>
             </div>
 
             {isImage && sizes.length > 0 && (
                 <div className="space-y-2">
-                    <p className="text-sm font-medium">Kadrowanie</p>
+                    <p className="text-sm font-medium">{t('Kadrowanie')}</p>
                     {sizes.map((s) => (
                         <button
                             key={s.id}
@@ -203,7 +210,7 @@ export function MediaDetails({ media, onChange, onDeleted }: Props) {
                                 </span>
                             </span>
                             <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                                {media.crops[s.name] ? 'własny' : 'auto'}{' '}
+                                {media.crops[s.name] ? t('własny') : 'auto'}{' '}
                                 <Crop className="size-3.5" />
                             </span>
                         </button>
@@ -219,7 +226,7 @@ export function MediaDetails({ media, onChange, onDeleted }: Props) {
                 onClick={remove}
                 disabled={saving}
             >
-                <Trash2 /> Usuń plik
+                <Trash2 /> {t('Usuń plik')}
             </Button>
 
             <Dialog
@@ -228,7 +235,7 @@ export function MediaDetails({ media, onChange, onDeleted }: Props) {
             >
                 <DialogContent className="max-w-3xl">
                     <DialogHeader>
-                        <DialogTitle>Kadrowanie obrazu</DialogTitle>
+                        <DialogTitle>{t('Kadrowanie obrazu')}</DialogTitle>
                     </DialogHeader>
                     {cropping && (
                         <CropEditor

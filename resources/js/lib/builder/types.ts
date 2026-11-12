@@ -1,42 +1,43 @@
 import type { Component, Editor } from 'grapesjs';
+import { t } from '@/lib/i18n';
 
 type Option = { id: string; name: string; cls?: string };
 type ClassGroup = { name: string; label: string; options: Option[] };
 
 const bg: ClassGroup = {
     name: 'bg',
-    label: 'Tło',
+    label: t('Tło'),
     options: [
-        { id: '', name: 'Białe' },
-        { id: 'muted', name: 'Jasnoszare', cls: 'lm-bg-muted' },
-        { id: 'brand', name: 'Kolor marki', cls: 'lm-bg-brand' },
-        { id: 'dark', name: 'Ciemne', cls: 'lm-bg-dark' },
+        { id: '', name: t('Białe') },
+        { id: 'muted', name: t('Jasnoszare'), cls: 'lm-bg-muted' },
+        { id: 'brand', name: t('Kolor marki'), cls: 'lm-bg-brand' },
+        { id: 'dark', name: t('Ciemne'), cls: 'lm-bg-dark' },
     ],
 };
 
 const pad: ClassGroup = {
     name: 'pad',
-    label: 'Odstępy pionowe',
+    label: t('Odstępy pionowe'),
     options: [
-        { id: 'sm', name: 'Małe', cls: 'lm-pad-sm' },
-        { id: '', name: 'Normalne' },
-        { id: 'lg', name: 'Duże', cls: 'lm-pad-lg' },
+        { id: 'sm', name: t('Małe'), cls: 'lm-pad-sm' },
+        { id: '', name: t('Normalne') },
+        { id: 'lg', name: t('Duże'), cls: 'lm-pad-lg' },
     ],
 };
 
 const align: ClassGroup = {
     name: 'align',
-    label: 'Wyrównanie tekstu',
+    label: t('Wyrównanie tekstu'),
     options: [
-        { id: '', name: 'Do lewej' },
-        { id: 'center', name: 'Do środka', cls: 'lm-center' },
-        { id: 'right', name: 'Do prawej', cls: 'lm-right' },
+        { id: '', name: t('Do lewej') },
+        { id: 'center', name: t('Do środka'), cls: 'lm-center' },
+        { id: 'right', name: t('Do prawej'), cls: 'lm-right' },
     ],
 };
 
 const cols: ClassGroup = {
     name: 'cols',
-    label: 'Liczba kolumn',
+    label: t('Liczba kolumn'),
     options: [
         { id: '2', name: '2', cls: 'lm-cols-2' },
         { id: '3', name: '3', cls: 'lm-cols-3' },
@@ -46,19 +47,19 @@ const cols: ClassGroup = {
 
 const valign: ClassGroup = {
     name: 'valign',
-    label: 'Wyrównanie w pionie',
+    label: t('Wyrównanie w pionie'),
     options: [
-        { id: '', name: 'Do góry' },
-        { id: 'center', name: 'Do środka', cls: 'lm-items-center' },
+        { id: '', name: t('Do góry') },
+        { id: 'center', name: t('Do środka'), cls: 'lm-items-center' },
     ],
 };
 
 const variant: ClassGroup = {
     name: 'variant',
-    label: 'Styl przycisku',
+    label: t('Styl przycisku'),
     options: [
-        { id: '', name: 'Wypełniony' },
-        { id: 'secondary', name: 'Obrys', cls: 'lm-btn-secondary' },
+        { id: '', name: t('Wypełniony') },
+        { id: 'secondary', name: t('Obrys'), cls: 'lm-btn-secondary' },
     ],
 };
 
@@ -111,7 +112,7 @@ export function registerComponentTypes(editor: Editor) {
                 ? { type: 'lm-section' }
                 : false,
         model: {
-            defaults: { ...base, name: 'Sekcja', traits: section.traits },
+            defaults: { ...base, name: t('Sekcja'), traits: section.traits },
             init: section.init,
         },
     });
@@ -123,7 +124,7 @@ export function registerComponentTypes(editor: Editor) {
                 ? { type: 'lm-grid' }
                 : false,
         model: {
-            defaults: { ...base, name: 'Kolumny', traits: grid.traits },
+            defaults: { ...base, name: t('Kolumny'), traits: grid.traits },
             init: grid.init,
         },
     });
@@ -133,7 +134,7 @@ export function registerComponentTypes(editor: Editor) {
             el.tagName === 'DIV' && el.classList?.contains('lm-card')
                 ? { type: 'lm-card' }
                 : false,
-        model: { defaults: { ...base, name: 'Karta' } },
+        model: { defaults: { ...base, name: t('Karta') } },
     });
 
     const textAlign = classGroups([align]);
@@ -144,12 +145,12 @@ export function registerComponentTypes(editor: Editor) {
         model: {
             defaults: {
                 ...base,
-                name: 'Nagłówek',
+                name: t('Nagłówek'),
                 traits: [
                     {
                         type: 'select',
                         name: 'level',
-                        label: 'Poziom nagłówka',
+                        label: t('Poziom nagłówka'),
                         changeProp: true,
                         options: [1, 2, 3, 4, 5, 6].map((n) => ({
                             id: `h${n}`,
@@ -176,7 +177,7 @@ export function registerComponentTypes(editor: Editor) {
         isComponent: (el) =>
             el.tagName === 'P' ? { type: 'lm-paragraph' } : false,
         model: {
-            defaults: { ...base, name: 'Akapit', traits: textAlign.traits },
+            defaults: { ...base, name: t('Akapit'), traits: textAlign.traits },
             init: textAlign.init,
         },
     });
@@ -191,17 +192,17 @@ export function registerComponentTypes(editor: Editor) {
         model: {
             defaults: {
                 ...base,
-                name: 'Przycisk',
+                name: t('Przycisk'),
                 tagName: 'a',
                 traits: [
-                    { type: 'text', name: 'href', label: 'Adres (URL)' },
+                    { type: 'text', name: 'href', label: t('Adres (URL)') },
                     {
                         type: 'select',
                         name: 'target',
-                        label: 'Otwórz',
+                        label: t('Otwórz'),
                         options: [
-                            { id: '', label: 'W tym samym oknie' },
-                            { id: '_blank', label: 'W nowej karcie' },
+                            { id: '', label: t('W tym samym oknie') },
+                            { id: '_blank', label: t('W nowej karcie') },
                         ],
                     },
                     ...button.traits,
@@ -218,24 +219,24 @@ export function registerComponentTypes(editor: Editor) {
         model: {
             defaults: {
                 ...base,
-                name: 'Obraz',
+                name: t('Obraz'),
                 droppable: false,
                 traits: [
                     {
                         type: 'text',
                         name: 'alt',
-                        label: 'Tekst alternatywny (ALT)',
-                        placeholder: 'Z biblioteki, jeśli puste',
+                        label: t('Tekst alternatywny (ALT)'),
+                        placeholder: t('Z biblioteki, jeśli puste'),
                     },
                     {
                         type: 'select',
                         name: 'data-size',
-                        label: 'Rozmiar',
+                        label: t('Rozmiar'),
                         options: [
-                            { id: 'thumbnail', label: 'Miniatura' },
-                            { id: 'medium', label: 'Średni' },
-                            { id: 'large', label: 'Duży' },
-                            { id: 'full', label: 'Pełny' },
+                            { id: 'thumbnail', label: t('Miniatura') },
+                            { id: 'medium', label: t('Średni') },
+                            { id: 'large', label: t('Duży') },
+                            { id: 'full', label: t('Pełny') },
                         ],
                     },
                 ],

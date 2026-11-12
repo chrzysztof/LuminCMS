@@ -15,7 +15,7 @@ class WysiwygField extends AbstractFieldType
 
     public function label(): string
     {
-        return 'Edytor tekstu';
+        return __('Edytor tekstu');
     }
 
     public function category(): string

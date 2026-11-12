@@ -14,7 +14,7 @@ class UserField extends RelationFieldBase
 
     public function label(): string
     {
-        return 'Użytkownik';
+        return __('Użytkownik');
     }
 
     protected function multiple(array $field): bool

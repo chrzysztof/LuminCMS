@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cmsUrl } from '@/lib/cms-urls';
+import { t } from '@/lib/i18n';
 
 type Props = {
     user: {
@@ -57,7 +58,8 @@ export default function UserEdit({
     };
 
     const remove = () => {
-        if (!user || !confirm(`Usunąć konto „${user.name}”?`)) return;
+        if (!user || !confirm(t('Usunąć konto „{name}”?', { name: user.name })))
+            return;
 
         router.delete(cmsUrl.userUpdate(user.id), {
             data: { reassign_to: reassign || null },
@@ -68,7 +70,9 @@ export default function UserEdit({
 
     return (
         <>
-            <Head title={user ? 'Edytuj użytkownika' : 'Dodaj użytkownika'} />
+            <Head
+                title={user ? t('Edytuj użytkownika') : t('Dodaj użytkownika')}
+            />
             <form
                 onSubmit={submit}
                 className="flex flex-1 flex-col gap-5 p-4 md:p-6"
@@ -76,18 +80,20 @@ export default function UserEdit({
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <h1 className="text-2xl font-semibold tracking-tight">
                         {user
-                            ? `Użytkownik: ${user.name}`
-                            : 'Dodaj użytkownika'}
+                            ? t('Użytkownik: {name}', { name: user.name })
+                            : t('Dodaj użytkownika')}
                     </h1>
                     <div className="flex gap-2">
                         <Button asChild variant="outline">
-                            <Link href={cmsUrl.userIndex}>Wróć do listy</Link>
+                            <Link href={cmsUrl.userIndex}>
+                                {t('Wróć do listy')}
+                            </Link>
                         </Button>
                         <Button type="submit" disabled={form.processing}>
                             {form.processing && (
                                 <Loader2 className="animate-spin" />
                             )}
-                            {user ? 'Zapisz' : 'Dodaj'}
+                            {user ? t('Zapisz') : t('Dodaj')}
                         </Button>
                     </div>
                 </div>
@@ -95,11 +101,15 @@ export default function UserEdit({
                 <div className="grid gap-5 lg:grid-cols-[1fr_22rem]">
                     <Card className="gap-4">
                         <CardHeader>
-                            <CardTitle className="text-base">Konto</CardTitle>
+                            <CardTitle className="text-base">
+                                {t('Konto')}
+                            </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid gap-1.5">
-                                <Label htmlFor="name">Imię i nazwisko</Label>
+                                <Label htmlFor="name">
+                                    {t('Imię i nazwisko')}
+                                </Label>
                                 <Input
                                     id="name"
                                     value={form.data.name}
@@ -114,7 +124,7 @@ export default function UserEdit({
                                 )}
                             </div>
                             <div className="grid gap-1.5">
-                                <Label htmlFor="email">E-mail</Label>
+                                <Label htmlFor="email">{t('E-mail')}</Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -131,7 +141,7 @@ export default function UserEdit({
                             </div>
                             <div className="grid gap-1.5">
                                 <Label htmlFor="password">
-                                    {user ? 'Nowe hasło' : 'Hasło'}
+                                    {user ? t('Nowe hasło') : t('Hasło')}
                                 </Label>
                                 <Input
                                     id="password"
@@ -144,9 +154,11 @@ export default function UserEdit({
                                 />
                                 <p className="text-xs text-muted-foreground">
                                     {user
-                                        ? 'Zostaw puste, aby nie zmieniać hasła. '
+                                        ? t(
+                                              'Zostaw puste, aby nie zmieniać hasła. ',
+                                          )
                                         : ''}
-                                    Minimum 8 znaków.
+                                    {t('Minimum 8 znaków.')}
                                 </p>
                                 {errors.password && (
                                     <p className="text-xs text-destructive">
@@ -161,13 +173,13 @@ export default function UserEdit({
                         <Card className="gap-4">
                             <CardHeader>
                                 <CardTitle className="text-base">
-                                    Rola
+                                    {t('Rola')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2">
                                 <select
                                     id="role"
-                                    aria-label="Rola"
+                                    aria-label={t('Rola')}
                                     className={nativeClass}
                                     disabled={!canPromote}
                                     value={form.data.role}
@@ -198,15 +210,17 @@ export default function UserEdit({
                             <Card className="gap-3">
                                 <CardHeader>
                                     <CardTitle className="text-base">
-                                        Usuwanie konta
+                                        {t('Usuwanie konta')}
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-3">
                                     {user.contents_count > 0 && (
                                         <div className="grid gap-1.5">
                                             <Label htmlFor="reassign">
-                                                Przypisz jego treści (
-                                                {user.contents_count}) do
+                                                {t(
+                                                    'Przypisz jego treści ({n}) do',
+                                                    { n: user.contents_count },
+                                                )}
                                             </Label>
                                             <select
                                                 id="reassign"
@@ -217,7 +231,7 @@ export default function UserEdit({
                                                 }
                                             >
                                                 <option value="">
-                                                    — bez autora —
+                                                    {t('— bez autora —')}
                                                 </option>
                                                 {others.map((o) => (
                                                     <option
@@ -237,7 +251,7 @@ export default function UserEdit({
                                         className="text-destructive"
                                         onClick={remove}
                                     >
-                                        <Trash2 /> Usuń użytkownika
+                                        <Trash2 /> {t('Usuń użytkownika')}
                                     </Button>
                                     {errors.user && (
                                         <p className="text-xs text-destructive">

@@ -58,7 +58,7 @@ class RedirectController extends Controller
         // Adres przestaje być "brakujący": usuwamy go z monitora 404.
         NotFoundLog::where('path', $this->manager->normalize($data['source']))->delete();
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Przekierowanie dodane.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Przekierowanie dodane.')]);
 
         return back();
     }
@@ -76,7 +76,7 @@ class RedirectController extends Controller
         // Ręczna zmiana oznacza, że przekierowanie przestaje być automatyczne (nie zniknie samo).
         $redirect->update(['source' => $source, 'target' => $target, 'status_code' => $data['status_code'], 'note' => $data['note'] ?? null, 'active' => $data['active'] ?? true, 'auto' => false]);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Zapisano.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Zapisano.')]);
 
         return back();
     }
@@ -106,7 +106,7 @@ class RedirectController extends Controller
     {
         NotFoundLog::query()->delete();
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Wyczyszczono monitor 404.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Wyczyszczono monitor 404.')]);
 
         return back();
     }
@@ -119,7 +119,7 @@ class RedirectController extends Controller
 
         $this->settings->save('pages', ['not_found_content_id' => $data['not_found_content_id'] ?? null]);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Zapisano stronę 404.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Zapisano stronę 404.')]);
 
         return back();
     }

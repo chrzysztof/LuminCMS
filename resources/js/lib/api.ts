@@ -1,3 +1,4 @@
+import { t } from '@/lib/i18n';
 /** Małe wywołania JSON do API panelu (sesja + token XSRF z ciasteczka). */
 function xsrfToken(): string {
     const match = document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]*)/);
@@ -49,7 +50,7 @@ export async function api<T = unknown>(
         const first = Object.values(errors)[0]?.[0];
 
         throw new ApiError(
-            first ?? data.message ?? 'Wystąpił błąd.',
+            first ?? data.message ?? t('Wystąpił błąd.'),
             response.status,
             errors,
         );

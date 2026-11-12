@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cmsUrl } from '@/lib/cms-urls';
 import { cn } from '@/lib/utils';
+import { t } from '@/lib/i18n';
 
 type Redirect = {
     id: number;
@@ -60,11 +61,11 @@ const empty: FormState = {
 };
 
 const codeLabels: Record<number, string> = {
-    301: '301 – stałe',
+    301: t('301 – stałe'),
     302: '302 – tymczasowe',
-    307: '307 – tymczasowe (zachowuje metodę)',
-    308: '308 – stałe (zachowuje metodę)',
-    410: '410 – usunięte na stałe',
+    307: t('307 – tymczasowe (zachowuje metodę)'),
+    308: t('308 – stałe (zachowuje metodę)'),
+    410: t('410 – usunięte na stałe'),
 };
 
 const nativeClass =
@@ -164,15 +165,16 @@ export default function RedirectsIndex({
 
     return (
         <>
-            <Head title="Przekierowania" />
+            <Head title={t('Przekierowania')} />
             <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
                 <div>
                     <h1 className="text-2xl font-semibold tracking-tight">
-                        Przekierowania i błędy 404
+                        {t('Przekierowania i błędy 404')}
                     </h1>
                     <p className="text-sm text-muted-foreground">
-                        Zmiana adresu opublikowanej strony tworzy przekierowanie
-                        301 automatycznie.
+                        {t(
+                            'Zmiana adresu opublikowanej strony tworzy przekierowanie 301 automatycznie.',
+                        )}
                     </p>
                 </div>
 
@@ -180,8 +182,8 @@ export default function RedirectsIndex({
                     <CardHeader>
                         <CardTitle className="text-base">
                             {editing
-                                ? 'Edytuj przekierowanie'
-                                : 'Nowe przekierowanie'}
+                                ? t('Edytuj przekierowanie')
+                                : t('Nowe przekierowanie')}
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -190,7 +192,9 @@ export default function RedirectsIndex({
                             className="grid gap-4 lg:grid-cols-[1fr_1fr_14rem]"
                         >
                             <div className="grid gap-1.5">
-                                <Label htmlFor="r-source">Z adresu</Label>
+                                <Label htmlFor="r-source">
+                                    {t('Z adresu')}
+                                </Label>
                                 <Input
                                     id="r-source"
                                     value={form.source}
@@ -206,7 +210,9 @@ export default function RedirectsIndex({
                                 )}
                             </div>
                             <div className="grid gap-1.5">
-                                <Label htmlFor="r-target">Na adres</Label>
+                                <Label htmlFor="r-target">
+                                    {t('Na adres')}
+                                </Label>
                                 <Input
                                     id="r-target"
                                     value={
@@ -217,7 +223,7 @@ export default function RedirectsIndex({
                                     disabled={form.status_code === 410}
                                     placeholder={
                                         form.status_code === 410
-                                            ? 'Nie dotyczy (410)'
+                                            ? t('Nie dotyczy (410)')
                                             : '/nowa-strona lub https://…'
                                     }
                                     onChange={(e) =>
@@ -231,7 +237,7 @@ export default function RedirectsIndex({
                                 )}
                             </div>
                             <div className="grid gap-1.5">
-                                <Label htmlFor="r-code">Rodzaj</Label>
+                                <Label htmlFor="r-code">{t('Rodzaj')}</Label>
                                 <select
                                     id="r-code"
                                     className={nativeClass}
@@ -257,7 +263,7 @@ export default function RedirectsIndex({
                             </div>
                             <div className="grid gap-1.5 lg:col-span-2">
                                 <Label htmlFor="r-note">
-                                    Notatka (opcjonalnie)
+                                    {t('Notatka (opcjonalnie)')}
                                 </Label>
                                 <Input
                                     id="r-note"
@@ -274,7 +280,7 @@ export default function RedirectsIndex({
                                     ) : (
                                         <Plus />
                                     )}{' '}
-                                    {editing ? 'Zapisz' : 'Dodaj'}
+                                    {editing ? t('Zapisz') : t('Dodaj')}
                                 </Button>
                                 {editing && (
                                     <Button
@@ -282,7 +288,7 @@ export default function RedirectsIndex({
                                         variant="ghost"
                                         onClick={reset}
                                     >
-                                        Anuluj
+                                        {t('Anuluj')}
                                     </Button>
                                 )}
                             </div>
@@ -296,14 +302,14 @@ export default function RedirectsIndex({
                         className={tabClass(tab === 'redirects')}
                         onClick={() => setTab('redirects')}
                     >
-                        Przekierowania ({redirects.total})
+                        {t('Przekierowania ({n})', { n: redirects.total })}
                     </button>
                     <button
                         type="button"
                         className={tabClass(tab === 'logs')}
                         onClick={() => setTab('logs')}
                     >
-                        Błędy 404 ({logs.length})
+                        {t('Błędy 404 ({n})', { n: logs.length })}
                     </button>
                 </div>
 
@@ -315,18 +321,18 @@ export default function RedirectsIndex({
                         >
                             <Input
                                 value={search}
-                                placeholder="Szukaj adresu lub notatki…"
+                                placeholder={t('Szukaj adresu lub notatki…')}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                             <Button type="submit" variant="outline">
-                                Szukaj
+                                {t('Szukaj')}
                             </Button>
                         </form>
                         <Card className="py-0">
                             <CardContent className="divide-y p-0">
                                 {redirects.data.length === 0 && (
                                     <p className="p-6 text-sm text-muted-foreground">
-                                        Brak przekierowań.
+                                        {t('Brak przekierowań.')}
                                     </p>
                                 )}
                                 {redirects.data.map((r) => (
@@ -341,7 +347,9 @@ export default function RedirectsIndex({
                                             type="button"
                                             role="switch"
                                             aria-checked={r.active}
-                                            aria-label={`Aktywne: ${r.source}`}
+                                            aria-label={t('Aktywne: {name}', {
+                                                name: r.source,
+                                            })}
                                             onClick={() =>
                                                 router.post(
                                                     cmsUrl.redirectToggle(r.id),
@@ -371,20 +379,21 @@ export default function RedirectsIndex({
                                                 <span className="text-muted-foreground">
                                                     →
                                                 </span>{' '}
-                                                {r.target ?? 'usunięta (410)'}
+                                                {r.target ??
+                                                    t('usunięta (410)')}
                                             </p>
                                             <p className="text-xs text-muted-foreground">
                                                 {r.status_code}
                                                 {r.auto && ' · automatyczne'}
                                                 {r.note &&
                                                     ` · ${r.note}`} ·{' '}
-                                                {r.hits} wejść
+                                                {t('{n} wejść', { n: r.hits })}
                                             </p>
                                         </div>
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            aria-label="Edytuj"
+                                            aria-label={t('Edytuj')}
                                             onClick={() => edit(r)}
                                         >
                                             <Pencil />
@@ -392,11 +401,14 @@ export default function RedirectsIndex({
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            aria-label="Usuń"
+                                            aria-label={t('Usuń')}
                                             className="text-destructive"
                                             onClick={() =>
                                                 confirm(
-                                                    `Usunąć przekierowanie z ${r.source}?`,
+                                                    t(
+                                                        'Usunąć przekierowanie z {name}?',
+                                                        { name: r.source },
+                                                    ),
                                                 ) &&
                                                 router.delete(
                                                     cmsUrl.redirectUpdate(r.id),
@@ -413,7 +425,7 @@ export default function RedirectsIndex({
                         {redirects.links.length > 3 && (
                             <nav
                                 className="flex flex-wrap gap-1"
-                                aria-label="Strony"
+                                aria-label={t('Strony')}
                             >
                                 {redirects.links.map((l, i) =>
                                     l.url ? (
@@ -447,21 +459,22 @@ export default function RedirectsIndex({
                     <>
                         <div className="flex flex-wrap items-center justify-between gap-3">
                             <p className="text-sm text-muted-foreground">
-                                Adresy, których nie udało się znaleźć, od
-                                najczęstszych.
+                                {t(
+                                    'Adresy, których nie udało się znaleźć, od najczęstszych.',
+                                )}
                             </p>
                             {logs.length > 0 && (
                                 <Button
                                     variant="outline"
                                     size="sm"
                                     onClick={() =>
-                                        confirm('Wyczyścić całą listę?') &&
+                                        confirm(t('Wyczyścić całą listę?')) &&
                                         router.delete(cmsUrl.redirectLogs, {
                                             preserveScroll: true,
                                         })
                                     }
                                 >
-                                    Wyczyść listę
+                                    {t('Wyczyść listę')}
                                 </Button>
                             )}
                         </div>
@@ -469,8 +482,9 @@ export default function RedirectsIndex({
                             <CardContent className="divide-y p-0">
                                 {logs.length === 0 && (
                                     <p className="p-6 text-sm text-muted-foreground">
-                                        Nie zarejestrowano jeszcze żadnych
-                                        błędów 404.
+                                        {t(
+                                            'Nie zarejestrowano jeszcze żadnych błędów 404.',
+                                        )}
                                     </p>
                                 )}
                                 {logs.map((l) => (
@@ -483,9 +497,9 @@ export default function RedirectsIndex({
                                                 {l.path}
                                             </p>
                                             <p className="truncate text-xs text-muted-foreground">
-                                                {l.hits} wejść
+                                                {t('{n} wejść', { n: l.hits })}
                                                 {l.last_referrer
-                                                    ? ` · z: ${l.last_referrer}`
+                                                    ? ` · ${t('z: {from}', { from: l.last_referrer })}`
                                                     : ''}
                                             </p>
                                         </div>
@@ -494,12 +508,12 @@ export default function RedirectsIndex({
                                             size="sm"
                                             onClick={() => fromLog(l)}
                                         >
-                                            Przekieruj
+                                            {t('Przekieruj')}
                                         </Button>
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            aria-label="Ukryj"
+                                            aria-label={t('Ukryj')}
                                             onClick={() =>
                                                 router.delete(
                                                     cmsUrl.redirectLog(l.id),
@@ -519,19 +533,18 @@ export default function RedirectsIndex({
                 <Card className="gap-4">
                     <CardHeader>
                         <CardTitle className="text-base">
-                            Strona błędu 404
+                            {t('Strona błędu 404')}
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3">
                         <p className="text-sm text-muted-foreground">
-                            Domyślnie pokazujemy wbudowaną stronę. Możesz
-                            wskazać własną stronę zbudowaną w edytorze
-                            wizualnym; odpowiedź nadal ma kod 404 i nie jest
-                            indeksowana.
+                            {t(
+                                'Domyślnie pokazujemy wbudowaną stronę. Możesz wskazać własną stronę zbudowaną w edytorze wizualnym; odpowiedź nadal ma kod 404 i nie jest indeksowana.',
+                            )}
                         </p>
                         <div className="flex max-w-xl gap-2">
                             <select
-                                aria-label="Strona 404"
+                                aria-label={t('Strona 404')}
                                 className={nativeClass}
                                 value={notFoundId ?? ''}
                                 onChange={(e) =>
@@ -542,7 +555,9 @@ export default function RedirectsIndex({
                                     )
                                 }
                             >
-                                <option value="">Domyślna strona Lumin</option>
+                                <option value="">
+                                    {t('Domyślna strona Lumin')}
+                                </option>
                                 {pages.map((p) => (
                                     <option key={p.id} value={p.id}>
                                         {p.title}
@@ -550,7 +565,7 @@ export default function RedirectsIndex({
                                 ))}
                             </select>
                             <Button type="button" onClick={saveNotFoundPage}>
-                                Zapisz
+                                {t('Zapisz')}
                             </Button>
                         </div>
                     </CardContent>

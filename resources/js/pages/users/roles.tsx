@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { cmsUrl } from '@/lib/cms-urls';
+import { t } from '@/lib/i18n';
 
 type Role = {
     key: string;
@@ -27,22 +28,24 @@ const nativeClass =
 function describe(cap: string, labels: Record<string, string>): string {
     if (labels[cap]) return labels[cap];
 
-    const m = cap.match(
-        /^(edit|edit_others|edit_published|publish|delete|delete_others|delete_published)_(posts|pages)$/,
-    );
-    if (!m) return cap;
-
-    const verbs: Record<string, string> = {
-        edit: 'Pisanie i edycja własnych',
-        edit_others: 'Edycja cudzych',
-        edit_published: 'Edycja opublikowanych',
-        publish: 'Publikowanie',
-        delete: 'Usuwanie własnych',
-        delete_others: 'Usuwanie cudzych',
-        delete_published: 'Usuwanie opublikowanych',
+    const phrases: Record<string, string> = {
+        edit_posts: t('Pisanie i edycja własnych wpisów'),
+        edit_others_posts: t('Edycja cudzych wpisów'),
+        edit_published_posts: t('Edycja opublikowanych wpisów'),
+        publish_posts: t('Publikowanie wpisów'),
+        delete_posts: t('Usuwanie własnych wpisów'),
+        delete_others_posts: t('Usuwanie cudzych wpisów'),
+        delete_published_posts: t('Usuwanie opublikowanych wpisów'),
+        edit_pages: t('Pisanie i edycja własnych stron'),
+        edit_others_pages: t('Edycja cudzych stron'),
+        edit_published_pages: t('Edycja opublikowanych stron'),
+        publish_pages: t('Publikowanie stron'),
+        delete_pages: t('Usuwanie własnych stron'),
+        delete_others_pages: t('Usuwanie cudzych stron'),
+        delete_published_pages: t('Usuwanie opublikowanych stron'),
     };
 
-    return `${verbs[m[1]]} ${m[2] === 'posts' ? 'wpisów' : 'stron'}`;
+    return phrases[cap] ?? cap;
 }
 
 export default function UserRoles({
@@ -58,21 +61,24 @@ export default function UserRoles({
 
     return (
         <>
-            <Head title="Role i ustawienia użytkowników" />
+            <Head title={t('Role i ustawienia użytkowników')} />
             <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
                 <div>
                     <h1 className="text-2xl font-semibold tracking-tight">
-                        Role i ustawienia
+                        {t('Role i ustawienia')}
                     </h1>
                     <p className="text-sm text-muted-foreground">
-                        Role działają jak w WordPressie. Każdemu użytkownikowi
-                        przypisujesz jedną z nich.
+                        {t(
+                            'Role działają jak w WordPressie. Każdemu użytkownikowi przypisujesz jedną z nich.',
+                        )}
                     </p>
                 </div>
 
                 <Card className="gap-4">
                     <CardHeader>
-                        <CardTitle className="text-base">Rejestracja</CardTitle>
+                        <CardTitle className="text-base">
+                            {t('Rejestracja')}
+                        </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <label className="flex items-center gap-2 text-sm">
@@ -86,11 +92,13 @@ export default function UserRoles({
                                     )
                                 }
                             />
-                            Każdy może się zarejestrować (strona /register)
+                            {t(
+                                'Każdy może się zarejestrować (strona /register)',
+                            )}
                         </label>
                         <div className="grid max-w-xs gap-1.5">
                             <Label htmlFor="default_role">
-                                Domyślna rola nowych użytkowników
+                                {t('Domyślna rola nowych użytkowników')}
                             </Label>
                             <select
                                 id="default_role"
@@ -119,7 +127,7 @@ export default function UserRoles({
                             {form.processing && (
                                 <Loader2 className="animate-spin" />
                             )}
-                            Zapisz ustawienia
+                            {t('Zapisz ustawienia')}
                         </Button>
                     </CardContent>
                 </Card>
@@ -129,7 +137,7 @@ export default function UserRoles({
                         <thead>
                             <tr className="border-b bg-muted/40 text-left text-xs text-muted-foreground uppercase">
                                 <th className="px-4 py-2.5 font-medium">
-                                    Uprawnienie
+                                    {t('Uprawnienie')}
                                 </th>
                                 {roles.map((r) => (
                                     <th
@@ -149,7 +157,7 @@ export default function UserRoles({
                                             {r.label}
                                         </button>
                                         <div className="font-normal normal-case">
-                                            {r.users} os.
+                                            {t('{n} os.', { n: r.users })}
                                         </div>
                                     </th>
                                 ))}

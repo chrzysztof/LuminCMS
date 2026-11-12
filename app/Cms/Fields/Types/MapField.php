@@ -18,7 +18,7 @@ class MapField extends AbstractFieldType
 
     public function label(): string
     {
-        return 'Mapa';
+        return __('Mapa');
     }
 
     public function category(): string
@@ -39,7 +39,7 @@ class MapField extends AbstractFieldType
     {
         return [
             ...$this->baseRules($field), 'array',
-            fn (string $a, mixed $v, \Closure $fail) => $this->valid($v) ?: $fail('Wskaż poprawne miejsce na mapie.'),
+            fn (string $a, mixed $v, \Closure $fail) => $this->valid($v) ?: $fail(__('Wskaż poprawne miejsce na mapie.')),
         ];
     }
 
@@ -87,7 +87,7 @@ class MapField extends AbstractFieldType
         if ($field['return_format'] === 'embed') {
             $height = (int) $this->number($field, 'height') ?: 320;
 
-            return new HtmlString('<iframe src="'.e($embed).'" width="100%" height="'.$height.'" style="border:0" loading="lazy" referrerpolicy="no-referrer" title="'.e($value['address'] ?: 'Mapa').'"></iframe>');
+            return new HtmlString('<iframe src="'.e($embed).'" width="100%" height="'.$height.'" style="border:0" loading="lazy" referrerpolicy="no-referrer" title="'.e($value['address'] ?: __('Mapa')).'"></iframe>');
         }
 
         return $value + ['embed_url' => $embed, 'link' => "https://www.openstreetmap.org/?mlat={$value['lat']}&mlon={$value['lng']}#map={$value['zoom']}/{$value['lat']}/{$value['lng']}"];

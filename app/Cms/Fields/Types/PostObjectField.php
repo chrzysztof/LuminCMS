@@ -14,7 +14,7 @@ class PostObjectField extends RelationFieldBase
 
     public function label(): string
     {
-        return 'Treść (pojedyncza)';
+        return __('Treść (pojedyncza)');
     }
 
     protected function multiple(array $field): bool

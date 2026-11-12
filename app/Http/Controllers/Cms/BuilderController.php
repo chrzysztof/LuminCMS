@@ -44,7 +44,7 @@ class BuilderController extends Controller
             'status' => ['sometimes', Rule::in([Content::STATUS_DRAFT, Content::STATUS_PUBLISHED])],
         ]);
 
-        abort_if(strlen(json_encode($data['project'])) > self::MAX_PROJECT_BYTES, 413, 'Projekt jest za duży.');
+        abort_if(strlen(json_encode($data['project'])) > self::MAX_PROJECT_BYTES, 413, __('Projekt jest za duży.'));
 
         $content->builder_data = $data['project'];
         $content->html_cache = $this->renderer->render($data['project']);

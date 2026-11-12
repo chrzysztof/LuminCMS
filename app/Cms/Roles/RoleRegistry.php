@@ -106,7 +106,22 @@ class RoleRegistry
 
     public static function label(?string $role): string
     {
-        return self::LABELS[$role] ?? (string) $role;
+        return isset(self::LABELS[$role]) ? __(self::LABELS[$role]) : (string) $role;
+    }
+
+    public static function description(string $role): string
+    {
+        return __(self::DESCRIPTIONS[$role] ?? '');
+    }
+
+    /** Opis uprawnienia: ogólnego albo treści (edit_others_pages itd.). */
+    public static function capabilityLabel(string $cap): string
+    {
+        if (isset(self::CAPABILITY_LABELS[$cap])) {
+            return __(self::CAPABILITY_LABELS[$cap]);
+        }
+
+        return $cap;
     }
 
     /** @return list<string> */

@@ -39,11 +39,11 @@ class SiteSettingsController extends Controller
         }
 
         $data = $request->validate($rules, [
-            'ga_id.regex' => 'Identyfikator Google Analytics 4 ma postać G-XXXXXXXXXX.',
-            'gtm_id.regex' => 'Identyfikator Google Tag Manager ma postać GTM-XXXXXXX.',
-            'pixel_id.regex' => 'Identyfikator Pixela Meta to same cyfry.',
-            'privacy_url.regex' => 'Podaj ścieżkę (np. /polityka-prywatnosci) albo pełny adres http(s).',
-            '*.regex' => 'Podaj pełny adres zaczynający się od http:// lub https://.',
+            'ga_id.regex' => __('Identyfikator Google Analytics 4 ma postać G-XXXXXXXXXX.'),
+            'gtm_id.regex' => __('Identyfikator Google Tag Manager ma postać GTM-XXXXXXX.'),
+            'pixel_id.regex' => __('Identyfikator Pixela Meta to same cyfry.'),
+            'privacy_url.regex' => __('Podaj ścieżkę (np. /polityka-prywatnosci) albo pełny adres http(s).'),
+            '*.regex' => __('Podaj pełny adres zaczynający się od http:// lub https://.'),
         ]);
 
         $clean = [];
@@ -56,7 +56,7 @@ class SiteSettingsController extends Controller
             'track_logged_in' => (bool) ($data['track_logged_in'] ?? false),
         ]);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Ustawienia witryny zapisane.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Ustawienia witryny zapisane.')]);
 
         return back();
     }

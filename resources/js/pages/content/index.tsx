@@ -9,6 +9,7 @@ import { cmsUrl } from '@/lib/cms-urls';
 import { formatDate } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import type { ContentStatus, ContentTypeInfo } from '@/types/cms';
+import { t } from '@/lib/i18n';
 
 type Item = {
     id: number;
@@ -38,11 +39,11 @@ const tabs: {
     label: string;
     count: 'all' | ContentStatus;
 }[] = [
-    { key: '', label: 'Wszystkie', count: 'all' },
-    { key: 'published', label: 'Opublikowane', count: 'published' },
-    { key: 'draft', label: 'Szkice', count: 'draft' },
-    { key: 'pending', label: 'Do przeglądu', count: 'pending' },
-    { key: 'scheduled', label: 'Zaplanowane', count: 'scheduled' },
+    { key: '', label: t('Wszystkie'), count: 'all' },
+    { key: 'published', label: t('Opublikowane'), count: 'published' },
+    { key: 'draft', label: t('Szkice'), count: 'draft' },
+    { key: 'pending', label: t('Do przeglądu'), count: 'pending' },
+    { key: 'scheduled', label: t('Zaplanowane'), count: 'scheduled' },
 ];
 
 function Row({
@@ -83,12 +84,15 @@ export default function ContentIndex({ type, items, counts, filters }: Props) {
                             {type.label_plural}
                         </h1>
                         <p className="text-sm text-muted-foreground">
-                            {counts.all} pozycji
+                            {t('{n} pozycji', { n: counts.all })}
                         </p>
                     </div>
                     <Button asChild>
                         <Link href={cmsUrl.contentCreate(type.key)}>
-                            <Plus /> Dodaj: {type.label.toLowerCase()}
+                            <Plus />{' '}
+                            {t('Dodaj: {type}', {
+                                type: type.label.toLowerCase(),
+                            })}
                         </Link>
                     </Button>
                 </div>
@@ -126,7 +130,7 @@ export default function ContentIndex({ type, items, counts, filters }: Props) {
                         <Input
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Szukaj po tytule…"
+                            placeholder={t('Szukaj po tytule…')}
                             className="pl-9"
                         />
                     </form>
@@ -134,14 +138,14 @@ export default function ContentIndex({ type, items, counts, filters }: Props) {
 
                 <Card className="gap-0 overflow-hidden py-0">
                     <div className="hidden grid-cols-[1fr_9rem_9rem_11rem] gap-4 border-b bg-muted/40 px-4 py-2.5 text-xs font-medium text-muted-foreground uppercase md:grid">
-                        <span>Tytuł</span>
-                        <span>Autor</span>
-                        <span>Status</span>
-                        <span>Zmieniono</span>
+                        <span>{t('Tytuł')}</span>
+                        <span>{t('Autor')}</span>
+                        <span>{t('Status')}</span>
+                        <span>{t('Zmieniono')}</span>
                     </div>
                     {items.data.length === 0 ? (
                         <p className="px-4 py-12 text-center text-sm text-muted-foreground">
-                            Brak wyników.
+                            {t('Brak wyników.')}
                         </p>
                     ) : (
                         items.data.map((item) => (
@@ -183,7 +187,10 @@ export default function ContentIndex({ type, items, counts, filters }: Props) {
                 {items.last_page > 1 && (
                     <div className="flex items-center justify-end gap-2 text-sm">
                         <span className="text-muted-foreground">
-                            Strona {items.current_page} z {items.last_page}
+                            {t('Strona {a} z {b}', {
+                                a: items.current_page,
+                                b: items.last_page,
+                            })}
                         </span>
                         <Button
                             variant="outline"
@@ -193,7 +200,7 @@ export default function ContentIndex({ type, items, counts, filters }: Props) {
                                 visit({ page: items.current_page - 1 })
                             }
                         >
-                            Poprzednia
+                            {t('Poprzednia')}
                         </Button>
                         <Button
                             variant="outline"
@@ -203,7 +210,7 @@ export default function ContentIndex({ type, items, counts, filters }: Props) {
                                 visit({ page: items.current_page + 1 })
                             }
                         >
-                            Następna
+                            {t('Następna')}
                         </Button>
                     </div>
                 )}

@@ -46,7 +46,7 @@ class MediaSizeController extends Controller
 
     public function destroy(MediaSize $size): JsonResponse
     {
-        abort_if($size->is_system, 422, 'Rozmiaru systemowego nie można usunąć (można go wyłączyć).');
+        abort_if($size->is_system, 422, __('Rozmiaru systemowego nie można usunąć (można go wyłączyć).'));
 
         $size->delete();
 
@@ -77,11 +77,11 @@ class MediaSizeController extends Controller
     private function assertCropHasBothSides(array $data): void
     {
         if (! empty($data['crop']) && (($data['width'] ?? 0) < 1 || ($data['height'] ?? 0) < 1)) {
-            abort(422, 'Kadrowany rozmiar wymaga szerokości i wysokości.');
+            abort(422, __('Kadrowany rozmiar wymaga szerokości i wysokości.'));
         }
 
         if (($data['width'] ?? 0) < 1 && ($data['height'] ?? 0) < 1) {
-            abort(422, 'Podaj szerokość lub wysokość.');
+            abort(422, __('Podaj szerokość lub wysokość.'));
         }
     }
 }

@@ -35,7 +35,7 @@ class OEmbedField extends AbstractFieldType
     {
         return [...$this->baseRules($field), 'string', 'max:500', function (string $attribute, mixed $value, \Closure $fail) {
             if ($value !== null && $value !== '' && $this->embedUrl((string) $value) === null) {
-                $fail('Obsługiwane adresy: YouTube i Vimeo.');
+                $fail(__('Obsługiwane adresy: YouTube i Vimeo.'));
             }
         }];
     }

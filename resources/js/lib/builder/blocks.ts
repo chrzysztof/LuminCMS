@@ -1,4 +1,5 @@
 import type { Editor } from 'grapesjs';
+import { t } from '@/lib/i18n';
 
 const icon = (path: string) =>
     `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;
@@ -22,8 +23,8 @@ type BlockDef = {
 const blocks: BlockDef[] = [
     {
         id: 'hero',
-        label: 'Hero',
-        category: 'Sekcje',
+        label: t('Hero'),
+        category: t('Sekcje'),
         icon: icon(
             '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 10h10M7 14h6"/>',
         ),
@@ -31,15 +32,15 @@ const blocks: BlockDef[] = [
     },
     {
         id: 'section',
-        label: 'Sekcja',
-        category: 'Sekcje',
+        label: t('Sekcja'),
+        category: t('Sekcje'),
         icon: icon('<rect x="3" y="5" width="18" height="14" rx="2"/>'),
         content: `<section class="lm-section"><div class="lm-container"><h2>Nagłówek sekcji</h2><p>Treść sekcji. Kliknij dwukrotnie, aby edytować.</p></div></section>`,
     },
     {
         id: 'columns-2',
-        label: '2 kolumny',
-        category: 'Sekcje',
+        label: t('2 kolumny'),
+        category: t('Sekcje'),
         icon: icon(
             '<rect x="3" y="5" width="8" height="14" rx="1.5"/><rect x="13" y="5" width="8" height="14" rx="1.5"/>',
         ),
@@ -47,8 +48,8 @@ const blocks: BlockDef[] = [
     },
     {
         id: 'cards-3',
-        label: '3 karty',
-        category: 'Sekcje',
+        label: t('3 karty'),
+        category: t('Sekcje'),
         icon: icon(
             '<rect x="2.5" y="6" width="5.5" height="12" rx="1.2"/><rect x="9.25" y="6" width="5.5" height="12" rx="1.2"/><rect x="16" y="6" width="5.5" height="12" rx="1.2"/>',
         ),
@@ -56,8 +57,8 @@ const blocks: BlockDef[] = [
     },
     {
         id: 'text-image',
-        label: 'Tekst + obraz',
-        category: 'Sekcje',
+        label: t('Tekst + obraz'),
+        category: t('Sekcje'),
         icon: icon(
             '<rect x="3" y="5" width="8" height="14" rx="1.5"/><path d="M14 8h7M14 12h7M14 16h4"/>',
         ),
@@ -65,22 +66,22 @@ const blocks: BlockDef[] = [
     },
     {
         id: 'heading',
-        label: 'Nagłówek',
-        category: 'Treść',
+        label: t('Nagłówek'),
+        category: t('Treść'),
         icon: icon('<path d="M6 5v14M18 5v14M6 12h12"/>'),
         content: `<h2>Nowy nagłówek</h2>`,
     },
     {
         id: 'paragraph',
-        label: 'Akapit',
-        category: 'Treść',
+        label: t('Akapit'),
+        category: t('Treść'),
         icon: icon('<path d="M4 6h16M4 11h16M4 16h10"/>'),
         content: `<p>Nowy akapit tekstu. Kliknij dwukrotnie, aby edytować.</p>`,
     },
     {
         id: 'image',
-        label: 'Obraz',
-        category: 'Treść',
+        label: t('Obraz'),
+        category: t('Treść'),
         icon: icon(
             '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M4 18l5-5 4 4 3-3 4 4"/>',
         ),
@@ -88,15 +89,15 @@ const blocks: BlockDef[] = [
     },
     {
         id: 'button',
-        label: 'Przycisk',
-        category: 'Treść',
+        label: t('Przycisk'),
+        category: t('Treść'),
         icon: icon('<rect x="3" y="8" width="18" height="8" rx="4"/>'),
         content: `<a class="lm-btn" href="#">Przycisk</a>`,
     },
     {
         id: 'list',
-        label: 'Lista',
-        category: 'Treść',
+        label: t('Lista'),
+        category: t('Treść'),
         icon: icon(
             '<path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/>',
         ),
@@ -104,8 +105,8 @@ const blocks: BlockDef[] = [
     },
     {
         id: 'quote',
-        label: 'Cytat',
-        category: 'Treść',
+        label: t('Cytat'),
+        category: t('Treść'),
         icon: icon(
             '<path d="M7 7h4v5H7zM13 7h4v5h-4zM7 12c0 3-1 4-2 5M13 12c0 3-1 4-2 5"/>',
         ),
@@ -113,15 +114,15 @@ const blocks: BlockDef[] = [
     },
     {
         id: 'divider',
-        label: 'Separator',
-        category: 'Układ',
+        label: t('Separator'),
+        category: t('Układ'),
         icon: icon('<path d="M3 12h18"/>'),
         content: `<hr class="lm-divider">`,
     },
     {
         id: 'spacer',
-        label: 'Odstęp',
-        category: 'Układ',
+        label: t('Odstęp'),
+        category: t('Układ'),
         icon: icon('<path d="M12 4v16M8 8l4-4 4 4M8 16l4 4 4-4"/>'),
         content: `<div class="lm-spacer"></div>`,
     },

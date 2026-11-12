@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cmsUrl } from '@/lib/cms-urls';
+import { t } from '@/lib/i18n';
 
 type Group = {
     id: number;
@@ -44,16 +45,17 @@ export default function FieldGroupIndex({
 
     return (
         <>
-            <Head title="Pola własne" />
+            <Head title={t('Pola własne')} />
             <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                         <h1 className="text-2xl font-semibold tracking-tight">
-                            Pola własne
+                            {t('Pola własne')}
                         </h1>
                         <p className="text-sm text-muted-foreground">
-                            Grupy pól dodawane do edytora treści według reguł
-                            lokalizacji.
+                            {t(
+                                'Grupy pól dodawane do edytora treści według reguł lokalizacji.',
+                            )}
                         </p>
                     </div>
                     <div className="flex gap-2">
@@ -61,11 +63,11 @@ export default function FieldGroupIndex({
                             variant="outline"
                             onClick={() => setImporting(!importing)}
                         >
-                            <Upload /> Import
+                            <Upload /> {t('Import')}
                         </Button>
                         <Button asChild>
                             <Link href={cmsUrl.fieldCreate}>
-                                <Plus /> Nowa grupa
+                                <Plus /> {t('Nowa grupa')}
                             </Link>
                         </Button>
                     </div>
@@ -75,7 +77,7 @@ export default function FieldGroupIndex({
                     <Card>
                         <CardHeader>
                             <CardTitle className="text-base">
-                                Import grup pól (JSON)
+                                {t('Import grup pól (JSON)')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
@@ -88,7 +90,7 @@ export default function FieldGroupIndex({
                                     }
                                 />
                                 <textarea
-                                    aria-label="Zawartość JSON"
+                                    aria-label={t('Zawartość JSON')}
                                     rows={8}
                                     value={json}
                                     onChange={(e) => setJson(e.target.value)}
@@ -101,7 +103,7 @@ export default function FieldGroupIndex({
                                     </p>
                                 )}
                                 <Button type="submit" disabled={!json.trim()}>
-                                    Importuj
+                                    {t('Importuj')}
                                 </Button>
                             </form>
                         </CardContent>
@@ -112,7 +114,7 @@ export default function FieldGroupIndex({
                     <CardContent className="divide-y p-0">
                         {groups.length === 0 && (
                             <p className="p-6 text-sm text-muted-foreground">
-                                Nie ma jeszcze żadnych grup pól.
+                                {t('Nie ma jeszcze żadnych grup pól.')}
                             </p>
                         )}
                         {groups.map((g) => (
@@ -124,7 +126,9 @@ export default function FieldGroupIndex({
                                     type="button"
                                     role="switch"
                                     aria-checked={g.active}
-                                    aria-label={`Aktywna: ${g.title}`}
+                                    aria-label={t('Aktywna: {name}', {
+                                        name: g.title,
+                                    })}
                                     onClick={() =>
                                         router.post(
                                             cmsUrl.fieldToggle(g.id),
@@ -146,14 +150,15 @@ export default function FieldGroupIndex({
                                         {g.title}
                                     </Link>
                                     <p className="truncate text-xs text-muted-foreground">
-                                        {g.fields_count} pól · {g.location}
+                                        {t('{n} pól', { n: g.fields_count })} ·{' '}
+                                        {g.location}
                                     </p>
                                 </div>
                                 <Button
                                     asChild
                                     variant="ghost"
                                     size="icon"
-                                    aria-label="Edytuj"
+                                    aria-label={t('Edytuj')}
                                 >
                                     <Link href={cmsUrl.fieldEdit(g.id)}>
                                         <Pencil />
@@ -162,7 +167,7 @@ export default function FieldGroupIndex({
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    aria-label="Duplikuj"
+                                    aria-label={t('Duplikuj')}
                                     onClick={() =>
                                         router.post(cmsUrl.fieldDuplicate(g.id))
                                     }
@@ -173,7 +178,7 @@ export default function FieldGroupIndex({
                                     asChild
                                     variant="ghost"
                                     size="icon"
-                                    aria-label="Eksport"
+                                    aria-label={t('Eksport')}
                                 >
                                     <a href={cmsUrl.fieldExport(g.id)}>
                                         <Download />
@@ -182,10 +187,14 @@ export default function FieldGroupIndex({
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    aria-label="Usuń"
+                                    aria-label={t('Usuń')}
                                     className="text-destructive"
                                     onClick={() =>
-                                        confirm(`Usunąć grupę „${g.title}”?`) &&
+                                        confirm(
+                                            t('Usunąć grupę „{name}”?', {
+                                                name: g.title,
+                                            }),
+                                        ) &&
                                         router.delete(cmsUrl.fieldUpdate(g.id))
                                     }
                                 >

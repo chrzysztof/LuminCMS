@@ -10,6 +10,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import type { MediaItem } from '@/types/cms';
+import { t } from '@/lib/i18n';
 
 type Props = {
     open: boolean;
@@ -41,13 +42,14 @@ export function MediaPicker({
             <DialogContent className="flex h-[80vh] max-w-4xl flex-col">
                 <DialogHeader>
                     <DialogTitle>
-                        {multiple ? 'Wybierz pliki' : 'Wybierz plik'}
+                        {multiple ? t('Wybierz pliki') : t('Wybierz plik')}
                     </DialogTitle>
                 </DialogHeader>
                 {!can('upload_files') ? (
                     <p className="py-12 text-center text-sm text-muted-foreground">
-                        Twoja rola (np. Współpracownik) nie ma dostępu do
-                        biblioteki mediów.
+                        {t(
+                            'Twoja rola (np. Współpracownik) nie ma dostępu do biblioteki mediów.',
+                        )}
                     </p>
                 ) : (
                     <MediaLibrary
@@ -61,14 +63,14 @@ export function MediaPicker({
                 )}
                 <DialogFooter>
                     <span className="mr-auto self-center text-sm text-muted-foreground">
-                        Wybrano: {selected.length}
+                        {t('Wybrano:')} {selected.length}
                     </span>
                     <Button
                         type="button"
                         variant="outline"
                         onClick={() => onOpenChange(false)}
                     >
-                        Anuluj
+                        {t('Anuluj')}
                     </Button>
                     <Button
                         type="button"
@@ -79,7 +81,7 @@ export function MediaPicker({
                             onOpenChange(false);
                         }}
                     >
-                        Użyj wybranych
+                        {t('Użyj wybranych')}
                     </Button>
                 </DialogFooter>
             </DialogContent>

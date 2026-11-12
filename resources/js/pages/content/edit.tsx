@@ -25,6 +25,7 @@ import type {
     FieldGroupData,
     MediaItem,
 } from '@/types/cms';
+import { t } from '@/lib/i18n';
 
 type ContentData = {
     id: number;
@@ -112,7 +113,7 @@ export default function ContentEdit({
     };
 
     const remove = () => {
-        if (content && confirm('Przenieść do kosza?'))
+        if (content && confirm(t('Przenieść do kosza?')))
             router.delete(cmsUrl.contentUpdate(type.key, content.id));
     };
 
@@ -157,8 +158,10 @@ export default function ContentEdit({
             <Head
                 title={
                     content
-                        ? `Edycja: ${content.title}`
-                        : `Nowa pozycja: ${type.label.toLowerCase()}`
+                        ? t('Edycja: {name}', { name: content.title })
+                        : t('Nowa pozycja: {type}', {
+                              type: type.label.toLowerCase(),
+                          })
                 }
             />
             <form
@@ -170,15 +173,19 @@ export default function ContentEdit({
                         <Button asChild variant="ghost" size="icon">
                             <Link
                                 href={cmsUrl.contentIndex(type.key)}
-                                aria-label="Wróć do listy"
+                                aria-label={t('Wróć do listy')}
                             >
                                 <ArrowLeft />
                             </Link>
                         </Button>
                         <h1 className="text-2xl font-semibold tracking-tight">
                             {content
-                                ? `Edytuj: ${type.label.toLowerCase()}`
-                                : `Dodaj: ${type.label.toLowerCase()}`}
+                                ? t('Edytuj: {type}', {
+                                      type: type.label.toLowerCase(),
+                                  })
+                                : t('Dodaj: {type}', {
+                                      type: type.label.toLowerCase(),
+                                  })}
                         </h1>
                         {content && <StatusBadge status={content.status} />}
                     </div>
@@ -191,7 +198,7 @@ export default function ContentEdit({
                                         content.id,
                                     )}
                                 >
-                                    <PenTool /> Edytor wizualny
+                                    <PenTool /> {t('Edytor wizualny')}
                                 </Link>
                             </Button>
                         )}
@@ -201,9 +208,9 @@ export default function ContentEdit({
                             )}
                             {form.data.status === 'published'
                                 ? content
-                                    ? 'Zaktualizuj'
-                                    : 'Opublikuj'
-                                : 'Zapisz'}
+                                    ? t('Zaktualizuj')
+                                    : t('Opublikuj')
+                                : t('Zapisz')}
                         </Button>
                     </div>
                 </div>
@@ -213,7 +220,7 @@ export default function ContentEdit({
                         <Card className="gap-4">
                             <CardContent className="space-y-4">
                                 <div className="grid gap-1.5">
-                                    <Label htmlFor="title">Tytuł</Label>
+                                    <Label htmlFor="title">{t('Tytuł')}</Label>
                                     <Input
                                         id="title"
                                         value={form.data.title}
@@ -233,7 +240,9 @@ export default function ContentEdit({
                                     )}
                                 </div>
                                 <div className="grid gap-1.5">
-                                    <Label htmlFor="slug">Adres (slug)</Label>
+                                    <Label htmlFor="slug">
+                                        {t('Adres (slug)')}
+                                    </Label>
                                     <div className="flex items-center gap-1 text-sm text-muted-foreground">
                                         <span>
                                             /
@@ -244,7 +253,9 @@ export default function ContentEdit({
                                         <Input
                                             id="slug"
                                             value={form.data.slug}
-                                            placeholder="generowany z tytułu"
+                                            placeholder={t(
+                                                'generowany z tytułu',
+                                            )}
                                             onChange={(e) =>
                                                 form.setData(
                                                     'slug',
@@ -261,7 +272,9 @@ export default function ContentEdit({
                                 </div>
                                 {supports('excerpt') && (
                                     <div className="grid gap-1.5">
-                                        <Label htmlFor="excerpt">Zajawka</Label>
+                                        <Label htmlFor="excerpt">
+                                            {t('Zajawka')}
+                                        </Label>
                                         <textarea
                                             id="excerpt"
                                             rows={3}
@@ -314,12 +327,14 @@ export default function ContentEdit({
                         <Card className="gap-4">
                             <CardHeader>
                                 <CardTitle className="text-base">
-                                    Publikacja
+                                    {t('Publikacja')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="grid gap-1.5">
-                                    <Label htmlFor="status">Status</Label>
+                                    <Label htmlFor="status">
+                                        {t('Status')}
+                                    </Label>
                                     <select
                                         id="status"
                                         className={nativeClass}
@@ -331,28 +346,30 @@ export default function ContentEdit({
                                             )
                                         }
                                     >
-                                        <option value="draft">Szkic</option>
+                                        <option value="draft">
+                                            {t('Szkic')}
+                                        </option>
                                         {!canPublish &&
                                         content &&
                                         (content.status === 'published' ||
                                             content.status === 'scheduled') ? (
                                             <option value={content.status}>
                                                 {content.status === 'published'
-                                                    ? 'Opublikowana'
-                                                    : 'Zaplanowana'}
+                                                    ? t('Opublikowana')
+                                                    : t('Zaplanowana')}
                                             </option>
                                         ) : canPublish ? (
                                             <>
                                                 <option value="published">
-                                                    Opublikowana
+                                                    {t('Opublikowana')}
                                                 </option>
                                                 <option value="scheduled">
-                                                    Zaplanowana
+                                                    {t('Zaplanowana')}
                                                 </option>
                                             </>
                                         ) : (
                                             <option value="pending">
-                                                Oczekuje na przegląd
+                                                {t('Oczekuje na przegląd')}
                                             </option>
                                         )}
                                     </select>
@@ -360,7 +377,7 @@ export default function ContentEdit({
                                 {form.data.status === 'scheduled' && (
                                     <div className="grid gap-1.5">
                                         <Label htmlFor="published_at">
-                                            Data publikacji
+                                            {t('Data publikacji')}
                                         </Label>
                                         <Input
                                             id="published_at"
@@ -383,7 +400,7 @@ export default function ContentEdit({
                                 {type.hierarchical && (
                                     <div className="grid gap-1.5">
                                         <Label htmlFor="parent">
-                                            Strona nadrzędna
+                                            {t('Strona nadrzędna')}
                                         </Label>
                                         <select
                                             id="parent"
@@ -398,7 +415,9 @@ export default function ContentEdit({
                                                 )
                                             }
                                         >
-                                            <option value="">— brak —</option>
+                                            <option value="">
+                                                {t('— brak —')}
+                                            </option>
                                             {parents.map((p) => (
                                                 <option key={p.id} value={p.id}>
                                                     {p.title}
@@ -415,7 +434,7 @@ export default function ContentEdit({
                                         className="text-destructive"
                                         onClick={remove}
                                     >
-                                        <Trash2 /> Przenieś do kosza
+                                        <Trash2 /> {t('Przenieś do kosza')}
                                     </Button>
                                 )}
                             </CardContent>
@@ -425,7 +444,7 @@ export default function ContentEdit({
                             <Card className="gap-4">
                                 <CardHeader>
                                     <CardTitle className="text-base">
-                                        Obraz wyróżniający
+                                        {t('Obraz wyróżniający')}
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-2">
@@ -438,7 +457,7 @@ export default function ContentEdit({
                                             />
                                             <button
                                                 type="button"
-                                                aria-label="Usuń obraz"
+                                                aria-label={t('Usuń obraz')}
                                                 onClick={() =>
                                                     form.setData(
                                                         'featured_media_id',
@@ -459,8 +478,8 @@ export default function ContentEdit({
                                     >
                                         <ImagePlus />{' '}
                                         {featured
-                                            ? 'Zmień obraz'
-                                            : 'Wybierz obraz'}
+                                            ? t('Zmień obraz')
+                                            : t('Wybierz obraz')}
                                     </Button>
                                     <MediaPicker
                                         open={pickingFeatured}

@@ -30,6 +30,7 @@ import { cmsUrl } from '@/lib/cms-urls';
 import { useCan } from '@/lib/can';
 import type { NavItem } from '@/types';
 import type { ContentTypeInfo } from '@/types/cms';
+import { t } from '@/lib/i18n';
 
 const typeIcons: Record<string, LucideIcon> = {
     'file-text': FileText,
@@ -50,20 +51,20 @@ export function AppSidebar() {
     const can = useCan();
 
     const mainItems: NavItem[] = [
-        { title: 'Pulpit', href: dashboard(), icon: LayoutGrid },
+        { title: t('Pulpit'), href: dashboard(), icon: LayoutGrid },
     ];
     const structureItems: NavItem[] = [
-        { title: 'Pola własne', href: cmsUrl.fieldIndex, icon: ListTree },
+        { title: t('Pola własne'), href: cmsUrl.fieldIndex, icon: ListTree },
     ];
     const settingsItems: NavItem[] = [
         ...(can('manage_options')
-            ? [{ title: 'Witryna', href: cmsUrl.siteSettings, icon: Globe }]
+            ? [{ title: t('Witryna'), href: cmsUrl.siteSettings, icon: Globe }]
             : []),
         ...(can('manage_seo')
             ? [
                   { title: 'SEO', href: cmsUrl.seoSettings, icon: Search },
                   {
-                      title: 'Przekierowania',
+                      title: t('Przekierowania'),
                       href: cmsUrl.redirectIndex,
                       icon: ArrowRightLeft,
                   },
@@ -71,16 +72,16 @@ export function AppSidebar() {
             : []),
     ];
     const libraryItems: NavItem[] = can('upload_files')
-        ? [{ title: 'Media', href: cmsUrl.library, icon: ImageIcon }]
+        ? [{ title: t('Media'), href: cmsUrl.library, icon: ImageIcon }]
         : [];
     const userItems: NavItem[] = [
         ...(can('list_users')
-            ? [{ title: 'Użytkownicy', href: cmsUrl.userIndex, icon: Users }]
+            ? [{ title: t('Użytkownicy'), href: cmsUrl.userIndex, icon: Users }]
             : []),
         ...(can('manage_options')
             ? [
                   {
-                      title: 'Role i ustawienia',
+                      title: t('Role i ustawienia'),
                       href: cmsUrl.userRoles,
                       icon: ShieldCheck,
                   },
@@ -105,19 +106,19 @@ export function AppSidebar() {
             <SidebarContent>
                 <NavMain items={mainItems} />
                 {contentItems.length > 0 && (
-                    <NavMain label="Treści" items={contentItems} />
+                    <NavMain label={t('Treści')} items={contentItems} />
                 )}
                 {libraryItems.length > 0 && (
-                    <NavMain label="Biblioteka" items={libraryItems} />
+                    <NavMain label={t('Biblioteka')} items={libraryItems} />
                 )}
                 {can('manage_options') && (
-                    <NavMain label="Struktura" items={structureItems} />
+                    <NavMain label={t('Struktura')} items={structureItems} />
                 )}
                 {userItems.length > 0 && (
-                    <NavMain label="Użytkownicy" items={userItems} />
+                    <NavMain label={t('Użytkownicy')} items={userItems} />
                 )}
                 {settingsItems.length > 0 && (
-                    <NavMain label="Ustawienia" items={settingsItems} />
+                    <NavMain label={t('Ustawienia')} items={settingsItems} />
                 )}
             </SidebarContent>
 

@@ -4,10 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import type { ConditionalRule } from '@/types/cms';
 import type { LocationRule } from '@/types/field-builder';
+import { t } from '@/lib/i18n';
 
 const operators: [string, string][] = [
-    ['==', 'jest równe'],
-    ['!=', 'nie jest równe'],
+    ['==', t('jest równe')],
+    ['!=', t('nie jest równe')],
     ['==empty', 'jest puste'],
     ['!=empty', 'nie jest puste'],
     ['==contains', 'zawiera'],
@@ -32,7 +33,9 @@ export function ConditionalEditor({
     if (candidates.length === 0) {
         return (
             <p className="text-sm text-muted-foreground">
-                Dodaj inne pole z nazwą, aby ustawić warunki wyświetlania.
+                {t(
+                    'Dodaj inne pole z nazwą, aby ustawić warunki wyświetlania.',
+                )}
             </p>
         );
     }
@@ -49,7 +52,7 @@ export function ConditionalEditor({
                 <div key={gi} className="space-y-2 rounded-lg border p-3">
                     {gi > 0 && (
                         <p className="-mt-6 mb-1 w-fit bg-background px-2 text-xs font-medium text-muted-foreground uppercase">
-                            lub
+                            {t('lub')}
                         </p>
                     )}
                     {group.map((rule, ri) => (
@@ -58,7 +61,7 @@ export function ConditionalEditor({
                             className="flex flex-wrap items-center gap-2"
                         >
                             <span className="w-4 text-xs text-muted-foreground">
-                                {ri > 0 ? 'i' : ''}
+                                {ri > 0 ? t('i') : ''}
                             </span>
                             <select
                                 className={`${nativeClass} w-44`}
@@ -119,7 +122,7 @@ export function ConditionalEditor({
                                 <Input
                                     className="w-40"
                                     value={rule.value ?? ''}
-                                    placeholder="wartość"
+                                    placeholder={t('wartość')}
                                     onChange={(e) =>
                                         set(
                                             groups.map((g, i) =>
@@ -144,7 +147,7 @@ export function ConditionalEditor({
                                 type="button"
                                 variant="ghost"
                                 size="icon"
-                                aria-label="Usuń regułę"
+                                aria-label={t('Usuń regułę')}
                                 onClick={() =>
                                     set(
                                         groups
@@ -175,7 +178,7 @@ export function ConditionalEditor({
                             )
                         }
                     >
-                        <Plus /> i
+                        <Plus /> {t('i')}
                     </Button>
                 </div>
             ))}
@@ -185,18 +188,19 @@ export function ConditionalEditor({
                 size="sm"
                 onClick={() => set([...groups, [newRule()]])}
             >
-                <Plus /> {groups.length ? 'Dodaj grupę „lub”' : 'Dodaj warunek'}
+                <Plus />{' '}
+                {groups.length ? t('Dodaj grupę „lub”') : t('Dodaj warunek')}
             </Button>
         </div>
     );
 }
 
 const params: [string, string][] = [
-    ['content_type', 'Typ treści'],
-    ['status', 'Status'],
-    ['template', 'Szablon'],
-    ['parent', 'Strona nadrzędna'],
-    ['term', 'Termin'],
+    ['content_type', t('Typ treści')],
+    ['status', t('Status')],
+    ['template', t('Szablon')],
+    ['parent', t('Strona nadrzędna')],
+    ['term', t('Termin')],
 ];
 
 type LocationProps = {
@@ -220,9 +224,9 @@ export function LocationEditor({
                 return contentTypes.map((t) => [t.key, t.label_plural]);
             case 'status':
                 return [
-                    ['draft', 'Szkic'],
-                    ['published', 'Opublikowana'],
-                    ['scheduled', 'Zaplanowana'],
+                    ['draft', t('Szkic')],
+                    ['published', t('Opublikowana')],
+                    ['scheduled', t('Zaplanowana')],
                 ];
             case 'parent':
                 return parents.map((p) => [String(p.id), p.title]);
@@ -252,14 +256,14 @@ export function LocationEditor({
         <div className="space-y-3">
             {value.length === 0 && (
                 <p className="text-sm text-muted-foreground">
-                    Bez reguł grupa nigdzie się nie wyświetli.
+                    {t('Bez reguł grupa nigdzie się nie wyświetli.')}
                 </p>
             )}
             {value.map((group, gi) => (
                 <div key={gi} className="space-y-2 rounded-lg border p-3">
                     {gi > 0 && (
                         <p className="-mt-6 mb-1 w-fit bg-background px-2 text-xs font-medium text-muted-foreground uppercase">
-                            lub
+                            {t('lub')}
                         </p>
                     )}
                     {group.map((rule, ri) => {
@@ -271,7 +275,7 @@ export function LocationEditor({
                                 className="flex flex-wrap items-center gap-2"
                             >
                                 <span className="w-4 text-xs text-muted-foreground">
-                                    {ri > 0 ? 'i' : ''}
+                                    {ri > 0 ? t('i') : ''}
                                 </span>
                                 <select
                                     className={`${nativeClass} w-44`}
@@ -303,8 +307,12 @@ export function LocationEditor({
                                         })
                                     }
                                 >
-                                    <option value="==">jest równe</option>
-                                    <option value="!=">nie jest równe</option>
+                                    <option value="==">
+                                        {t('jest równe')}
+                                    </option>
+                                    <option value="!=">
+                                        {t('nie jest równe')}
+                                    </option>
                                 </select>
                                 {opts ? (
                                     <select
@@ -326,7 +334,7 @@ export function LocationEditor({
                                     <Input
                                         className="w-56"
                                         value={rule.value}
-                                        placeholder="np. landing"
+                                        placeholder={t('np. landing')}
                                         onChange={(e) =>
                                             patch(gi, ri, {
                                                 value: e.target.value,
@@ -338,7 +346,7 @@ export function LocationEditor({
                                     type="button"
                                     variant="ghost"
                                     size="icon"
-                                    aria-label="Usuń regułę"
+                                    aria-label={t('Usuń regułę')}
                                     onClick={() =>
                                         onChange(
                                             value
@@ -371,7 +379,7 @@ export function LocationEditor({
                             )
                         }
                     >
-                        <Plus /> i
+                        <Plus /> {t('i')}
                     </Button>
                 </div>
             ))}
@@ -381,7 +389,8 @@ export function LocationEditor({
                 size="sm"
                 onClick={() => onChange([...value, [newRule()]])}
             >
-                <Plus /> {value.length ? 'Dodaj grupę „lub”' : 'Dodaj regułę'}
+                <Plus />{' '}
+                {value.length ? t('Dodaj grupę „lub”') : t('Dodaj regułę')}
             </Button>
         </div>
     );

@@ -19,6 +19,7 @@ import type {
     GroupGeneral,
     LocationRule,
 } from '@/types/field-builder';
+import { t } from '@/lib/i18n';
 
 type GroupData = GroupGeneral & {
     id: number;
@@ -104,7 +105,9 @@ export default function FieldGroupEdit({
             const copy = toDraft({
                 ...l[i],
                 name: l[i].name ? `${l[i].name}_kopia` : '',
-                label: l[i].label ? `${l[i].label} (kopia)` : '',
+                label: l[i].label
+                    ? t('{name} (kopia)', { name: l[i].label })
+                    : '',
             });
             const next = [...l];
             next.splice(i + 1, 0, copy);
@@ -135,7 +138,9 @@ export default function FieldGroupEdit({
         if (
             group &&
             confirm(
-                'Usunąć tę grupę pól? Zapisane wartości w treściach zostaną w bazie.',
+                t(
+                    'Usunąć tę grupę pól? Zapisane wartości w treściach zostaną w bazie.',
+                ),
             )
         )
             router.delete(cmsUrl.fieldUpdate(group.id));
@@ -148,7 +153,11 @@ export default function FieldGroupEdit({
     return (
         <>
             <Head
-                title={group ? `Grupa pól: ${group.title}` : 'Nowa grupa pól'}
+                title={
+                    group
+                        ? t('Grupa pól: {name}', { name: group.title })
+                        : t('Nowa grupa pól')
+                }
             />
             <form
                 onSubmit={submit}
@@ -159,18 +168,20 @@ export default function FieldGroupEdit({
                         <Button asChild variant="ghost" size="icon">
                             <Link
                                 href={cmsUrl.fieldIndex}
-                                aria-label="Wróć do listy"
+                                aria-label={t('Wróć do listy')}
                             >
                                 <ArrowLeft />
                             </Link>
                         </Button>
                         <h1 className="text-2xl font-semibold tracking-tight">
-                            {group ? 'Edytuj grupę pól' : 'Nowa grupa pól'}
+                            {group
+                                ? t('Edytuj grupę pól')
+                                : t('Nowa grupa pól')}
                         </h1>
                     </div>
                     <Button type="submit" disabled={processing}>
                         {processing && <Loader2 className="animate-spin" />}{' '}
-                        Zapisz grupę
+                        {t('Zapisz grupę')}
                     </Button>
                 </div>
 
@@ -180,7 +191,9 @@ export default function FieldGroupEdit({
                             <CardContent className="space-y-1.5">
                                 <Input
                                     value={general.title}
-                                    placeholder="Tytuł grupy, np. Dane strony głównej"
+                                    placeholder={t(
+                                        'Tytuł grupy, np. Dane strony głównej',
+                                    )}
                                     className="h-11 text-lg font-medium"
                                     onChange={(e) =>
                                         setGeneral({
@@ -209,13 +222,13 @@ export default function FieldGroupEdit({
                         <Card className="gap-4">
                             <CardHeader>
                                 <CardTitle className="text-base">
-                                    Pola ({fields.length})
+                                    {t('Pola ({n})', { n: fields.length })}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-3">
                                 {fields.length === 0 && (
                                     <p className="text-sm text-muted-foreground">
-                                        Ta grupa nie ma jeszcze pól.
+                                        {t('Ta grupa nie ma jeszcze pól.')}
                                     </p>
                                 )}
                                 {fields.map((f, i) => (
@@ -245,7 +258,7 @@ export default function FieldGroupEdit({
                                     variant="outline"
                                     onClick={addField}
                                 >
-                                    <Plus /> Dodaj pole
+                                    <Plus /> {t('Dodaj pole')}
                                 </Button>
                             </CardContent>
                         </Card>
@@ -253,7 +266,7 @@ export default function FieldGroupEdit({
                         <Card className="gap-4">
                             <CardHeader>
                                 <CardTitle className="text-base">
-                                    Gdzie pokazać tę grupę
+                                    {t('Gdzie pokazać tę grupę')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
@@ -271,24 +284,24 @@ export default function FieldGroupEdit({
                     <Card className="gap-4">
                         <CardHeader>
                             <CardTitle className="text-base">
-                                Ustawienia grupy
+                                {t('Ustawienia grupy')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <Toggle
-                                label="Grupa aktywna"
+                                label={t('Grupa aktywna')}
                                 checked={general.active}
                                 onChange={(v) =>
                                     setGeneral({ ...general, active: v })
                                 }
                             />
                             <SelectSetting
-                                label="Położenie w edytorze"
+                                label={t('Położenie w edytorze')}
                                 value={general.position}
                                 options={[
-                                    ['after_title', 'Pod tytułem'],
-                                    ['normal', 'W treści'],
-                                    ['side', 'W panelu bocznym'],
+                                    ['after_title', t('Pod tytułem')],
+                                    ['normal', t('W treści')],
+                                    ['side', t('W panelu bocznym')],
                                 ]}
                                 onChange={(v) =>
                                     setGeneral({
@@ -298,11 +311,11 @@ export default function FieldGroupEdit({
                                 }
                             />
                             <SelectSetting
-                                label="Styl"
+                                label={t('Styl')}
                                 value={general.style}
                                 options={[
-                                    ['default', 'Standardowy (w ramce)'],
-                                    ['seamless', 'Bez ramki'],
+                                    ['default', t('Standardowy (w ramce)')],
+                                    ['seamless', t('Bez ramki')],
                                 ]}
                                 onChange={(v) =>
                                     setGeneral({
@@ -312,11 +325,11 @@ export default function FieldGroupEdit({
                                 }
                             />
                             <SelectSetting
-                                label="Położenie etykiet"
+                                label={t('Położenie etykiet')}
                                 value={general.label_placement}
                                 options={[
-                                    ['top', 'Nad polem'],
-                                    ['left', 'Z lewej'],
+                                    ['top', t('Nad polem')],
+                                    ['left', t('Z lewej')],
                                 ]}
                                 onChange={(v) =>
                                     setGeneral({
@@ -327,11 +340,11 @@ export default function FieldGroupEdit({
                                 }
                             />
                             <SelectSetting
-                                label="Położenie instrukcji"
+                                label={t('Położenie instrukcji')}
                                 value={general.instruction_placement}
                                 options={[
-                                    ['label', 'Pod etykietą'],
-                                    ['field', 'Pod polem'],
+                                    ['label', t('Pod etykietą')],
+                                    ['field', t('Pod polem')],
                                 ]}
                                 onChange={(v) =>
                                     setGeneral({
@@ -342,7 +355,7 @@ export default function FieldGroupEdit({
                                 }
                             />
                             {group && (
-                                <Row label="Klucz grupy">
+                                <Row label={t('Klucz grupy')}>
                                     <code className="rounded bg-muted px-2 py-1 text-xs">
                                         {group.key}
                                     </code>
@@ -357,7 +370,7 @@ export default function FieldGroupEdit({
                                         size="sm"
                                     >
                                         <a href={cmsUrl.fieldExport(group.id)}>
-                                            <Download /> Eksport JSON
+                                            <Download /> {t('Eksport JSON')}
                                         </a>
                                     </Button>
                                     <Button
@@ -367,7 +380,7 @@ export default function FieldGroupEdit({
                                         className="text-destructive"
                                         onClick={remove}
                                     >
-                                        Usuń grupę
+                                        {t('Usuń grupę')}
                                     </Button>
                                 </div>
                             )}

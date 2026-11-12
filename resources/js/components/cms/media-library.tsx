@@ -7,6 +7,7 @@ import { api, ApiError } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import type { MediaItem } from '@/types/cms';
 import { toast } from 'sonner';
+import { t } from '@/lib/i18n';
 
 type Props = {
     /** manage: pełna edycja w panelu bocznym; select: wybór plików do pola. */
@@ -146,7 +147,7 @@ export function MediaLibrary({
                         <Input
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Szukaj plików…"
+                            placeholder={t('Szukaj plików…')}
                             className="pl-9"
                         />
                     </div>
@@ -169,15 +170,16 @@ export function MediaLibrary({
                         ) : (
                             <Upload />
                         )}{' '}
-                        Wgraj pliki
+                        {t('Wgraj pliki')}
                     </Button>
                 </div>
 
                 <div className="min-h-0 flex-1 overflow-y-auto">
                     {items.length === 0 && !loading ? (
                         <p className="py-16 text-center text-sm text-muted-foreground">
-                            Brak plików. Przeciągnij je tutaj albo użyj
-                            przycisku „Wgraj pliki”.
+                            {t(
+                                'Brak plików. Przeciągnij je tutaj albo użyj przycisku „Wgraj pliki”.',
+                            )}
                         </p>
                     ) : (
                         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
@@ -223,7 +225,7 @@ export function MediaLibrary({
                     )}
                     {loading && (
                         <p className="py-4 text-center text-sm text-muted-foreground">
-                            Ładowanie…
+                            {t('Ładowanie…')}
                         </p>
                     )}
                     {!loading && meta.current_page < meta.last_page && (
@@ -235,7 +237,7 @@ export function MediaLibrary({
                                     void load(meta.current_page + 1, false)
                                 }
                             >
-                                Pokaż więcej
+                                {t('Pokaż więcej')}
                             </Button>
                         </div>
                     )}

@@ -14,7 +14,7 @@ class ImageProcessor
         $image = @imagecreatefromstring($binary);
 
         if (! $image) {
-            throw new InvalidArgumentException('Nie można odczytać obrazu.');
+            throw new InvalidArgumentException(__('Nie można odczytać obrazu.'));
         }
 
         if (! imageistruecolor($image)) {
@@ -115,7 +115,7 @@ class ImageProcessor
         $data = ob_get_clean();
 
         if (! $ok || $data === false || $data === '') {
-            throw new InvalidArgumentException('Nie udało się zapisać obrazu jako WebP.');
+            throw new InvalidArgumentException(__('Nie udało się zapisać obrazu jako WebP.'));
         }
 
         return $data;

@@ -17,6 +17,7 @@ import {
     Undo2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { t } from '@/lib/i18n';
 
 type Props = {
     id?: string;
@@ -57,7 +58,7 @@ function Btn({
 
 function setLink(editor: Editor) {
     const previous = (editor.getAttributes('link').href as string) ?? '';
-    const url = window.prompt('Adres linku (puste usuwa link)', previous);
+    const url = window.prompt(t('Adres linku (puste usuwa link)'), previous);
 
     if (url === null) return;
 
@@ -108,14 +109,14 @@ export function WysiwygEditor({
         <div className="rounded-md border focus-within:ring-[3px] focus-within:ring-ring/30">
             <div className="flex flex-wrap gap-0.5 border-b bg-muted/40 p-1">
                 <Btn
-                    label="Pogrubienie"
+                    label={t('Pogrubienie')}
                     active={editor.isActive('bold')}
                     onClick={() => editor.chain().focus().toggleBold().run()}
                 >
                     <Bold />
                 </Btn>
                 <Btn
-                    label="Kursywa"
+                    label={t('Kursywa')}
                     active={editor.isActive('italic')}
                     onClick={() => editor.chain().focus().toggleItalic().run()}
                 >
@@ -124,7 +125,7 @@ export function WysiwygEditor({
                 {full && (
                     <>
                         <Btn
-                            label="Podkreślenie"
+                            label={t('Podkreślenie')}
                             active={editor.isActive('underline')}
                             onClick={() =>
                                 editor.chain().focus().toggleUnderline().run()
@@ -133,7 +134,7 @@ export function WysiwygEditor({
                             <UnderlineIcon />
                         </Btn>
                         <Btn
-                            label="Przekreślenie"
+                            label={t('Przekreślenie')}
                             active={editor.isActive('strike')}
                             onClick={() =>
                                 editor.chain().focus().toggleStrike().run()
@@ -142,7 +143,7 @@ export function WysiwygEditor({
                             <Strikethrough />
                         </Btn>
                         <Btn
-                            label="Nagłówek 2"
+                            label={t('Nagłówek 2')}
                             active={editor.isActive('heading', { level: 2 })}
                             onClick={() =>
                                 editor
@@ -155,7 +156,7 @@ export function WysiwygEditor({
                             <Heading2 />
                         </Btn>
                         <Btn
-                            label="Nagłówek 3"
+                            label={t('Nagłówek 3')}
                             active={editor.isActive('heading', { level: 3 })}
                             onClick={() =>
                                 editor
@@ -170,7 +171,7 @@ export function WysiwygEditor({
                     </>
                 )}
                 <Btn
-                    label="Lista punktowana"
+                    label={t('Lista punktowana')}
                     active={editor.isActive('bulletList')}
                     onClick={() =>
                         editor.chain().focus().toggleBulletList().run()
@@ -179,7 +180,7 @@ export function WysiwygEditor({
                     <List />
                 </Btn>
                 <Btn
-                    label="Lista numerowana"
+                    label={t('Lista numerowana')}
                     active={editor.isActive('orderedList')}
                     onClick={() =>
                         editor.chain().focus().toggleOrderedList().run()
@@ -188,7 +189,7 @@ export function WysiwygEditor({
                     <ListOrdered />
                 </Btn>
                 <Btn
-                    label="Link"
+                    label={t('Link')}
                     active={editor.isActive('link')}
                     onClick={() => setLink(editor)}
                 >
@@ -197,7 +198,7 @@ export function WysiwygEditor({
                 {full && (
                     <>
                         <Btn
-                            label="Cytat"
+                            label={t('Cytat')}
                             active={editor.isActive('blockquote')}
                             onClick={() =>
                                 editor.chain().focus().toggleBlockquote().run()
@@ -206,7 +207,7 @@ export function WysiwygEditor({
                             <Quote />
                         </Btn>
                         <Btn
-                            label="Kod"
+                            label={t('Kod')}
                             active={editor.isActive('code')}
                             onClick={() =>
                                 editor.chain().focus().toggleCode().run()
@@ -215,7 +216,7 @@ export function WysiwygEditor({
                             <Code />
                         </Btn>
                         <Btn
-                            label="Linia pozioma"
+                            label={t('Linia pozioma')}
                             onClick={() =>
                                 editor.chain().focus().setHorizontalRule().run()
                             }
@@ -226,13 +227,13 @@ export function WysiwygEditor({
                 )}
                 <span className="ml-auto flex gap-0.5">
                     <Btn
-                        label="Cofnij"
+                        label={t('Cofnij')}
                         onClick={() => editor.chain().focus().undo().run()}
                     >
                         <Undo2 />
                     </Btn>
                     <Btn
-                        label="Ponów"
+                        label={t('Ponów')}
                         onClick={() => editor.chain().focus().redo().run()}
                     >
                         <Redo2 />

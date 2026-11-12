@@ -91,7 +91,7 @@ class UserController extends Controller
         $user->email_verified_at = now();
         $user->save();
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Użytkownik dodany.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Użytkownik dodany.')]);
 
         return to_route('cms.users.edit', $user);
     }
@@ -142,7 +142,7 @@ class UserController extends Controller
 
         $user->save();
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Zapisano.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Zapisano.')]);
 
         return back();
     }
@@ -152,7 +152,7 @@ class UserController extends Controller
         $this->authorizeCap($request, 'delete_users');
 
         if ($user->id === $request->user()->id) {
-            throw ValidationException::withMessages(['user' => 'Nie możesz usunąć własnego konta.']);
+            throw ValidationException::withMessages(['user' => __('Nie możesz usunąć własnego konta.')]);
         }
 
         $this->guardLastAdministrator($user);
@@ -165,7 +165,7 @@ class UserController extends Controller
             $user->delete();
         });
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Użytkownik usunięty.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Użytkownik usunięty.')]);
 
         return to_route('cms.users.index');
     }
@@ -181,12 +181,12 @@ class UserController extends Controller
             'roles' => collect(RoleRegistry::roles())->map(fn ($r) => [
                 'key' => $r,
                 'label' => RoleRegistry::label($r),
-                'description' => RoleRegistry::DESCRIPTIONS[$r],
+                'description' => RoleRegistry::description($r),
                 'users' => User::where('role', $r)->count(),
                 'capabilities' => $definitions[$r],
             ])->values(),
             'capabilities' => $caps->values(),
-            'labels' => RoleRegistry::CAPABILITY_LABELS,
+            'labels' => collect(RoleRegistry::CAPABILITY_LABELS)->map(fn ($l) => __($l))->all(),
             'settings' => $this->settings->group('users'),
         ]);
     }
@@ -205,7 +205,7 @@ class UserController extends Controller
             'registration_enabled' => (bool) ($data['registration_enabled'] ?? false),
         ]);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Ustawienia użytkowników zapisane.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Ustawienia użytkowników zapisane.')]);
 
         return back();
     }
@@ -219,7 +219,7 @@ class UserController extends Controller
     private function guardLastAdministrator(User $user): void
     {
         if ($user->isAdministrator() && User::where('role', RoleRegistry::ADMINISTRATOR)->count() <= 1) {
-            throw ValidationException::withMessages(['role' => 'To ostatni administrator — witryna musi mieć co najmniej jednego.']);
+            throw ValidationException::withMessages(['role' => __('To ostatni administrator — witryna musi mieć co najmniej jednego.')]);
         }
     }
 
@@ -234,7 +234,7 @@ class UserController extends Controller
         return collect(RoleRegistry::roles())->map(fn ($r) => [
             'key' => $r,
             'label' => RoleRegistry::label($r),
-            'description' => RoleRegistry::DESCRIPTIONS[$r],
+            'description' => RoleRegistry::description($r),
         ])->all();
     }
 }

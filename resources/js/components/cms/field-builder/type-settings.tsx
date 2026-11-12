@@ -6,61 +6,62 @@ import {
     nativeClass,
 } from '@/components/cms/field-builder/setting-inputs';
 import type { FieldDraft } from '@/types/field-builder';
+import { t } from '@/lib/i18n';
 
 /** Polskie etykiety ustawień typów. Nieznane klucze pokazujemy pod ich nazwą. */
 const labels: Record<string, string> = {
-    default_value: 'Wartość domyślna',
-    placeholder: 'Podpowiedź (placeholder)',
-    prepend: 'Tekst przed polem',
-    append: 'Tekst po polu',
-    maxlength: 'Maksymalna długość',
-    rows: 'Liczba wierszy',
-    new_lines: 'Nowe linie',
-    min: 'Wartość minimalna',
-    max: 'Wartość maksymalna',
-    step: 'Krok',
-    choices: 'Opcje',
-    allow_null: 'Zezwól na brak wyboru',
-    multiple: 'Wybór wielu opcji',
-    ui: 'Stylizowany interfejs',
-    return_format: 'Format zwracany w szablonie',
-    allow_custom: 'Pozwól na własne wartości',
-    save_custom: 'Dodawaj własne wartości do opcji',
-    layout: 'Układ',
-    toggle: 'Przycisk „zaznacz wszystko”',
-    other_choice: 'Dodaj opcję „Inne”',
-    save_other_choice: 'Zapisuj wartość z „Inne” jako opcję',
-    message: 'Treść',
-    ui_on_text: 'Tekst dla „tak”',
-    ui_off_text: 'Tekst dla „nie”',
-    enable_opacity: 'Pozwól na przezroczystość',
-    display_format: 'Format wyświetlania w panelu',
-    first_day: 'Pierwszy dzień tygodnia',
-    esc_html: 'Pokaż jako zwykły tekst (bez HTML)',
-    open: 'Domyślnie otwarty',
-    multi_expand: 'Wiele otwartych naraz',
-    placement: 'Położenie',
-    endpoint: 'Zakończ poprzednią grupę',
-    size: 'Rozmiar obrazu',
-    mime_types: 'Dozwolone rozszerzenia',
-    max_size: 'Maksymalny rozmiar pliku (MB)',
-    min_width: 'Minimalna szerokość (px)',
-    min_height: 'Minimalna wysokość (px)',
-    max_width: 'Maksymalna szerokość (px)',
-    max_height: 'Maksymalna wysokość (px)',
-    preview_size: 'Rozmiar podglądu',
-    insert: 'Nowe pliki dodawaj',
-    toolbar: 'Pasek narzędzi',
-    post_type: 'Dozwolone typy treści',
-    post_status: 'Dozwolone statusy',
-    field_type: 'Sposób wyboru',
-    taxonomy: 'Taksonomia (klucz)',
-    button_label: 'Etykieta przycisku dodawania',
-    collapsed: 'Pole tytułu wiersza (nazwa)',
-    center_lat: 'Domyślna szerokość geograficzna',
-    center_lng: 'Domyślna długość geograficzna',
-    zoom: 'Domyślne powiększenie (1–20)',
-    height: 'Wysokość mapy (px)',
+    default_value: t('Wartość domyślna'),
+    placeholder: t('Podpowiedź (placeholder)'),
+    prepend: t('Tekst przed polem'),
+    append: t('Tekst po polu'),
+    maxlength: t('Maksymalna długość'),
+    rows: t('Liczba wierszy'),
+    new_lines: t('Nowe linie'),
+    min: t('Wartość minimalna'),
+    max: t('Wartość maksymalna'),
+    step: t('Krok'),
+    choices: t('Opcje'),
+    allow_null: t('Zezwól na brak wyboru'),
+    multiple: t('Wybór wielu opcji'),
+    ui: t('Stylizowany interfejs'),
+    return_format: t('Format zwracany w szablonie'),
+    allow_custom: t('Pozwól na własne wartości'),
+    save_custom: t('Dodawaj własne wartości do opcji'),
+    layout: t('Układ'),
+    toggle: t('Przycisk „zaznacz wszystko”'),
+    other_choice: t('Dodaj opcję „Inne”'),
+    save_other_choice: t('Zapisuj wartość z „Inne” jako opcję'),
+    message: t('Treść'),
+    ui_on_text: t('Tekst dla „tak”'),
+    ui_off_text: t('Tekst dla „nie”'),
+    enable_opacity: t('Pozwól na przezroczystość'),
+    display_format: t('Format wyświetlania w panelu'),
+    first_day: t('Pierwszy dzień tygodnia'),
+    esc_html: t('Pokaż jako zwykły tekst (bez HTML)'),
+    open: t('Domyślnie otwarty'),
+    multi_expand: t('Wiele otwartych naraz'),
+    placement: t('Położenie'),
+    endpoint: t('Zakończ poprzednią grupę'),
+    size: t('Rozmiar obrazu'),
+    mime_types: t('Dozwolone rozszerzenia'),
+    max_size: t('Maksymalny rozmiar pliku (MB)'),
+    min_width: t('Minimalna szerokość (px)'),
+    min_height: t('Minimalna wysokość (px)'),
+    max_width: t('Maksymalna szerokość (px)'),
+    max_height: t('Maksymalna wysokość (px)'),
+    preview_size: t('Rozmiar podglądu'),
+    insert: t('Nowe pliki dodawaj'),
+    toolbar: t('Pasek narzędzi'),
+    post_type: t('Dozwolone typy treści'),
+    post_status: t('Dozwolone statusy'),
+    field_type: t('Sposób wyboru'),
+    taxonomy: t('Taksonomia (klucz)'),
+    button_label: t('Etykieta przycisku dodawania'),
+    collapsed: t('Pole tytułu wiersza (nazwa)'),
+    center_lat: t('Domyślna szerokość geograficzna'),
+    center_lng: t('Domyślna długość geograficzna'),
+    zoom: t('Domyślne powiększenie (1–20)'),
+    height: t('Wysokość mapy (px)'),
 };
 
 /** Dla tych typów "min"/"max" oznaczają liczbę pozycji, a nie wartość liczbową. */
@@ -70,105 +71,105 @@ const hidden = new Set(['ajax', 'sub_fields']);
 
 const returnFormats: Record<string, [string, string][]> = {
     select: [
-        ['value', 'Wartość'],
-        ['label', 'Etykieta'],
-        ['array', 'Obie (wartość i etykieta)'],
+        ['value', t('Wartość')],
+        ['label', t('Etykieta')],
+        ['array', t('Obie (wartość i etykieta)')],
     ],
     checkbox: [
-        ['value', 'Wartość'],
-        ['label', 'Etykieta'],
-        ['array', 'Obie (wartość i etykieta)'],
+        ['value', t('Wartość')],
+        ['label', t('Etykieta')],
+        ['array', t('Obie (wartość i etykieta)')],
     ],
     radio: [
-        ['value', 'Wartość'],
-        ['label', 'Etykieta'],
-        ['array', 'Obie (wartość i etykieta)'],
+        ['value', t('Wartość')],
+        ['label', t('Etykieta')],
+        ['array', t('Obie (wartość i etykieta)')],
     ],
     button_group: [
-        ['value', 'Wartość'],
-        ['label', 'Etykieta'],
-        ['array', 'Obie (wartość i etykieta)'],
+        ['value', t('Wartość')],
+        ['label', t('Etykieta')],
+        ['array', t('Obie (wartość i etykieta)')],
     ],
     color_picker: [
-        ['string', 'Tekst (np. #ff8000)'],
-        ['array', 'Tablica (red, green, blue, alpha)'],
+        ['string', t('Tekst (np. #ff8000)')],
+        ['array', t('Tablica (red, green, blue, alpha)')],
     ],
     image: [
-        ['array', 'Tablica z danymi obrazu'],
-        ['url', 'Adres URL'],
-        ['id', 'Identyfikator'],
+        ['array', t('Tablica z danymi obrazu')],
+        ['url', t('Adres URL')],
+        ['id', t('Identyfikator')],
     ],
     file: [
-        ['array', 'Tablica z danymi pliku'],
-        ['url', 'Adres URL'],
-        ['id', 'Identyfikator'],
+        ['array', t('Tablica z danymi pliku')],
+        ['url', t('Adres URL')],
+        ['id', t('Identyfikator')],
     ],
     gallery: [
-        ['array', 'Tablica z danymi obrazów'],
-        ['url', 'Adresy URL'],
-        ['id', 'Identyfikatory'],
+        ['array', t('Tablica z danymi obrazów')],
+        ['url', t('Adresy URL')],
+        ['id', t('Identyfikatory')],
     ],
     oembed: [
-        ['html', 'Kod HTML (iframe)'],
-        ['url', 'Adres URL'],
+        ['html', t('Kod HTML (iframe)')],
+        ['url', t('Adres URL')],
     ],
     post_object: [
-        ['object', 'Obiekt treści'],
-        ['id', 'Identyfikator'],
+        ['object', t('Obiekt treści')],
+        ['id', t('Identyfikator')],
     ],
     relationship: [
-        ['object', 'Obiekty treści'],
-        ['id', 'Identyfikatory'],
+        ['object', t('Obiekty treści')],
+        ['id', t('Identyfikatory')],
     ],
     taxonomy: [
-        ['object', 'Obiekty terminów'],
-        ['id', 'Identyfikatory'],
+        ['object', t('Obiekty terminów')],
+        ['id', t('Identyfikatory')],
     ],
     user: [
-        ['object', 'Dane użytkownika (id, imię)'],
-        ['id', 'Identyfikator'],
+        ['object', t('Dane użytkownika (id, imię)')],
+        ['id', t('Identyfikator')],
     ],
     map: [
-        ['array', 'Tablica (lat, lng, zoom, adres, linki)'],
-        ['embed', 'Gotowy iframe OpenStreetMap'],
+        ['array', t('Tablica (lat, lng, zoom, adres, linki)')],
+        ['embed', t('Gotowy iframe OpenStreetMap')],
     ],
 };
 
 const repeaterLayouts: [string, string][] = [
-    ['block', 'Bloki (zwijane)'],
-    ['row', 'Wiersze'],
-    ['table', 'Tabela'],
+    ['block', t('Bloki (zwijane)')],
+    ['row', t('Wiersze')],
+    ['table', t('Tabela')],
 ];
 
 const enums: Record<string, [string, string][]> = {
     new_lines: [
-        ['wpautop', 'Akapity automatycznie'],
-        ['br', 'Znaczniki <br>'],
-        ['', 'Bez formatowania'],
+        ['wpautop', t('Akapity automatycznie')],
+        ['br', t('Znaczniki <br>')],
+        ['', t('Bez formatowania')],
     ],
     layout: [
-        ['vertical', 'Pionowy'],
-        ['horizontal', 'Poziomy'],
+        ['vertical', t('Pionowy')],
+        ['horizontal', t('Poziomy')],
     ],
     placement: [
-        ['top', 'Na górze'],
-        ['left', 'Z lewej'],
+        ['top', t('Na górze')],
+        ['left', t('Z lewej')],
     ],
     insert: [
-        ['append', 'Na końcu'],
-        ['prepend', 'Na początku'],
+        ['append', t('Na końcu')],
+        ['prepend', t('Na początku')],
     ],
     toolbar: [
-        ['full', 'Pełny'],
-        ['basic', 'Podstawowy'],
+        ['full', t('Pełny')],
+        ['basic', t('Podstawowy')],
     ],
     field_type: [
-        ['multi_select', 'Wiele terminów'],
-        ['select', 'Jeden termin'],
+        ['multi_select', t('Wiele terminów')],
+        ['select', t('Jeden termin')],
     ],
     first_day: [
-        ['1', 'Poniedziałek'],
-        ['0', 'Niedziela'],
+        ['1', t('Poniedziałek')],
+        ['0', t('Niedziela')],
     ],
 };
 
@@ -218,9 +219,9 @@ export function TypeSettings({ field, defaults, onChange }: Props) {
             {keys.map((key) => {
                 const label =
                     key === 'min' && countTypes.has(field.type)
-                        ? 'Minimalna liczba pozycji'
+                        ? t('Minimalna liczba pozycji')
                         : key === 'max' && countTypes.has(field.type)
-                          ? 'Maksymalna liczba pozycji'
+                          ? t('Maksymalna liczba pozycji')
                           : (labels[key] ?? key);
                 const def = defaults[key];
                 const value = key in field ? field[key] : def;
@@ -230,7 +231,7 @@ export function TypeSettings({ field, defaults, onChange }: Props) {
                         <Row
                             key={key}
                             label={label}
-                            hint="Jedna opcja w linii: wartość : etykieta"
+                            hint={t('Jedna opcja w linii: wartość : etykieta')}
                             className="sm:col-span-2"
                         >
                             <textarea
@@ -315,7 +316,7 @@ export function TypeSettings({ field, defaults, onChange }: Props) {
                         <Row
                             key={key}
                             label={label}
-                            hint="Jedna wartość w linii"
+                            hint={t('Jedna wartość w linii')}
                         >
                             <textarea
                                 rows={3}

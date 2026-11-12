@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { isVisible } from '@/lib/conditional-logic';
 import { cn } from '@/lib/utils';
 import type { FieldDefinition, MediaItem } from '@/types/cms';
+import { t } from '@/lib/i18n';
 
 type Values = Record<string, unknown>;
 type MediaMap = Record<number, MediaItem>;
@@ -137,7 +138,7 @@ function MediaControl({
                             )}
                             <button
                                 type="button"
-                                aria-label="Usuń"
+                                aria-label={t('Usuń')}
                                 onClick={() =>
                                     onChange(
                                         isGallery
@@ -153,7 +154,7 @@ function MediaControl({
                                 <div className="absolute bottom-1 left-1 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                                     <button
                                         type="button"
-                                        aria-label="Przesuń wcześniej"
+                                        aria-label={t('Przesuń wcześniej')}
                                         onClick={() => move(index, -1)}
                                         className="rounded bg-black/70 px-1.5 text-xs text-white"
                                     >
@@ -161,7 +162,7 @@ function MediaControl({
                                     </button>
                                     <button
                                         type="button"
-                                        aria-label="Przesuń później"
+                                        aria-label={t('Przesuń później')}
                                         onClick={() => move(index, 1)}
                                         className="rounded bg-black/70 px-1.5 text-xs text-white"
                                     >
@@ -182,10 +183,10 @@ function MediaControl({
                 >
                     <ImagePlus />{' '}
                     {isGallery
-                        ? 'Dodaj obrazy'
+                        ? t('Dodaj obrazy')
                         : field.type === 'image'
-                          ? 'Wybierz obraz'
-                          : 'Wybierz plik'}
+                          ? t('Wybierz obraz')
+                          : t('Wybierz plik')}
                 </Button>
             )}
             <MediaPicker
@@ -416,8 +417,8 @@ function Control(props: ControlProps) {
                         />
                     </span>
                     {on
-                        ? s(field, 'ui_on_text') || 'Tak'
-                        : s(field, 'ui_off_text') || 'Nie'}
+                        ? s(field, 'ui_on_text') || t('Tak')
+                        : s(field, 'ui_off_text') || t('Nie')}
                 </button>
             );
         }
@@ -516,7 +517,9 @@ function Control(props: ControlProps) {
         default:
             return (
                 <p className="text-sm text-muted-foreground">
-                    Typ pola „{field.type}” nie ma jeszcze edytora w panelu.
+                    {t('Typ pola „{type}” nie ma jeszcze edytora w panelu.', {
+                        type: field.type,
+                    })}
                 </p>
             );
     }

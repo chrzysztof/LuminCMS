@@ -15,6 +15,7 @@ import {
 } from '@/lib/seo';
 import { cn } from '@/lib/utils';
 import type { MediaItem } from '@/types/cms';
+import { t } from '@/lib/i18n';
 
 export type SeoValues = Record<string, string | number | boolean | null>;
 
@@ -95,7 +96,7 @@ export function SeoPanel({
                   .join(` ${site.separator} `)
             : applyTemplate(
                   site.title_template,
-                  customTitle || title || 'Tytuł strony',
+                  customTitle || title || t('Tytuł strony'),
                   site,
               );
     const fallbackDescription = limitWords(
@@ -124,14 +125,15 @@ export function SeoPanel({
             <CardContent className="space-y-5">
                 {site.noindex_site && (
                     <p className="rounded-md bg-amber-50 p-2 text-xs text-amber-900 dark:bg-amber-950 dark:text-amber-200">
-                        Cała witryna jest ukryta przed wyszukiwarkami
-                        (Ustawienia → SEO).
+                        {t(
+                            'Cała witryna jest ukryta przed wyszukiwarkami (Ustawienia → SEO).',
+                        )}
                     </p>
                 )}
 
                 <div
                     className="rounded-lg border bg-card p-4"
-                    aria-label="Podgląd w Google"
+                    aria-label={t('Podgląd w Google')}
                 >
                     <p className="truncate text-xs text-muted-foreground">
                         {site.base_url.replace(/^https?:\/\//, '')}
@@ -142,19 +144,21 @@ export function SeoPanel({
                     </p>
                     <p className="mt-0.5 line-clamp-2 text-sm text-muted-foreground">
                         {shownDescription ||
-                            'Brak opisu — wyszukiwarka wybierze fragment treści.'}
+                            t(
+                                'Brak opisu — wyszukiwarka wybierze fragment treści.',
+                            )}
                     </p>
                 </div>
 
                 <div className="grid gap-1.5">
                     <div className="flex items-center justify-between">
-                        <Label htmlFor="seo-title">Tytuł SEO</Label>
+                        <Label htmlFor="seo-title">{t('Tytuł SEO')}</Label>
                         <Counter value={shownTitle.length} max={TITLE_MAX} />
                     </div>
                     <Input
                         id="seo-title"
                         value={customTitle}
-                        placeholder={title || 'Domyślnie: tytuł treści'}
+                        placeholder={title || t('Domyślnie: tytuł treści')}
                         onChange={(e) => onChange({ title: e.target.value })}
                     />
                     {errors['seo.title'] && (
@@ -166,7 +170,9 @@ export function SeoPanel({
 
                 <div className="grid gap-1.5">
                     <div className="flex items-center justify-between">
-                        <Label htmlFor="seo-description">Opis meta</Label>
+                        <Label htmlFor="seo-description">
+                            {t('Opis meta')}
+                        </Label>
                         <Counter
                             value={shownDescription.length}
                             max={DESCRIPTION_MAX}
@@ -177,7 +183,9 @@ export function SeoPanel({
                         rows={3}
                         className={nativeClass}
                         value={customDescription}
-                        placeholder="Domyślnie: zajawka albo początek treści"
+                        placeholder={t(
+                            'Domyślnie: zajawka albo początek treści',
+                        )}
                         onChange={(e) =>
                             onChange({ description: e.target.value })
                         }
@@ -190,7 +198,7 @@ export function SeoPanel({
                 </div>
 
                 <div className="grid gap-1.5">
-                    <Label htmlFor="seo-keyword">Fraza kluczowa</Label>
+                    <Label htmlFor="seo-keyword">{t('Fraza kluczowa')}</Label>
                     <Input
                         id="seo-keyword"
                         value={str(seo.focus_keyword)}
@@ -231,18 +239,18 @@ export function SeoPanel({
                     )}
                 >
                     <summary className="cursor-pointer text-sm font-medium">
-                        Zaawansowane i media społecznościowe
+                        {t('Zaawansowane i media społecznościowe')}
                     </summary>
                     <div className="mt-4 space-y-4">
                         <div className="grid gap-1.5">
                             <Label htmlFor="seo-canonical">
-                                Adres kanoniczny (canonical)
+                                {t('Adres kanoniczny (canonical)')}
                             </Label>
                             <Input
                                 id="seo-canonical"
                                 type="url"
                                 value={str(seo.canonical)}
-                                placeholder="Domyślnie: adres tej strony"
+                                placeholder={t('Domyślnie: adres tej strony')}
                                 onChange={(e) =>
                                     onChange({ canonical: e.target.value })
                                 }
@@ -255,19 +263,21 @@ export function SeoPanel({
                         </div>
                         <div className="flex flex-wrap gap-x-6 gap-y-2">
                             <Toggle
-                                label="Ukryj przed wyszukiwarkami (noindex)"
+                                label={t(
+                                    'Ukryj przed wyszukiwarkami (noindex)',
+                                )}
                                 checked={Boolean(seo.noindex)}
                                 onChange={(v) => onChange({ noindex: v })}
                             />
                             <Toggle
-                                label="Nie podążaj za linkami (nofollow)"
+                                label={t('Nie podążaj za linkami (nofollow)')}
                                 checked={Boolean(seo.nofollow)}
                                 onChange={(v) => onChange({ nofollow: v })}
                             />
                         </div>
                         <div className="grid gap-1.5">
                             <Label htmlFor="seo-og-title">
-                                Tytuł w mediach społecznościowych
+                                {t('Tytuł w mediach społecznościowych')}
                             </Label>
                             <Input
                                 id="seo-og-title"
@@ -280,7 +290,7 @@ export function SeoPanel({
                         </div>
                         <div className="grid gap-1.5">
                             <Label htmlFor="seo-og-description">
-                                Opis w mediach społecznościowych
+                                {t('Opis w mediach społecznościowych')}
                             </Label>
                             <textarea
                                 id="seo-og-description"
@@ -294,7 +304,7 @@ export function SeoPanel({
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label>Obraz do udostępniania</Label>
+                            <Label>{t('Obraz do udostępniania')}</Label>
                             {ogImage && (
                                 <div className="relative w-full max-w-xs overflow-hidden rounded-lg border">
                                     <img
@@ -304,7 +314,7 @@ export function SeoPanel({
                                     />
                                     <button
                                         type="button"
-                                        aria-label="Usuń obraz"
+                                        aria-label={t('Usuń obraz')}
                                         onClick={() =>
                                             onChange({ og_image_id: null })
                                         }
@@ -321,11 +331,14 @@ export function SeoPanel({
                                 onClick={() => setPicking(true)}
                             >
                                 <ImagePlus />{' '}
-                                {ogImage ? 'Zmień obraz' : 'Wybierz obraz'}
+                                {ogImage
+                                    ? t('Zmień obraz')
+                                    : t('Wybierz obraz')}
                             </Button>
                             <p className="text-xs text-muted-foreground">
-                                Bez wyboru użyjemy obrazu wyróżniającego, a
-                                potem domyślnego z ustawień SEO.
+                                {t(
+                                    'Bez wyboru użyjemy obrazu wyróżniającego, a potem domyślnego z ustawień SEO.',
+                                )}
                             </p>
                             <MediaPicker
                                 open={picking}

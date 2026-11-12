@@ -50,7 +50,7 @@ abstract class RelationFieldBase extends AbstractFieldType
         }
 
         if (! $this->multiple($field)) {
-            $rules[] = fn (string $a, mixed $v, \Closure $fail) => $this->allowed($field, [(int) $v]) ?: $fail('Wybrana pozycja jest niedozwolona.');
+            $rules[] = fn (string $a, mixed $v, \Closure $fail) => $this->allowed($field, [(int) $v]) ?: $fail(__('Wybrana pozycja jest niedozwolona.'));
         }
 
         return $rules;
@@ -62,7 +62,7 @@ abstract class RelationFieldBase extends AbstractFieldType
             return [];
         }
 
-        return ['integer', fn (string $a, mixed $v, \Closure $fail) => $this->allowed($field, [(int) $v]) ?: $fail('Wybrana pozycja jest niedozwolona.')];
+        return ['integer', fn (string $a, mixed $v, \Closure $fail) => $this->allowed($field, [(int) $v]) ?: $fail(__('Wybrana pozycja jest niedozwolona.'))];
     }
 
     /** Czy wszystkie identyfikatory istnieją i spełniają ograniczenia pola. */

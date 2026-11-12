@@ -21,14 +21,15 @@ import { TypeSettings } from '@/components/cms/field-builder/type-settings';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import type { FieldDraft, FieldTypeInfo } from '@/types/field-builder';
+import { t } from '@/lib/i18n';
 
 const categoryLabels: Record<string, string> = {
-    basic: 'Podstawowe',
-    content: 'Treść',
-    choice: 'Wybór',
-    relational: 'Relacje',
-    advanced: 'Zaawansowane',
-    layout: 'Układ',
+    basic: t('Podstawowe'),
+    content: t('Treść'),
+    choice: t('Wybór'),
+    relational: t('Relacje'),
+    advanced: t('Zaawansowane'),
+    layout: t('Układ'),
 };
 
 type Props = {
@@ -117,7 +118,7 @@ export function FieldEditor({
                         <ChevronRight className="size-4 shrink-0" />
                     )}
                     <span className="truncate font-medium">
-                        {field.label || 'Nowe pole'}
+                        {field.label || t('Nowe pole')}
                     </span>
                     <code className="truncate text-xs text-muted-foreground">
                         {field.name}
@@ -130,7 +131,7 @@ export function FieldEditor({
                     type="button"
                     variant="ghost"
                     size="icon"
-                    aria-label="W górę"
+                    aria-label={t('W górę')}
                     disabled={index === 0}
                     onClick={() => onMove(-1)}
                 >
@@ -140,7 +141,7 @@ export function FieldEditor({
                     type="button"
                     variant="ghost"
                     size="icon"
-                    aria-label="W dół"
+                    aria-label={t('W dół')}
                     disabled={index === total - 1}
                     onClick={() => onMove(1)}
                 >
@@ -150,7 +151,7 @@ export function FieldEditor({
                     type="button"
                     variant="ghost"
                     size="icon"
-                    aria-label="Duplikuj pole"
+                    aria-label={t('Duplikuj pole')}
                     onClick={onDuplicate}
                 >
                     <Copy />
@@ -159,7 +160,7 @@ export function FieldEditor({
                     type="button"
                     variant="ghost"
                     size="icon"
-                    aria-label="Usuń pole"
+                    aria-label={t('Usuń pole')}
                     className="text-destructive"
                     onClick={onRemove}
                 >
@@ -170,7 +171,7 @@ export function FieldEditor({
             {open && (
                 <div className="space-y-5 border-t p-4">
                     <div className="grid gap-4 sm:grid-cols-2">
-                        <Row label="Etykieta">
+                        <Row label={t('Etykieta')}>
                             <Input
                                 value={field.label}
                                 onChange={(e) => {
@@ -187,8 +188,10 @@ export function FieldEditor({
                         </Row>
                         {info?.stores_data && (
                             <Row
-                                label="Nazwa pola"
-                                hint="Używana w szablonach i API: małe litery, cyfry, podkreślenia."
+                                label={t('Nazwa pola')}
+                                hint={t(
+                                    'Używana w szablonach i API: małe litery, cyfry, podkreślenia.',
+                                )}
                             >
                                 <Input
                                     value={field.name}
@@ -205,7 +208,7 @@ export function FieldEditor({
                                 )}
                             </Row>
                         )}
-                        <Row label="Typ pola">
+                        <Row label={t('Typ pola')}>
                             <select
                                 className={nativeClass}
                                 value={field.type}
@@ -217,13 +220,13 @@ export function FieldEditor({
                                         label={categoryLabels[c] ?? c}
                                     >
                                         {types
-                                            .filter((t) => t.category === c)
-                                            .map((t) => (
+                                            .filter((ft) => ft.category === c)
+                                            .map((ft) => (
                                                 <option
-                                                    key={t.name}
-                                                    value={t.name}
+                                                    key={ft.name}
+                                                    value={ft.name}
                                                 >
-                                                    {t.label}
+                                                    {t(ft.label)}
                                                 </option>
                                             ))}
                                     </optgroup>
@@ -235,7 +238,7 @@ export function FieldEditor({
                                 </p>
                             )}
                         </Row>
-                        <Row label="Instrukcja dla redaktora">
+                        <Row label={t('Instrukcja dla redaktora')}>
                             <Input
                                 value={field.instructions}
                                 onChange={(e) =>
@@ -247,7 +250,7 @@ export function FieldEditor({
 
                     {info?.stores_data && (
                         <Toggle
-                            label="Pole wymagane"
+                            label={t('Pole wymagane')}
                             checked={field.required}
                             onChange={(v) => onChange({ required: v })}
                         />
@@ -261,7 +264,7 @@ export function FieldEditor({
 
                     <div className="grid gap-4 sm:grid-cols-3">
                         <SelectSetting
-                            label="Szerokość"
+                            label={t('Szerokość')}
                             value={field.wrapper?.width ?? ''}
                             options={[
                                 ['', '100%'],
@@ -278,7 +281,7 @@ export function FieldEditor({
                             }
                         />
                         <TextSetting
-                            label="Klasa CSS"
+                            label={t('Klasa CSS')}
                             value={field.wrapper?.class}
                             onChange={(v) =>
                                 onChange({
@@ -287,7 +290,7 @@ export function FieldEditor({
                             }
                         />
                         <TextSetting
-                            label="ID elementu"
+                            label={t('ID elementu')}
                             value={field.wrapper?.id}
                             onChange={(v) =>
                                 onChange({
@@ -300,7 +303,7 @@ export function FieldEditor({
                     {isContainer && (
                         <div className="space-y-3 rounded-lg border border-dashed p-3">
                             <p className="text-sm font-medium">
-                                Pola w wierszu
+                                {t('Pola w wierszu')}
                             </p>
                             {err('sub_fields') && (
                                 <p className="text-xs text-destructive">
@@ -309,8 +312,9 @@ export function FieldEditor({
                             )}
                             {subs.length === 0 && (
                                 <p className="text-sm text-muted-foreground">
-                                    Dodaj pola, które będzie zawierał każdy
-                                    wiersz.
+                                    {t(
+                                        'Dodaj pola, które będzie zawierał każdy wiersz.',
+                                    )}
                                 </p>
                             )}
                             {subs.map((sub, i) => (
@@ -358,7 +362,9 @@ export function FieldEditor({
                                                     ? `${sub.name}_kopia`
                                                     : '',
                                                 label: sub.label
-                                                    ? `${sub.label} (kopia)`
+                                                    ? t('{name} (kopia)', {
+                                                          name: sub.label,
+                                                      })
                                                     : '',
                                             }),
                                         );
@@ -390,16 +396,19 @@ export function FieldEditor({
                                     ]);
                                 }}
                             >
-                                <Plus /> Dodaj pole podrzędne
+                                <Plus /> {t('Dodaj pole podrzędne')}
                             </Button>
                         </div>
                     )}
 
                     <div className="space-y-2">
-                        <p className="text-sm font-medium">Logika warunkowa</p>
+                        <p className="text-sm font-medium">
+                            {t('Logika warunkowa')}
+                        </p>
                         <p className="text-xs text-muted-foreground">
-                            Pole jest widoczne, gdy spełniona jest co najmniej
-                            jedna grupa warunków.
+                            {t(
+                                'Pole jest widoczne, gdy spełniona jest co najmniej jedna grupa warunków.',
+                            )}
                         </p>
                         {err('conditional_logic') && (
                             <p className="text-xs text-destructive">

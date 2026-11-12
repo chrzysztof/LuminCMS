@@ -39,7 +39,7 @@ class SeoSettingsController extends Controller
             'default_og_image_id' => ['nullable', 'integer', Rule::exists('media', 'id')],
             'twitter_handle' => ['nullable', 'string', 'max:50', 'regex:/^@?[A-Za-z0-9_]*$/'],
             'noindex_site' => ['boolean'],
-        ], ['title_template.regex' => 'Szablon musi zawierać znacznik %title%.']);
+        ], ['title_template.regex' => __('Szablon musi zawierać znacznik %title%.')]);
 
         $this->settings->save('seo', [
             ...$data,
@@ -49,7 +49,7 @@ class SeoSettingsController extends Controller
             'noindex_site' => (bool) ($data['noindex_site'] ?? false),
         ]);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Ustawienia SEO zapisane.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Ustawienia SEO zapisane.')]);
 
         return back();
     }

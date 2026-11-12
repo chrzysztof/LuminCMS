@@ -101,7 +101,7 @@ class ContentController extends Controller
 
         $this->save($request, $type, $content);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Zapisano.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Zapisano.')]);
 
         return to_route('cms.content.edit', [$type->key, $content]);
     }
@@ -113,7 +113,7 @@ class ContentController extends Controller
 
         $this->save($request, $type, $content);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Zapisano.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Zapisano.')]);
 
         return back();
     }
@@ -125,7 +125,7 @@ class ContentController extends Controller
 
         $content->delete();
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Przeniesiono do kosza.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Przeniesiono do kosza.')]);
 
         return to_route('cms.content.index', $type->key);
     }
@@ -244,7 +244,7 @@ class ContentController extends Controller
         }
 
         if ($content->exists && ! empty($data['parent_id']) && $data['parent_id'] === $content->id) {
-            throw ValidationException::withMessages(['parent_id' => 'Treść nie może być własnym rodzicem.']);
+            throw ValidationException::withMessages(['parent_id' => __('Treść nie może być własnym rodzicem.')]);
         }
 
         $context = [

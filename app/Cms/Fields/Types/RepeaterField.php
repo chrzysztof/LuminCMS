@@ -32,7 +32,7 @@ class RepeaterField extends AbstractFieldType implements ContainerFieldType
             'sub_fields' => [],
             'min' => '', 'max' => '',
             'layout' => 'block',            // table | block | row
-            'button_label' => 'Dodaj wiersz',
+            'button_label' => __('Dodaj wiersz'),
             'collapsed' => '',              // nazwa pola podrzędnego używanego jako tytuł zwiniętego wiersza
         ];
     }

@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import type { MediaItem } from '@/types/cms';
+import { t } from '@/lib/i18n';
 
 type Rect = { x: number; y: number; width: number; height: number };
 
@@ -107,8 +108,10 @@ export function CropEditor({
     return (
         <div className="space-y-3">
             <p className="text-sm text-muted-foreground">
-                {size.label} ({size.width}×{size.height}). Przeciągnij ramkę,
-                aby wybrać kadr, a róg, aby zmienić jego wielkość.
+                {t(
+                    '{label} ({w}×{h}). Przeciągnij ramkę, aby wybrać kadr, a róg, aby zmienić jego wielkość.',
+                    { label: size.label, w: size.width, h: size.height },
+                )}
             </p>
             <div
                 ref={box}
@@ -160,7 +163,7 @@ export function CropEditor({
                     onClick={onReset}
                     disabled={busy || !media.crops[size.name]}
                 >
-                    Przywróć automatyczny kadr
+                    {t('Przywróć automatyczny kadr')}
                 </Button>
                 <div className="flex gap-2">
                     <Button
@@ -169,7 +172,7 @@ export function CropEditor({
                         size="sm"
                         onClick={onCancel}
                     >
-                        Anuluj
+                        {t('Anuluj')}
                     </Button>
                     <Button
                         type="button"
@@ -177,7 +180,7 @@ export function CropEditor({
                         disabled={busy}
                         onClick={() => onSave(rect)}
                     >
-                        Zapisz kadr
+                        {t('Zapisz kadr')}
                     </Button>
                 </div>
             </div>

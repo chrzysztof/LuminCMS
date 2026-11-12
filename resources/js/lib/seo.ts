@@ -1,3 +1,4 @@
+import { t } from '@/lib/i18n';
 export type SeoSite = {
     site_name: string;
     tagline: string;
@@ -59,33 +60,39 @@ export function analyse(input: {
     const checks: Check[] = [
         {
             ok: title.length >= 30 && title.length <= TITLE_MAX,
-            text: `Tytuł SEO ma 30–${TITLE_MAX} znaków (jest ${title.length}).`,
+            text: t('Tytuł SEO ma 30–{max} znaków (jest {len}).', {
+                max: TITLE_MAX,
+                len: title.length,
+            }),
         },
         {
             ok:
                 description.length >= 70 &&
                 description.length <= DESCRIPTION_MAX,
-            text: `Opis ma 70–${DESCRIPTION_MAX} znaków (jest ${description.length}).`,
+            text: t('Opis ma 70–{max} znaków (jest {len}).', {
+                max: DESCRIPTION_MAX,
+                len: description.length,
+            }),
         },
     ];
 
     if (k) {
         checks.push(
-            { ok: has(title), text: 'Fraza kluczowa jest w tytule SEO.' },
-            { ok: has(description), text: 'Fraza kluczowa jest w opisie.' },
+            { ok: has(title), text: t('Fraza kluczowa jest w tytule SEO.') },
+            { ok: has(description), text: t('Fraza kluczowa jest w opisie.') },
             {
                 ok: slugify(slug).includes(slugify(k).replace(/^-|-$/g, '')),
-                text: 'Fraza kluczowa jest w adresie (slug).',
+                text: t('Fraza kluczowa jest w adresie (slug).'),
             },
             {
                 ok: has(body.slice(0, 400)),
-                text: 'Fraza kluczowa pojawia się na początku treści.',
+                text: t('Fraza kluczowa pojawia się na początku treści.'),
             },
         );
     } else {
         checks.push({
             ok: false,
-            text: 'Ustaw frazę kluczową, aby sprawdzić jej użycie.',
+            text: t('Ustaw frazę kluczową, aby sprawdzić jej użycie.'),
         });
     }
 

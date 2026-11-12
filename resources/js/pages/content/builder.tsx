@@ -31,6 +31,7 @@ import { registerComponentTypes } from '@/lib/builder/types';
 import { cmsUrl } from '@/lib/cms-urls';
 import { cn } from '@/lib/utils';
 import type { ContentStatus, ContentTypeInfo, MediaItem } from '@/types/cms';
+import { t } from '@/lib/i18n';
 
 type Props = {
     type: ContentTypeInfo;
@@ -39,9 +40,9 @@ type Props = {
 };
 
 const devices = [
-    { id: 'Desktop', label: 'Komputer', icon: Monitor, width: '' },
-    { id: 'Tablet', label: 'Tablet', icon: Tablet, width: '768px' },
-    { id: 'Mobile', label: 'Telefon', icon: Smartphone, width: '375px' },
+    { id: 'Desktop', label: t('Komputer'), icon: Monitor, width: '' },
+    { id: 'Tablet', label: t('Tablet'), icon: Tablet, width: '768px' },
+    { id: 'Mobile', label: t('Telefon'), icon: Smartphone, width: '375px' },
 ];
 
 const panelClass =
@@ -89,7 +90,7 @@ export default function Builder({ type, content, project }: Props) {
                 setStatus(result.status);
                 setDirty(false);
                 editor.clearDirtyCount?.();
-                toast.success(publish ? 'Opublikowano.' : 'Zapisano.');
+                toast.success(publish ? t('Opublikowano.') : t('Zapisano.'));
             } catch (e) {
                 toast.error((e as Error).message);
             } finally {
@@ -238,7 +239,7 @@ export default function Builder({ type, content, project }: Props) {
 
     return (
         <>
-            <Head title={`Edytor: ${content.title}`} />
+            <Head title={t('Edytor: {name}', { name: content.title })} />
             <div className="lumin-builder fixed inset-0 overflow-hidden bg-neutral-200">
                 <div ref={canvas} className="absolute inset-0" />
 
@@ -247,11 +248,12 @@ export default function Builder({ type, content, project }: Props) {
                         <div className="rounded-2xl bg-white/90 px-8 py-6 text-center shadow-lg">
                             <LayoutGrid className="mx-auto mb-2 size-8 text-brand" />
                             <p className="font-medium">
-                                Zacznij od pustej strony
+                                {t('Zacznij od pustej strony')}
                             </p>
                             <p className="text-sm text-muted-foreground">
-                                Przeciągnij blok z panelu po lewej na stronę
-                                albo kliknij go, aby dodać na końcu.
+                                {t(
+                                    'Przeciągnij blok z panelu po lewej na stronę albo kliknij go, aby dodać na końcu.',
+                                )}
                             </p>
                         </div>
                     </div>
@@ -277,7 +279,7 @@ export default function Builder({ type, content, project }: Props) {
                                         type.key,
                                         content.id,
                                     )}
-                                    aria-label="Wróć do treści"
+                                    aria-label={t('Wróć do treści')}
                                 >
                                     <ArrowLeft />
                                 </Link>
@@ -289,7 +291,7 @@ export default function Builder({ type, content, project }: Props) {
                                 <StatusBadge status={status} />
                                 {dirty && (
                                     <span className="text-xs text-amber-600">
-                                        niezapisane
+                                        {t('niezapisane')}
                                     </span>
                                 )}
                             </div>
@@ -324,8 +326,8 @@ export default function Builder({ type, content, project }: Props) {
                                 type="button"
                                 variant="ghost"
                                 size="icon"
-                                aria-label="Cofnij"
-                                title="Cofnij"
+                                aria-label={t('Cofnij')}
+                                title={t('Cofnij')}
                                 className="size-9"
                                 disabled={!history.undo}
                                 onClick={() =>
@@ -338,8 +340,8 @@ export default function Builder({ type, content, project }: Props) {
                                 type="button"
                                 variant="ghost"
                                 size="icon"
-                                aria-label="Ponów"
-                                title="Ponów"
+                                aria-label={t('Ponów')}
+                                title={t('Ponów')}
                                 className="size-9"
                                 disabled={!history.redo}
                                 onClick={() =>
@@ -362,7 +364,7 @@ export default function Builder({ type, content, project }: Props) {
                                 size="sm"
                                 onClick={() => void preview()}
                             >
-                                <Eye /> Podgląd
+                                <Eye /> {t('Podgląd')}
                             </Button>
                             <Button
                                 type="button"
@@ -376,7 +378,7 @@ export default function Builder({ type, content, project }: Props) {
                                 ) : (
                                     <Save />
                                 )}{' '}
-                                Zapisz
+                                {t('Zapisz')}
                             </Button>
                             <Button
                                 type="button"
@@ -385,8 +387,8 @@ export default function Builder({ type, content, project }: Props) {
                                 onClick={() => void save(true)}
                             >
                                 {status === 'published'
-                                    ? 'Zaktualizuj'
-                                    : 'Opublikuj'}
+                                    ? t('Zaktualizuj')
+                                    : t('Opublikuj')}
                             </Button>
                         </div>
                     </div>
@@ -398,8 +400,8 @@ export default function Builder({ type, content, project }: Props) {
                                 type="button"
                                 variant="outline"
                                 size="icon"
-                                aria-label="Bloki"
-                                title="Bloki"
+                                aria-label={t('Bloki')}
+                                title={t('Bloki')}
                                 className="pointer-events-auto size-9 bg-white"
                                 onClick={() => setLeftOpen((o) => !o)}
                             >
@@ -413,7 +415,7 @@ export default function Builder({ type, content, project }: Props) {
                                 )}
                             >
                                 <p className="border-b px-4 py-3 text-sm font-semibold">
-                                    Bloki
+                                    {t('Bloki')}
                                 </p>
                                 <div
                                     ref={blocksEl}
@@ -427,8 +429,8 @@ export default function Builder({ type, content, project }: Props) {
                                 type="button"
                                 variant="outline"
                                 size="icon"
-                                aria-label="Właściwości"
-                                title="Właściwości"
+                                aria-label={t('Właściwości')}
+                                title={t('Właściwości')}
                                 className="pointer-events-auto size-9 bg-white"
                                 onClick={() => setRightOpen((o) => !o)}
                             >
@@ -445,12 +447,12 @@ export default function Builder({ type, content, project }: Props) {
                                     {[
                                         {
                                             id: 'props',
-                                            label: 'Właściwości',
+                                            label: t('Właściwości'),
                                             icon: SlidersHorizontal,
                                         },
                                         {
                                             id: 'layers',
-                                            label: 'Warstwy',
+                                            label: t('Warstwy'),
                                             icon: Layers,
                                         },
                                     ].map(({ id, label, icon: Icon }) => (
@@ -479,9 +481,9 @@ export default function Builder({ type, content, project }: Props) {
                                 >
                                     {!selected && (
                                         <p className="py-6 text-center text-sm text-muted-foreground">
-                                            Kliknij element na stronie, aby
-                                            zmienić jego wygląd. Dwukrotne
-                                            kliknięcie tekstu włącza edycję.
+                                            {t(
+                                                'Kliknij element na stronie, aby zmienić jego wygląd. Dwukrotne kliknięcie tekstu włącza edycję.',
+                                            )}
                                         </p>
                                     )}
                                     {selected && (
@@ -497,8 +499,8 @@ export default function Builder({ type, content, project }: Props) {
                                             className="mb-2 w-full"
                                             onClick={() => setPicking(true)}
                                         >
-                                            <ImagePlus /> Wybierz obraz z
-                                            biblioteki
+                                            <ImagePlus />{' '}
+                                            {t('Wybierz obraz z biblioteki')}
                                         </Button>
                                     )}
                                     <div ref={traitsEl} />

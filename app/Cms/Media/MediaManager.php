@@ -83,7 +83,7 @@ class MediaManager
 
         if (count($rect) !== 4 || $rect['width'] < 1 || $rect['height'] < 1 || $rect['x'] < 0 || $rect['y'] < 0
             || $media->width < $rect['x'] + $rect['width'] || $media->height < $rect['y'] + $rect['height']) {
-            throw new InvalidArgumentException('Obszar kadrowania wykracza poza obraz.');
+            throw new InvalidArgumentException(__('Obszar kadrowania wykracza poza obraz.'));
         }
 
         $media->crops = [...($media->crops ?? []), $sizeName => $rect];

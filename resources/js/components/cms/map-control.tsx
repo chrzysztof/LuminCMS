@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import type { FieldDefinition } from '@/types/cms';
+import { t } from '@/lib/i18n';
 
 type MapValue = { lat: number; lng: number; zoom: number; address: string };
 
@@ -131,7 +132,7 @@ export function MapControl({ field, value, onChange }: Props) {
     const search = async () => {
         const q = query.trim();
         if (!q) return;
-        setStatus('Szukam…');
+        setStatus(t('Szukam…'));
         try {
             const res = await fetch(
                 `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`,
@@ -146,7 +147,7 @@ export function MapControl({ field, value, onChange }: Props) {
             }[];
 
             if (!hit) {
-                setStatus('Nie znaleziono adresu.');
+                setStatus(t('Nie znaleziono adresu.'));
 
                 return;
             }
@@ -166,7 +167,9 @@ export function MapControl({ field, value, onChange }: Props) {
             setStatus('');
         } catch {
             setStatus(
-                'Wyszukiwanie jest niedostępne. Kliknij na mapie, aby wskazać miejsce.',
+                t(
+                    'Wyszukiwanie jest niedostępne. Kliknij na mapie, aby wskazać miejsce.',
+                ),
             );
         }
     };
@@ -176,7 +179,7 @@ export function MapControl({ field, value, onChange }: Props) {
             <div className="flex gap-2">
                 <Input
                     value={query}
-                    placeholder="Wyszukaj adres…"
+                    placeholder={t('Wyszukaj adres…')}
                     onChange={(e) => setQuery(e.target.value)}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
@@ -190,7 +193,7 @@ export function MapControl({ field, value, onChange }: Props) {
                     variant="outline"
                     onClick={() => void search()}
                 >
-                    <Search /> Szukaj
+                    <Search /> {t('Szukaj')}
                 </Button>
             </div>
             {status && (
@@ -215,11 +218,11 @@ export function MapControl({ field, value, onChange }: Props) {
                             className="inline-flex items-center gap-1 text-destructive"
                             onClick={() => onChange(null)}
                         >
-                            <X className="size-3.5" /> Usuń miejsce
+                            <X className="size-3.5" /> {t('Usuń miejsce')}
                         </button>
                     </>
                 ) : (
-                    <span>Kliknij na mapie, aby wskazać miejsce.</span>
+                    <span>{t('Kliknij na mapie, aby wskazać miejsce.')}</span>
                 )}
             </div>
         </div>

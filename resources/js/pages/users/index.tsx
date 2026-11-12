@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { cmsUrl } from '@/lib/cms-urls';
 import { formatDate } from '@/lib/format';
 import { cn } from '@/lib/utils';
+import { t } from '@/lib/i18n';
 
 type UserRow = {
     id: number;
@@ -48,25 +49,25 @@ export default function UsersIndex({
             { preserveState: true, replace: true },
         );
 
-    const tabs = [{ key: '', label: 'Wszyscy' }, ...roles];
+    const tabs = [{ key: '', label: t('Wszyscy') }, ...roles];
 
     return (
         <>
-            <Head title="Użytkownicy" />
+            <Head title={t('Użytkownicy')} />
             <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                         <h1 className="text-2xl font-semibold tracking-tight">
-                            Użytkownicy
+                            {t('Użytkownicy')}
                         </h1>
                         <p className="text-sm text-muted-foreground">
-                            {counts.all} kont
+                            {t('{n} kont', { n: counts.all })}
                         </p>
                     </div>
                     {can.create && (
                         <Button asChild>
                             <Link href={cmsUrl.userCreate}>
-                                <Plus /> Dodaj użytkownika
+                                <Plus /> {t('Dodaj użytkownika')}
                             </Link>
                         </Button>
                     )}
@@ -105,7 +106,7 @@ export default function UsersIndex({
                         <Input
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Szukaj imienia lub e-maila…"
+                            placeholder={t('Szukaj imienia lub e-maila…')}
                             className="pl-9"
                         />
                     </form>
@@ -113,15 +114,15 @@ export default function UsersIndex({
 
                 <Card className="gap-0 overflow-hidden py-0">
                     <div className="hidden grid-cols-[1fr_14rem_10rem_7rem_9rem] gap-4 border-b bg-muted/40 px-4 py-2.5 text-xs font-medium text-muted-foreground uppercase md:grid">
-                        <span>Nazwa</span>
-                        <span>E-mail</span>
-                        <span>Rola</span>
-                        <span>Treści</span>
-                        <span>Dodano</span>
+                        <span>{t('Nazwa')}</span>
+                        <span>{t('E-mail')}</span>
+                        <span>{t('Rola')}</span>
+                        <span>{t('Treści')}</span>
+                        <span>{t('Dodano')}</span>
                     </div>
                     {users.data.length === 0 ? (
                         <p className="px-4 py-12 text-center text-sm text-muted-foreground">
-                            Brak wyników.
+                            {t('Brak wyników.')}
                         </p>
                     ) : (
                         users.data.map((u) => {
@@ -133,7 +134,7 @@ export default function UsersIndex({
                                         {u.name}
                                         {u.is_self && (
                                             <span className="ml-2 text-xs font-normal text-muted-foreground">
-                                                (Ty)
+                                                {t('(Ty)')}
                                             </span>
                                         )}
                                     </span>
@@ -174,7 +175,10 @@ export default function UsersIndex({
                 {users.last_page > 1 && (
                     <div className="flex items-center justify-end gap-2 text-sm">
                         <span className="text-muted-foreground">
-                            Strona {users.current_page} z {users.last_page}
+                            {t('Strona {a} z {b}', {
+                                a: users.current_page,
+                                b: users.last_page,
+                            })}
                         </span>
                         <Button
                             variant="outline"
@@ -184,7 +188,7 @@ export default function UsersIndex({
                                 visit({ page: users.current_page - 1 })
                             }
                         >
-                            Poprzednia
+                            {t('Poprzednia')}
                         </Button>
                         <Button
                             variant="outline"
@@ -194,7 +198,7 @@ export default function UsersIndex({
                                 visit({ page: users.current_page + 1 })
                             }
                         >
-                            Następna
+                            {t('Następna')}
                         </Button>
                     </div>
                 )}

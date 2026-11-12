@@ -46,7 +46,7 @@ abstract class MediaFieldBase extends AbstractFieldType
             }
 
             if ($this->imageOnly() && ! $media->isImage()) {
-                $fail('Wybrany plik nie jest obrazem.');
+                $fail(__('Wybrany plik nie jest obrazem.'));
 
                 return;
             }
@@ -54,7 +54,7 @@ abstract class MediaFieldBase extends AbstractFieldType
             $allowed = array_filter(array_map(fn ($e) => strtolower(trim($e, ". \t")), explode(',', (string) $field['mime_types'])));
 
             if ($allowed && ! in_array(strtolower(pathinfo($media->path, PATHINFO_EXTENSION)), $allowed, true)) {
-                $fail('Niedozwolony typ pliku. Dozwolone: '.implode(', ', $allowed).'.');
+                $fail(__('Niedozwolony typ pliku. Dozwolone: :types.', ['types' => implode(', ', $allowed)]));
             }
 
             $maxMb = $this->number($field, 'max_size');
@@ -68,7 +68,9 @@ abstract class MediaFieldBase extends AbstractFieldType
                     continue;
                 }
                 if (($op === '<' && $media->{$prop} < $limit) || ($op === '>' && $media->{$prop} > $limit)) {
-                    $fail(($op === '<' ? 'Minimalny' : 'Maksymalny').' '.($prop === 'width' ? 'szerokość' : 'wysokość')." obrazu to {$limit} px.");
+                    $fail($op === '<'
+                        ? __($prop === 'width' ? 'Minimalna szerokość obrazu to :limit px.' : 'Minimalna wysokość obrazu to :limit px.', ['limit' => $limit])
+                        : __($prop === 'width' ? 'Maksymalna szerokość obrazu to :limit px.' : 'Maksymalna wysokość obrazu to :limit px.', ['limit' => $limit]));
                 }
             }
         };
