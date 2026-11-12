@@ -69,6 +69,7 @@ class CmsServiceProvider extends ServiceProvider
                 'twitter_handle' => '',
                 'noindex_site' => false,
             ],
+            'pages' => ['not_found_content_id' => null],
         ]));
 
         $this->app->singleton(FieldRegistry::class, function () {

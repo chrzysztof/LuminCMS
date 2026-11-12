@@ -5,24 +5,60 @@ namespace App\Http\Controllers;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentResolver;
 use App\Cms\Content\ContentType;
+use App\Cms\Redirects\RedirectManager;
 use App\Cms\Seo\SeoResolver;
+use App\Cms\Settings\Settings;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
 /** Publiczna strona: renderuje zapisany HTML treści. */
 class SiteController extends Controller
 {
-    public function __construct(private readonly ContentResolver $resolver, private readonly SeoResolver $seo) {}
+    public function __construct(
+        private readonly ContentResolver $resolver,
+        private readonly SeoResolver $seo,
+        private readonly RedirectManager $redirects,
+        private readonly Settings $settings,
+    ) {}
 
-    public function show(Request $request): View
+    public function show(Request $request): View|RedirectResponse
     {
+        if ($match = $this->redirects->match($request)) {
+            abort_if($match['code'] === 410, 410);
+
+            return redirect()->away($match['target'], $match['code'])->withHeaders(['Cache-Control' => 'no-store']);
+        }
+
         $content = $this->resolver->find($request->path());
 
         abort_if($content === null, 404);
 
         return $this->view($content, preview: false);
+    }
+
+    /** Odpowiedź 404: wybrana w ustawieniach strona albo domyślny widok. Zapisuje adres w monitorze 404. */
+    public function notFound(Request $request): HttpResponse|View
+    {
+        rescue(fn () => $this->redirects->logNotFound($request), report: true);
+
+        $id = $this->settings->get('pages', 'not_found_content_id');
+        $page = $id ? Content::published()->find($id) : null;
+
+        if ($page) {
+            // Podgląd = noindex i brak canonical; kod odpowiedzi zostaje 404.
+            return response()->view('site.show', [
+                'content' => $page,
+                'html' => (string) $page->html_cache,
+                'preview' => true,
+                'seo' => $this->seo->forContent($page, preview: true),
+            ], 404);
+        }
+
+        return response()->view('errors.404', [], 404);
     }
 
     /** Podgląd dla zalogowanych, także szkiców. */

@@ -2,6 +2,12 @@
 export const cmsUrl = {
     library: '/cms/library',
     seoSettings: '/cms/settings/seo',
+    redirectIndex: '/cms/redirects',
+    redirectLogs: '/cms/redirects/logs',
+    redirectPages: '/cms/redirects/pages',
+    redirectUpdate: (id: number) => `/cms/redirects/${id}`,
+    redirectToggle: (id: number) => `/cms/redirects/${id}/toggle`,
+    redirectLog: (id: number) => `/cms/redirects/logs/${id}`,
     fieldIndex: '/cms/fields',
     fieldCreate: '/cms/fields/create',
     fieldImport: '/cms/fields/import',

@@ -5,6 +5,7 @@ use App\Http\Controllers\Cms\ContentController;
 use App\Http\Controllers\Cms\FieldGroupController;
 use App\Http\Controllers\Cms\MediaController;
 use App\Http\Controllers\Cms\MediaSizeController;
+use App\Http\Controllers\Cms\RedirectController;
 use App\Http\Controllers\Cms\RelationController;
 use App\Http\Controllers\Cms\SeoSettingsController;
 use App\Http\Controllers\SiteController;
@@ -25,6 +26,14 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
     Route::put('content/{type:key}/{content}/builder', [BuilderController::class, 'save'])->name('content.builder.save');
     Route::get('content/{type:key}/{content}/preview', [SiteController::class, 'preview'])->name('content.preview');
 
+    Route::get('redirects', [RedirectController::class, 'index'])->name('redirects.index');
+    Route::post('redirects', [RedirectController::class, 'store'])->name('redirects.store');
+    Route::delete('redirects/logs', [RedirectController::class, 'clearLogs'])->name('redirects.logs.clear');
+    Route::delete('redirects/logs/{log}', [RedirectController::class, 'destroyLog'])->name('redirects.logs.destroy');
+    Route::put('redirects/pages', [RedirectController::class, 'updatePages'])->name('redirects.pages');
+    Route::put('redirects/{redirect}', [RedirectController::class, 'update'])->name('redirects.update');
+    Route::delete('redirects/{redirect}', [RedirectController::class, 'destroy'])->name('redirects.destroy');
+    Route::post('redirects/{redirect}/toggle', [RedirectController::class, 'toggle'])->name('redirects.toggle');
     Route::get('settings/seo', [SeoSettingsController::class, 'edit'])->name('settings.seo');
     Route::put('settings/seo', [SeoSettingsController::class, 'update'])->name('settings.seo.update');
     Route::get('relations/{group}', RelationController::class)->name('relations');

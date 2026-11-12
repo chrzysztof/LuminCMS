@@ -9,6 +9,7 @@ use App\Cms\Fields\FieldGroup;
 use App\Cms\Fields\FieldRegistry;
 use App\Cms\Fields\FieldValidator;
 use App\Cms\Media\Media;
+use App\Cms\Redirects\RedirectManager;
 use App\Cms\Settings\Settings;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -236,6 +237,8 @@ class ContentController extends Controller
             default => $content->published_at,
         };
 
+        $before = app(RedirectManager::class)->snapshot($content);
+
         $content->fill([
             'title' => $data['title'],
             'slug' => $this->uniqueSlug($type, ($data['slug'] ?? null) ?: $data['title'], $content),
@@ -247,6 +250,9 @@ class ContentController extends Controller
             'fields' => $fields,
             'seo' => $this->cleanSeo($data['seo'] ?? []),
         ])->save();
+
+        // Nowa treść (live=false) tylko zwalnia swój adres z automatycznych przekierowań.
+        app(RedirectManager::class)->recordMoves($before + [$content->id => ['path' => '', 'live' => false]]);
     }
 
     /** Dane potrzebne panelowi SEO do podglądu wyniku w Google i prostej analizy. */

@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
     Boxes,
+    ArrowRightLeft,
     ListTree,
     Search,
     FileText,
@@ -50,6 +51,11 @@ export function AppSidebar() {
     ];
     const settingsItems: NavItem[] = [
         { title: 'SEO', href: cmsUrl.seoSettings, icon: Search },
+        {
+            title: 'Przekierowania',
+            href: cmsUrl.redirectIndex,
+            icon: ArrowRightLeft,
+        },
     ];
     const libraryItems: NavItem[] = [
         { title: 'Media', href: cmsUrl.library, icon: ImageIcon },
