@@ -16,6 +16,9 @@ git ls-files -z | grep -zv -e '^tests/' -e '^\.github/' -e '^scripts/' -e '^\.gi
 
 cd "$WORK/$NAME"
 composer install --no-dev --optimize-autoloader --no-interaction --no-progress --prefer-dist
+# Composer czasem pobiera źródła z git zamiast archiwów: repozytoria nie należą do paczki.
+find vendor -name .git -prune -exec rm -rf {} +
+
 npm ci --no-audit --no-fund
 npm run build
 rm -rf node_modules
