@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Cms\BuilderController;
 use App\Http\Controllers\Cms\ContentController;
+use App\Http\Controllers\Cms\FieldGroupController;
 use App\Http\Controllers\Cms\MediaController;
 use App\Http\Controllers\Cms\MediaSizeController;
 use App\Http\Controllers\SiteController;
@@ -21,6 +22,17 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
     Route::get('content/{type:key}/{content}/builder', [BuilderController::class, 'edit'])->name('content.builder');
     Route::put('content/{type:key}/{content}/builder', [BuilderController::class, 'save'])->name('content.builder.save');
     Route::get('content/{type:key}/{content}/preview', [SiteController::class, 'preview'])->name('content.preview');
+
+    Route::get('fields', [FieldGroupController::class, 'index'])->name('fields.index');
+    Route::get('fields/create', [FieldGroupController::class, 'create'])->name('fields.create');
+    Route::post('fields', [FieldGroupController::class, 'store'])->name('fields.store');
+    Route::post('fields/import', [FieldGroupController::class, 'import'])->name('fields.import');
+    Route::get('fields/{group}/edit', [FieldGroupController::class, 'edit'])->name('fields.edit');
+    Route::put('fields/{group}', [FieldGroupController::class, 'update'])->name('fields.update');
+    Route::delete('fields/{group}', [FieldGroupController::class, 'destroy'])->name('fields.destroy');
+    Route::post('fields/{group}/toggle', [FieldGroupController::class, 'toggle'])->name('fields.toggle');
+    Route::post('fields/{group}/duplicate', [FieldGroupController::class, 'duplicate'])->name('fields.duplicate');
+    Route::get('fields/{group}/export', [FieldGroupController::class, 'export'])->name('fields.export');
 
     Route::get('media', [MediaController::class, 'index'])->name('media.index');
     Route::post('media', [MediaController::class, 'store'])->name('media.store');

@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
     Boxes,
+    ListTree,
     FileText,
     Image as ImageIcon,
     LayoutGrid,
@@ -43,6 +44,9 @@ export function AppSidebar() {
     const mainItems: NavItem[] = [
         { title: 'Pulpit', href: dashboard(), icon: LayoutGrid },
     ];
+    const structureItems: NavItem[] = [
+        { title: 'Pola własne', href: cmsUrl.fieldIndex, icon: ListTree },
+    ];
     const libraryItems: NavItem[] = [
         { title: 'Media', href: cmsUrl.library, icon: ImageIcon },
     ];
@@ -67,6 +71,7 @@ export function AppSidebar() {
                     <NavMain label="Treści" items={contentItems} />
                 )}
                 <NavMain label="Biblioteka" items={libraryItems} />
+                <NavMain label="Struktura" items={structureItems} />
             </SidebarContent>
 
             <SidebarFooter>
