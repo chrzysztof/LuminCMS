@@ -108,6 +108,55 @@ class RichFieldsTest extends TestCase
         $this->assertSame($page->id, $this->registry->get('post_object')->format($page->id, [...$field, 'return_format' => 'id']));
     }
 
+    public function test_link_field_validates_url_and_normalizes(): void
+    {
+        $fields = [['type' => 'link', 'name' => 'cta']];
+
+        foreach (['https://example.com/a?b=1', '/kontakt', '#sekcja', 'mailto:a@b.pl', 'tel:+48 600 100 200', '//cdn.example.com/x'] as $ok) {
+            $this->assertNull($this->errors($fields, ['cta' => ['url' => $ok]]), $ok);
+        }
+
+        foreach (['javascript:alert(1)', 'data:text/html,x', 'ftp://x.pl', 'example.com', 'https://a b'] as $bad) {
+            $this->assertArrayHasKey('cta', $this->errors($fields, ['cta' => ['url' => $bad]]), $bad);
+        }
+
+        $this->assertArrayHasKey('cta', $this->errors($fields, ['cta' => ['url' => '/x', 'target' => '_top']]));
+
+        $out = $this->validator->validate($fields, ['cta' => ['url' => ' /kontakt ', 'title' => ' Napisz ', 'target' => '_blank']]);
+        $this->assertSame(['url' => '/kontakt', 'title' => 'Napisz', 'target' => '_blank'], $out['cta']);
+        $this->assertNull($this->validator->validate($fields, ['cta' => ['url' => '', 'title' => 'x']])['cta'] ?? null);
+
+        $this->assertArrayHasKey('cta', $this->errors([['type' => 'link', 'name' => 'cta', 'required' => true]], ['cta' => ['url' => '', 'title' => 'x']]));
+
+        $type = $this->registry->get('link');
+        $field = $this->registry->resolveField($fields[0]);
+        $this->assertSame(['url' => '/k', 'title' => '', 'target' => ''], $type->format(['url' => '/k'], $field));
+        $this->assertSame('/k', $type->format(['url' => '/k'], [...$field, 'return_format' => 'url']));
+        $this->assertNull($type->format(null, $field));
+    }
+
+    public function test_page_link_stores_id_and_returns_current_url(): void
+    {
+        $page = $this->page('Oferta');
+        $draft = $this->page('Szkic', 'draft');
+        $fields = [['type' => 'page_link', 'name' => 'cel', 'post_type' => ['page']]];
+
+        $this->assertArrayHasKey('cel', $this->errors($fields, ['cel' => $draft->id]));
+        $this->assertArrayHasKey('cel', $this->errors($fields, ['cel' => 9999]));
+        $this->assertSame($page->id, $this->validator->validate($fields, ['cel' => (string) $page->id])['cel']);
+
+        $type = $this->registry->get('page_link');
+        $field = $this->registry->resolveField($fields[0]);
+        $this->assertSame(url('/oferta'), $type->format($page->id, $field));
+        $this->assertSame($page->id, $type->format($page->id, [...$field, 'return_format' => 'id']));
+
+        $page->update(['slug' => 'nowy-adres']);
+        $this->assertSame(url('/nowy-adres'), $type->format($page->id, $field));
+
+        $multi = [...$field, 'multiple' => true];
+        $this->assertSame([url('/nowy-adres')], $type->format([$page->id, 9999], $multi));
+    }
+
     public function test_relationship_keeps_order_dedups_and_respects_max(): void
     {
         $a = $this->page('A');

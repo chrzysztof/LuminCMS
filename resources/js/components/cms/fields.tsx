@@ -2,6 +2,7 @@ import { File as FileIcon, ImagePlus, X } from 'lucide-react';
 import { useState } from 'react';
 import { FlexibleControl } from '@/components/cms/flexible-control';
 import { GroupControl } from '@/components/cms/group-control';
+import { LinkControl } from '@/components/cms/link-control';
 import { MapControl } from '@/components/cms/map-control';
 import { MediaPicker } from '@/components/cms/media-picker';
 import { RelationControl } from '@/components/cms/relation-control';
@@ -497,6 +498,16 @@ function Control(props: ControlProps) {
                     onChange={(e) => onChange(e.target.value)}
                 />
             );
+        case 'link':
+            return (
+                <LinkControl
+                    field={field}
+                    value={value}
+                    onChange={onChange}
+                    id={id}
+                />
+            );
+        case 'page_link':
         case 'post_object':
         case 'relationship':
         case 'taxonomy':

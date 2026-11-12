@@ -58,6 +58,8 @@ class CmsServiceProvider extends ServiceProvider
         Types\WysiwygField::class,
         Types\OEmbedField::class,
         Types\PostObjectField::class,
+        Types\PageLinkField::class,
+        Types\LinkField::class,
         Types\RelationshipField::class,
         Types\TaxonomyField::class,
         Types\UserField::class,

@@ -123,6 +123,14 @@ const returnFormats: Record<string, [string, string][]> = {
         ['html', t('Kod HTML (iframe)')],
         ['url', t('Adres URL')],
     ],
+    link: [
+        ['array', t('Tablica (url, title, target)')],
+        ['url', t('Adres URL')],
+    ],
+    page_link: [
+        ['url', t('Adres URL')],
+        ['id', t('Identyfikator')],
+    ],
     post_object: [
         ['object', t('Obiekt treści')],
         ['id', t('Identyfikator')],
