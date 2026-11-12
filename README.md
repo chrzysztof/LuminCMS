@@ -10,13 +10,13 @@ Lumin is built on Laravel 13 with a React admin panel and server-rendered public
 - **Custom fields** — a field-group builder with 36 planned field types (29 available today, including Repeater), conditional logic, location rules and JSON import/export.
 - **Visual editor** — a drag-and-drop page builder (GrapesJS) that outputs clean, semantic HTML with no inline styles or generated IDs.
 - **Media library** — automatic WebP conversion, configurable image sizes, focal points, per-size crops and responsive `<picture>` output.
-- **SEO built in** — titles, meta descriptions, canonical URLs, sitemap and image alt text _(in progress)_.
+- **SEO built in** — title templates, meta descriptions, canonical URLs, robots directives, Open Graph, Twitter cards, JSON-LD, `sitemap.xml`, `robots.txt` and a snippet preview with focus-keyword checks.
 - **Shortcodes, JSON importer and site settings** — analytics, tag manager and pixel integrations _(planned)_.
 - **Fast by default** — server-rendered Blade templates on the public site, cached builder output, a lightweight front end.
 
 ## Status
 
-Early development. The foundation, admin panel, media library, visual editor and field-group builder are working; the remaining field types, SEO module and settings are on the roadmap.
+Early development. The foundation, admin panel, media library, visual editor and field-group builder are working; the SEO module is working; the remaining field types, redirects and further site settings are on the roadmap.
 
 ## Requirements
 
