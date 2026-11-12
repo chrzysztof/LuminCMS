@@ -31,8 +31,22 @@ type Props = {
         total: number;
     };
     counts: Record<'all' | ContentStatus, number>;
-    filters: { status: string; search: string };
+    filters: {
+        status: string;
+        search: string;
+        author: number | '';
+        terms: Record<string, number>;
+    };
+    authors: { id: number; name: string }[];
+    taxonomies: {
+        key: string;
+        label: string;
+        terms: { id: number; name: string; depth: number }[];
+    }[];
 };
+
+const selectClass =
+    'h-9 rounded-md border border-input bg-transparent px-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/30';
 
 const tabs: {
     key: '' | ContentStatus;
@@ -64,10 +78,26 @@ function Row({
     );
 }
 
-export default function ContentIndex({ type, items, counts, filters }: Props) {
+export default function ContentIndex({
+    type,
+    items,
+    counts,
+    filters,
+    authors,
+    taxonomies,
+}: Props) {
     const [search, setSearch] = useState(filters.search);
 
-    const visit = (params: Record<string, string | number>) =>
+    const setTerm = (key: string, id: string) => {
+        const terms = { ...filters.terms };
+        if (id) terms[key] = Number(id);
+        else delete terms[key];
+        visit({ terms, page: 1 });
+    };
+    const hasFilters =
+        filters.author !== '' || Object.keys(filters.terms).length > 0;
+
+    const visit = (params: Record<string, unknown>) =>
         router.get(
             cmsUrl.contentIndex(type.key),
             { ...filters, ...params },
@@ -135,6 +165,62 @@ export default function ContentIndex({ type, items, counts, filters }: Props) {
                         />
                     </form>
                 </div>
+
+                {(taxonomies.length > 0 || authors.length > 1) && (
+                    <div className="flex flex-wrap items-center gap-2">
+                        {taxonomies.map((tx) => (
+                            <select
+                                key={tx.key}
+                                aria-label={tx.label}
+                                className={selectClass}
+                                value={filters.terms[tx.key] ?? ''}
+                                onChange={(e) =>
+                                    setTerm(tx.key, e.target.value)
+                                }
+                            >
+                                <option value="">
+                                    {t('{taxonomy}: wszystkie', {
+                                        taxonomy: tx.label,
+                                    })}
+                                </option>
+                                {tx.terms.map((term) => (
+                                    <option key={term.id} value={term.id}>
+                                        {'— '.repeat(term.depth)}
+                                        {term.name}
+                                    </option>
+                                ))}
+                            </select>
+                        ))}
+                        {authors.length > 1 && (
+                            <select
+                                aria-label={t('Autor')}
+                                className={selectClass}
+                                value={filters.author}
+                                onChange={(e) =>
+                                    visit({ author: e.target.value, page: 1 })
+                                }
+                            >
+                                <option value="">{t('Autor: wszyscy')}</option>
+                                {authors.map((a) => (
+                                    <option key={a.id} value={a.id}>
+                                        {a.name}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
+                        {hasFilters && (
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() =>
+                                    visit({ author: '', terms: {}, page: 1 })
+                                }
+                            >
+                                {t('Wyczyść filtry')}
+                            </Button>
+                        )}
+                    </div>
+                )}
 
                 <Card className="gap-0 overflow-hidden py-0">
                     <div className="hidden grid-cols-[1fr_9rem_9rem_11rem] gap-4 border-b bg-muted/40 px-4 py-2.5 text-xs font-medium text-muted-foreground uppercase md:grid">

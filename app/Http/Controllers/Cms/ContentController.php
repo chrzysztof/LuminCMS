@@ -12,8 +12,11 @@ use App\Cms\Media\Media;
 use App\Cms\Redirects\RedirectManager;
 use App\Cms\Roles\ContentAccess;
 use App\Cms\Settings\Settings;
+use App\Cms\Taxonomy\Taxonomy;
 use App\Cms\Themes\ThemeManager;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -43,8 +46,32 @@ class ContentController extends Controller
         $status = $request->string('status')->toString();
         $search = $request->string('search')->trim()->toString();
 
-        $query = Content::query()->where('content_type_id', $type->id)->with('author:id,name')->latest('updated_at')
-            ->when($onlyOwn, fn ($q) => $q->where('author_id', $user->id));
+        $taxonomies = $type->taxonomies()->orderBy('taxonomies.id')->get();
+        $termTree = $taxonomies->mapWithKeys(fn (Taxonomy $t) => [$t->key => $t->terms()->orderBy('name')->limit(500)->get(['id', 'parent_id', 'name'])]);
+
+        // Filtry: jeden termin na taksonomię (z potomkami) i autor. Nieznane wartości są ignorowane.
+        $termFilters = [];
+        foreach ($taxonomies as $taxonomy) {
+            $id = (int) data_get($request->query('terms'), $taxonomy->key);
+            $terms = $termTree[$taxonomy->key];
+
+            if ($id > 0 && $terms->contains('id', $id)) {
+                $termFilters[$taxonomy->key] = $id;
+            }
+        }
+
+        $author = $onlyOwn ? 0 : (int) $request->query('author');
+
+        $base = Content::query()->where('content_type_id', $type->id)
+            ->when($onlyOwn, fn ($q) => $q->where('author_id', $user->id))
+            ->when($author > 0, fn ($q) => $q->where('author_id', $author));
+
+        foreach ($termFilters as $key => $id) {
+            $ids = $this->withDescendants($termTree[$key], $id);
+            $base->whereHas('terms', fn ($q) => $q->whereIn('terms.id', $ids));
+        }
+
+        $query = (clone $base)->with('author:id,name')->latest('updated_at');
 
         if (in_array($status, self::STATUSES, true)) {
             $query->where('status', $status);
@@ -54,7 +81,9 @@ class ContentController extends Controller
             $query->where('title', 'like', "%{$search}%");
         }
 
-        $counts = Content::where('content_type_id', $type->id)->when($onlyOwn, fn ($q) => $q->where('author_id', $user->id))->selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status');
+        $counts = (clone $base)->selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status');
+
+        $authors = $onlyOwn ? collect() : User::whereIn('id', Content::where('content_type_id', $type->id)->whereNotNull('author_id')->select('author_id'))->orderBy('name')->get(['id', 'name']);
 
         return Inertia::render('content/index', [
             'type' => $this->typeData($type),
@@ -76,8 +105,52 @@ class ContentController extends Controller
                 Content::STATUS_PENDING => $counts[Content::STATUS_PENDING] ?? 0,
                 Content::STATUS_SCHEDULED => $counts[Content::STATUS_SCHEDULED] ?? 0,
             ],
-            'filters' => ['status' => $status, 'search' => $search],
+            'filters' => ['status' => $status, 'search' => $search, 'author' => $author ?: '', 'terms' => (object) $termFilters],
+            'authors' => $authors->values(),
+            'taxonomies' => $taxonomies->map(fn (Taxonomy $t) => [
+                'key' => $t->key, 'label' => $t->label,
+                'terms' => $this->flattenTerms($termTree[$t->key], $t->hierarchical),
+            ])->values(),
         ]);
+    }
+
+    /** @return list<int> termin i wszystkie jego potomki */
+    private function withDescendants(Collection $terms, int $id): array
+    {
+        $ids = [$id];
+        $queue = [$id];
+
+        while ($queue) {
+            $parent = array_shift($queue);
+
+            foreach ($terms->where('parent_id', $parent) as $child) {
+                if (! in_array($child->id, $ids, true)) {
+                    $ids[] = $child->id;
+                    $queue[] = $child->id;
+                }
+            }
+        }
+
+        return $ids;
+    }
+
+    /** Lista terminów do selecta; w taksonomiach hierarchicznych w kolejności drzewa, z poziomem zagnieżdżenia. */
+    private function flattenTerms(Collection $terms, bool $hierarchical): array
+    {
+        if (! $hierarchical) {
+            return $terms->map(fn ($t) => ['id' => $t->id, 'name' => $t->name, 'depth' => 0])->values()->all();
+        }
+
+        $out = [];
+        $walk = function (?int $parent, int $depth) use (&$walk, &$out, $terms) {
+            foreach ($terms->where('parent_id', $parent) as $t) {
+                $out[] = ['id' => $t->id, 'name' => $t->name, 'depth' => $depth];
+                $walk($t->id, $depth + 1);
+            }
+        };
+        $walk(null, 0);
+
+        return $out;
     }
 
     public function create(Request $request, ContentType $type): Response

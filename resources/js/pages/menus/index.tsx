@@ -4,6 +4,7 @@ import {
     ArrowUp,
     ChevronDown,
     ChevronRight,
+    GripVertical,
     Loader2,
     Plus,
     Trash2,
@@ -11,11 +12,13 @@ import {
     IndentDecrease,
 } from 'lucide-react';
 import { useState } from 'react';
+import type { DragEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cmsUrl } from '@/lib/cms-urls';
+import { cn } from '@/lib/utils';
 import { t } from '@/lib/i18n';
 
 type ItemType = 'content' | 'term' | 'custom' | 'heading';
@@ -119,6 +122,31 @@ function outdent(items: Item[], i: number): Item[] {
         ...shift(block, -1),
         ...rest.slice(parentEnd),
     ];
+}
+
+type DropZone = 'before' | 'after' | 'child';
+
+/**
+ * Przeciąganie: pozycja z potomkami ląduje przed celem, za jego poddrzewem albo jako jego ostatnie dziecko.
+ * Zwraca tę samą tablicę, gdy upuszczenie jest niedozwolone (na siebie, w swoje poddrzewo, zbyt głęboko).
+ */
+function dropItem(
+    items: Item[],
+    from: number,
+    to: number,
+    zone: DropZone,
+): Item[] {
+    const end = subtreeEnd(items, from);
+    if (to >= from && to < end) return items;
+    const block = items.slice(from, end);
+    const rest = [...items.slice(0, from), ...items.slice(end)];
+    const target = rest[to >= end ? to - block.length : to];
+    const at = rest.indexOf(target);
+    const depth = zone === 'child' ? target.depth + 1 : target.depth;
+    const moved = shift(block, depth - block[0].depth);
+    if (Math.max(...moved.map((x) => x.depth)) > MAX_DEPTH) return items;
+    const insertAt = zone === 'before' ? at : subtreeEnd(rest, at);
+    return [...rest.slice(0, insertAt), ...moved, ...rest.slice(insertAt)];
 }
 
 export default function MenusIndex({ menus, menu, locations, sources }: Props) {
@@ -228,6 +256,23 @@ function MenuEditor({
     const [open, setOpen] = useState<Record<string, boolean>>({});
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [saving, setSaving] = useState(false);
+    const [dragFrom, setDragFrom] = useState<number | null>(null);
+    const [drop, setDrop] = useState<{ i: number; zone: DropZone } | null>(
+        null,
+    );
+
+    const endDrag = () => {
+        setDragFrom(null);
+        setDrop(null);
+    };
+
+    // Strefa upuszczenia zależy od wysokości kursora nad kartą: góra, dół albo środek (jako dziecko).
+    const zoneAt = (e: DragEvent<HTMLElement>): DropZone => {
+        const r = e.currentTarget.getBoundingClientRect();
+        const y = (e.clientY - r.top) / r.height;
+
+        return y < 0.3 ? 'before' : y > 0.7 ? 'after' : 'child';
+    };
 
     const patch = (i: number, data: Partial<Item>) =>
         setItems((cur) => cur.map((x, n) => (n === i ? { ...x, ...data } : x)));
@@ -332,10 +377,90 @@ function MenuEditor({
                     return (
                         <Card
                             key={x.key}
-                            className="gap-0 py-0"
+                            data-menu-item
+                            className={cn(
+                                'relative gap-0 py-0',
+                                dragFrom === i && 'opacity-40',
+                                drop?.i === i &&
+                                    drop.zone === 'child' &&
+                                    'ring-2 ring-brand',
+                            )}
                             style={{ marginLeft: `${x.depth * 1.5}rem` }}
+                            onDragOver={(e) => {
+                                if (dragFrom === null) return;
+                                const zone = zoneAt(e);
+                                if (
+                                    dropItem(items, dragFrom, i, zone) === items
+                                ) {
+                                    if (drop) setDrop(null);
+                                    return;
+                                }
+                                e.preventDefault();
+                                e.dataTransfer.dropEffect = 'move';
+                                if (drop?.i !== i || drop.zone !== zone)
+                                    setDrop({ i, zone });
+                            }}
+                            onDrop={(e) => {
+                                if (dragFrom === null) return;
+                                e.preventDefault();
+                                const next = dropItem(
+                                    items,
+                                    dragFrom,
+                                    i,
+                                    zoneAt(e),
+                                );
+                                if (next !== items) {
+                                    setItems(next);
+                                    setErrors({});
+                                }
+                                endDrag();
+                            }}
                         >
+                            {drop?.i === i && drop.zone !== 'child' && (
+                                <div
+                                    aria-hidden
+                                    className={cn(
+                                        'pointer-events-none absolute inset-x-0 h-0.5 rounded bg-brand',
+                                        drop.zone === 'before'
+                                            ? '-top-2'
+                                            : '-bottom-2',
+                                    )}
+                                />
+                            )}
                             <div className="flex flex-wrap items-center gap-2 p-2">
+                                <span
+                                    draggable
+                                    role="button"
+                                    tabIndex={-1}
+                                    aria-label={t(
+                                        'Przeciągnij, aby zmienić kolejność',
+                                    )}
+                                    title={t(
+                                        'Przeciągnij, aby zmienić kolejność',
+                                    )}
+                                    className="cursor-grab touch-none text-muted-foreground hover:text-foreground active:cursor-grabbing"
+                                    onDragStart={(e) => {
+                                        const card =
+                                            e.currentTarget.closest(
+                                                '[data-menu-item]',
+                                            );
+                                        e.dataTransfer.effectAllowed = 'move';
+                                        e.dataTransfer.setData(
+                                            'text/plain',
+                                            x.key,
+                                        );
+                                        if (card)
+                                            e.dataTransfer.setDragImage(
+                                                card,
+                                                16,
+                                                16,
+                                            );
+                                        setDragFrom(i);
+                                    }}
+                                    onDragEnd={endDrag}
+                                >
+                                    <GripVertical className="size-4" />
+                                </span>
                                 <Button
                                     type="button"
                                     variant="ghost"

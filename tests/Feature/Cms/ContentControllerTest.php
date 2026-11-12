@@ -5,6 +5,8 @@ namespace Tests\Feature\Cms;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentType;
 use App\Cms\Fields\FieldGroup;
+use App\Cms\Taxonomy\Taxonomy;
+use App\Cms\Taxonomy\Term;
 use App\Models\User;
 use Database\Seeders\CmsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -58,6 +60,49 @@ class ContentControllerTest extends TestCase
             ->assertInertia(fn (Assert $p) => $p->component('content/index')
                 ->where('counts.all', 2)->where('counts.published', 1)->where('counts.draft', 1)
                 ->has('items.data', 1)->where('items.data.0.title', 'Oferta'));
+    }
+
+    public function test_index_filters_by_taxonomy_term_with_descendants_and_by_author(): void
+    {
+        $cat = Taxonomy::where('key', 'category')->firstOrFail();
+        $news = Term::create(['taxonomy_id' => $cat->id, 'name' => 'Newsy', 'slug' => 'newsy']);
+        $sub = Term::create(['taxonomy_id' => $cat->id, 'parent_id' => $news->id, 'name' => 'Branża', 'slug' => 'branza']);
+        $other = Term::create(['taxonomy_id' => $cat->id, 'name' => 'Inne', 'slug' => 'inne']);
+        $ada = User::factory()->create(['name' => 'Ada']);
+
+        $postType = ContentType::where('key', 'post')->value('id');
+        $mk = fn (string $title, $term, $author) => tap(Content::create([
+            'content_type_id' => $postType, 'title' => $title, 'slug' => str($title)->slug(), 'status' => 'published',
+            'published_at' => now(), 'author_id' => $author->id,
+        ]), fn (Content $c) => $c->terms()->attach($term->id));
+        $mk('W newsach', $news, $this->user);
+        $mk('W podkategorii', $sub, $ada);
+        $mk('W innych', $other, $ada);
+
+        $titles = fn (string $query) => $this->actingAs($this->user)->get('/cms/content/post'.$query)->viewData('page')['props']['items']['data'];
+
+        $this->assertCount(3, $titles(''));
+        // Termin nadrzędny obejmuje potomków.
+        $this->assertEqualsCanonicalizing(['W newsach', 'W podkategorii'], array_column($titles("?terms[category]={$news->id}"), 'title'));
+        $this->assertSame(['W podkategorii'], array_column($titles("?terms[category]={$sub->id}"), 'title'));
+        $this->assertEqualsCanonicalizing(['W podkategorii', 'W innych'], array_column($titles("?author={$ada->id}"), 'title'));
+        $this->assertSame(['W podkategorii'], array_column($titles("?author={$ada->id}&terms[category]={$news->id}"), 'title'));
+        // Nieznany termin jest ignorowany, a liczniki uwzględniają filtry.
+        $this->assertCount(3, $titles('?terms[category]=9999'));
+        $this->actingAs($this->user)->get("/cms/content/post?terms[category]={$other->id}")
+            ->assertInertia(fn (Assert $p) => $p->where('counts.all', 1)->where('filters.terms.category', $other->id)
+                ->has('taxonomies', 2)->where('taxonomies.0.key', 'category')->has('taxonomies.0.terms', 3)
+                ->where('taxonomies.0.terms.2.depth', 1)->has('authors', 2));
+    }
+
+    public function test_authors_without_edit_others_only_see_their_own_content(): void
+    {
+        $author = User::factory()->role('author')->create();
+        $this->page(['title' => 'Cudza']);
+        Content::create(['content_type_id' => ContentType::where('key', 'post')->value('id'), 'title' => 'Moja', 'slug' => 'moja', 'status' => 'published', 'published_at' => now(), 'author_id' => $author->id]);
+
+        $this->actingAs($author)->get("/cms/content/post?author={$this->user->id}")
+            ->assertInertia(fn (Assert $p) => $p->has('items.data', 1)->where('items.data.0.title', 'Moja')->has('authors', 0)->where('filters.author', ''));
     }
 
     public function test_shared_props_include_content_types_for_sidebar(): void
