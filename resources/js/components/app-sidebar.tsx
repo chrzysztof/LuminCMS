@@ -4,6 +4,7 @@ import {
     ShieldCheck,
     Users,
     ArrowRightLeft,
+    ArrowUpDown,
     Globe,
     ListTree,
     Search,
@@ -61,6 +62,11 @@ export function AppSidebar() {
     ];
     const structureItems: NavItem[] = [
         { title: t('Pola własne'), href: cmsUrl.fieldIndex, icon: ListTree },
+        {
+            title: t('Import i eksport'),
+            href: cmsUrl.importExport,
+            icon: ArrowUpDown,
+        },
     ];
     const taxonomyItems: NavItem[] = can('manage_categories')
         ? [

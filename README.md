@@ -56,6 +56,15 @@ A theme is a folder in `themes/{slug}/` with a `theme.json` manifest and Blade v
 - **Theme management:** Appearance → Themes lists installed themes (screenshot, version, author, parent), activates, exports a theme as ZIP and deletes it (not the default, the active theme or a parent of another theme). Install from a ZIP validates the archive before extracting: safe paths only (no `..`, absolute paths or symlinks), an extension whitelist (PHP allowed only as `*.blade.php`), no hidden files, file-count and size limits, a `theme.json` with a `name`, and either `views/layout.blade.php` or an installed parent. A theme is trusted code (Blade runs on the server), so set `CMS_THEME_UPLOADS=false` to disable uploads on hosts where only deploys should add themes.
 - `php artisan cms:theme` lists themes, `php artisan cms:theme {slug}` activates one.
 
+## Import and export
+
+Structure → Import and export moves content types, taxonomies with terms, field groups and (optionally) content between installations as one JSON file (schema `"lumin": 1`, objects `content_types`, `taxonomies`, `field_groups`, `contents`). Content references parents, terms and types by key or slug, never by database id.
+
+- **Dry run:** the whole import runs in one database transaction. Any error, or the dry-run switch, rolls everything back, so the report shows exactly what a real import would do and a bad file never leaves half-imported data.
+- **Existing items** (same key or slug) are skipped by default, or overwritten with "update". System types and taxonomies are never overwritten.
+- Field groups, content fields and slugs go through the same validation as the panel forms; visual-editor content (`builder_data`) is re-rendered to clean HTML on import.
+- Media library files are not transferred, so fields holding media ids need to be filled in afterwards.
+
 ## Requirements
 
 - PHP 8.3+

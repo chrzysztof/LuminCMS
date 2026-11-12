@@ -5,6 +5,7 @@ use App\Http\Controllers\Cms\BuilderController;
 use App\Http\Controllers\Cms\ContentController;
 use App\Http\Controllers\Cms\CustomizeController;
 use App\Http\Controllers\Cms\FieldGroupController;
+use App\Http\Controllers\Cms\ImportExportController;
 use App\Http\Controllers\Cms\MediaController;
 use App\Http\Controllers\Cms\MediaSizeController;
 use App\Http\Controllers\Cms\MenuController;
@@ -64,6 +65,10 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
         Route::post('fields/{group}/toggle', [FieldGroupController::class, 'toggle'])->name('fields.toggle');
         Route::post('fields/{group}/duplicate', [FieldGroupController::class, 'duplicate'])->name('fields.duplicate');
         Route::get('fields/{group}/export', [FieldGroupController::class, 'export'])->name('fields.export');
+
+        Route::get('import', [ImportExportController::class, 'index'])->name('import.index');
+        Route::post('import', [ImportExportController::class, 'import'])->name('import.run');
+        Route::get('export', [ImportExportController::class, 'export'])->name('export');
     });
 
     Route::middleware('can:manage_options')->group(function () {

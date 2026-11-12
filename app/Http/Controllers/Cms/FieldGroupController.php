@@ -177,7 +177,7 @@ class FieldGroupController extends Controller
         return $this->validateData($request->all(), $group);
     }
 
-    private function validateData(array $input, ?FieldGroup $group, bool $enforceUniqueKey = true): array
+    public function validateData(array $input, ?FieldGroup $group, bool $enforceUniqueKey = true): array
     {
         $validator = validator($input, [
             'title' => ['required', 'string', 'max:255'],
@@ -344,7 +344,7 @@ class FieldGroupController extends Controller
         ];
     }
 
-    private function uniqueKey(string $base): string
+    public function uniqueKey(string $base): string
     {
         $key = $base;
         $i = 2;
