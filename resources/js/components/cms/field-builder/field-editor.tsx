@@ -3,9 +3,11 @@ import {
     ChevronRight,
     ChevronUp,
     Copy,
+    Plus,
     Trash2,
 } from 'lucide-react';
 import { useState } from 'react';
+import { toDraft } from '@/components/cms/field-builder/draft';
 import { ConditionalEditor } from '@/components/cms/field-builder/logic-editors';
 import { fieldNameFromLabel } from '@/components/cms/field-builder/slug';
 import {
@@ -36,6 +38,9 @@ type Props = {
     types: FieldTypeInfo[];
     siblings: FieldDraft[];
     errors: Record<string, string | undefined>;
+    /** Prefiks kluczy błędów tego pola, np. "fields.2" albo "fields.2.sub_fields.0". */
+    errorPrefix: string;
+    depth?: number;
     onChange: (patch: Record<string, unknown>) => void;
     onMove: (dir: -1 | 1) => void;
     onDuplicate: () => void;
@@ -49,6 +54,8 @@ export function FieldEditor({
     types,
     siblings,
     errors,
+    errorPrefix,
+    depth = 0,
     onChange,
     onMove,
     onDuplicate,
@@ -57,7 +64,7 @@ export function FieldEditor({
     const [open, setOpen] = useState(!field.name && !field.label);
     const [nameTouched, setNameTouched] = useState(Boolean(field.name));
     const info = types.find((t) => t.name === field.type);
-    const err = (key: string) => errors[`fields.${index}.${key}`];
+    const err = (key: string) => errors[`${errorPrefix}.${key}`];
     const hasError = Object.keys(errors).some((k) =>
         k.startsWith(`fields.${index}.`),
     );
@@ -65,6 +72,16 @@ export function FieldEditor({
         .filter((s) => s._id !== field._id && s.name)
         .map((s) => ({ name: s.name, label: s.label }));
     const categories = [...new Set(types.map((t) => t.category))];
+    const isContainer = field.type === 'repeater';
+    const subs = (
+        Array.isArray(field.sub_fields) ? field.sub_fields : []
+    ) as FieldDraft[];
+    const setSubs = (next: FieldDraft[]) => onChange({ sub_fields: next });
+    const moveSub = (i: number, dir: -1 | 1) => {
+        const next = [...subs];
+        [next[i], next[i + dir]] = [next[i + dir], next[i]];
+        setSubs(next);
+    };
 
     const changeType = (type: string) => {
         const next = types.find((t) => t.name === type);
@@ -279,6 +296,104 @@ export function FieldEditor({
                             }
                         />
                     </div>
+
+                    {isContainer && (
+                        <div className="space-y-3 rounded-lg border border-dashed p-3">
+                            <p className="text-sm font-medium">
+                                Pola w wierszu
+                            </p>
+                            {err('sub_fields') && (
+                                <p className="text-xs text-destructive">
+                                    {err('sub_fields')}
+                                </p>
+                            )}
+                            {subs.length === 0 && (
+                                <p className="text-sm text-muted-foreground">
+                                    Dodaj pola, które będzie zawierał każdy
+                                    wiersz.
+                                </p>
+                            )}
+                            {subs.map((sub, i) => (
+                                <FieldEditor
+                                    key={sub._id}
+                                    field={sub}
+                                    index={i}
+                                    total={subs.length}
+                                    types={
+                                        depth >= 2
+                                            ? types.filter(
+                                                  (t) => t.name !== 'repeater',
+                                              )
+                                            : types
+                                    }
+                                    siblings={subs}
+                                    errors={errors}
+                                    errorPrefix={`${errorPrefix}.sub_fields.${i}`}
+                                    depth={depth + 1}
+                                    onChange={(p) =>
+                                        setSubs(
+                                            subs.map((x) =>
+                                                x._id !== sub._id
+                                                    ? x
+                                                    : '__replace' in p
+                                                      ? {
+                                                            ...(p.__replace as FieldDraft),
+                                                        }
+                                                      : ({
+                                                            ...x,
+                                                            ...p,
+                                                        } as FieldDraft),
+                                            ),
+                                        )
+                                    }
+                                    onMove={(d) => moveSub(i, d)}
+                                    onDuplicate={() => {
+                                        const next = [...subs];
+                                        next.splice(
+                                            i + 1,
+                                            0,
+                                            toDraft({
+                                                ...sub,
+                                                name: sub.name
+                                                    ? `${sub.name}_kopia`
+                                                    : '',
+                                                label: sub.label
+                                                    ? `${sub.label} (kopia)`
+                                                    : '',
+                                            }),
+                                        );
+                                        setSubs(next);
+                                    }}
+                                    onRemove={() =>
+                                        setSubs(
+                                            subs.filter(
+                                                (x) => x._id !== sub._id,
+                                            ),
+                                        )
+                                    }
+                                />
+                            ))}
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                    const base =
+                                        types.find((t) => t.name === 'text') ??
+                                        types[0];
+                                    setSubs([
+                                        ...subs,
+                                        toDraft({
+                                            type: base.name,
+                                            ...base.settings,
+                                        }),
+                                    ]);
+                                }}
+                            >
+                                <Plus /> Dodaj pole podrzędne
+                            </Button>
+                        </div>
+                    )}
 
                     <div className="space-y-2">
                         <p className="text-sm font-medium">Logika warunkowa</p>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Cms;
 
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentType;
+use App\Cms\Fields\ContainerFieldType;
 use App\Cms\Fields\FieldGroup;
 use App\Cms\Fields\FieldRegistry;
 use App\Cms\Fields\FieldValidator;
@@ -260,22 +261,34 @@ class ContentController extends Controller
         ];
     }
 
-    /** Obiekty mediów powiązane z treścią (do podglądu w polach Image/File/Gallery). */
+    /** Obiekty mediów powiązane z treścią (do podglądu w polach Image/File/Gallery, także w wierszach Repeatera). */
     private function referencedMedia(array $fields, array $values, ?int $featuredId): array
     {
-        $ids = $featuredId ? [$featuredId] : [];
-
-        foreach ($fields as $field) {
-            if (! in_array($field['type'], ['image', 'file', 'gallery'], true)) {
-                continue;
-            }
-
-            $value = $values[$field['name']] ?? null;
-            $ids = [...$ids, ...(is_array($value) ? $value : [$value])];
-        }
-
+        $ids = [...($featuredId ? [$featuredId] : []), ...$this->mediaIds($fields, $values)];
         $ids = array_values(array_unique(array_filter($ids, 'is_numeric')));
 
         return Media::whereIn('id', $ids)->get()->mapWithKeys(fn (Media $m) => [$m->id => $m->asArray('medium')])->all();
+    }
+
+    /** @return list<mixed> */
+    private function mediaIds(array $fields, array $values): array
+    {
+        $ids = [];
+
+        foreach ($fields as $field) {
+            $value = $values[$field['name'] ?? ''] ?? null;
+
+            if (in_array($field['type'], ['image', 'file', 'gallery'], true)) {
+                $ids = [...$ids, ...(is_array($value) ? $value : [$value])];
+            } elseif (($type = $this->registry->get($field['type'])) instanceof ContainerFieldType && is_array($value)) {
+                $sub = array_map(fn ($f) => $this->registry->resolveField($f), $type->subFields($field));
+
+                foreach ($value as $row) {
+                    $ids = [...$ids, ...$this->mediaIds($sub, is_array($row) ? $row : [])];
+                }
+            }
+        }
+
+        return $ids;
     }
 }

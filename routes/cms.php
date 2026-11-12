@@ -5,6 +5,7 @@ use App\Http\Controllers\Cms\ContentController;
 use App\Http\Controllers\Cms\FieldGroupController;
 use App\Http\Controllers\Cms\MediaController;
 use App\Http\Controllers\Cms\MediaSizeController;
+use App\Http\Controllers\Cms\RelationController;
 use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,7 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
     Route::put('content/{type:key}/{content}/builder', [BuilderController::class, 'save'])->name('content.builder.save');
     Route::get('content/{type:key}/{content}/preview', [SiteController::class, 'preview'])->name('content.preview');
 
+    Route::get('relations/{group}', RelationController::class)->name('relations');
     Route::get('fields', [FieldGroupController::class, 'index'])->name('fields.index');
     Route::get('fields/create', [FieldGroupController::class, 'create'])->name('fields.create');
     Route::post('fields', [FieldGroupController::class, 'store'])->name('fields.store');

@@ -1,6 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft, Download, Loader2, Plus } from 'lucide-react';
 import { useState } from 'react';
+import { toDraft } from '@/components/cms/field-builder/draft';
 import { FieldEditor } from '@/components/cms/field-builder/field-editor';
 import { LocationEditor } from '@/components/cms/field-builder/logic-editors';
 import {
@@ -33,27 +34,6 @@ type Props = {
     terms: { id: number; name: string; taxonomy: string | null }[];
     parents: { id: number; title: string }[];
 };
-
-let counter = 0;
-const uid = () => `f${Date.now().toString(36)}${counter++}`;
-
-function toDraft(raw: Record<string, unknown>): FieldDraft {
-    return {
-        label: '',
-        name: '',
-        instructions: '',
-        required: false,
-        conditional_logic: false,
-        ...raw,
-        wrapper: {
-            width: '',
-            class: '',
-            id: '',
-            ...((raw.wrapper as object) ?? {}),
-        },
-        _id: uid(),
-    } as FieldDraft;
-}
 
 export default function FieldGroupEdit({
     group,
@@ -247,6 +227,7 @@ export default function FieldGroupEdit({
                                         types={fieldTypes}
                                         siblings={fields}
                                         errors={errors}
+                                        errorPrefix={`fields.${i}`}
                                         onChange={(p) => patchField(f._id, p)}
                                         onMove={(d) => move(i, d)}
                                         onDuplicate={() => duplicate(i)}

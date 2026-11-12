@@ -50,9 +50,19 @@ const labels: Record<string, string> = {
     max_height: 'Maksymalna wysokość (px)',
     preview_size: 'Rozmiar podglądu',
     insert: 'Nowe pliki dodawaj',
+    toolbar: 'Pasek narzędzi',
+    post_type: 'Dozwolone typy treści',
+    post_status: 'Dozwolone statusy',
+    field_type: 'Sposób wyboru',
+    taxonomy: 'Taksonomia (klucz)',
+    button_label: 'Etykieta przycisku dodawania',
+    collapsed: 'Pole tytułu wiersza (nazwa)',
 };
 
-const hidden = new Set(['ajax']);
+/** Dla tych typów "min"/"max" oznaczają liczbę pozycji, a nie wartość liczbową. */
+const countTypes = new Set(['repeater', 'relationship', 'gallery']);
+
+const hidden = new Set(['ajax', 'sub_fields']);
 
 const returnFormats: Record<string, [string, string][]> = {
     select: [
@@ -94,7 +104,33 @@ const returnFormats: Record<string, [string, string][]> = {
         ['url', 'Adresy URL'],
         ['id', 'Identyfikatory'],
     ],
+    oembed: [
+        ['html', 'Kod HTML (iframe)'],
+        ['url', 'Adres URL'],
+    ],
+    post_object: [
+        ['object', 'Obiekt treści'],
+        ['id', 'Identyfikator'],
+    ],
+    relationship: [
+        ['object', 'Obiekty treści'],
+        ['id', 'Identyfikatory'],
+    ],
+    taxonomy: [
+        ['object', 'Obiekty terminów'],
+        ['id', 'Identyfikatory'],
+    ],
+    user: [
+        ['object', 'Dane użytkownika (id, imię)'],
+        ['id', 'Identyfikator'],
+    ],
 };
+
+const repeaterLayouts: [string, string][] = [
+    ['block', 'Bloki (zwijane)'],
+    ['row', 'Wiersze'],
+    ['table', 'Tabela'],
+];
 
 const enums: Record<string, [string, string][]> = {
     new_lines: [
@@ -113,6 +149,14 @@ const enums: Record<string, [string, string][]> = {
     insert: [
         ['append', 'Na końcu'],
         ['prepend', 'Na początku'],
+    ],
+    toolbar: [
+        ['full', 'Pełny'],
+        ['basic', 'Podstawowy'],
+    ],
+    field_type: [
+        ['multi_select', 'Wiele terminów'],
+        ['select', 'Jeden termin'],
     ],
     first_day: [
         ['1', 'Poniedziałek'],
@@ -164,7 +208,12 @@ export function TypeSettings({ field, defaults, onChange }: Props) {
     return (
         <div className="grid gap-4 sm:grid-cols-2">
             {keys.map((key) => {
-                const label = labels[key] ?? key;
+                const label =
+                    key === 'min' && countTypes.has(field.type)
+                        ? 'Minimalna liczba pozycji'
+                        : key === 'max' && countTypes.has(field.type)
+                          ? 'Maksymalna liczba pozycji'
+                          : (labels[key] ?? key);
                 const def = defaults[key];
                 const value = key in field ? field[key] : def;
 
@@ -214,6 +263,18 @@ export function TypeSettings({ field, defaults, onChange }: Props) {
                     );
                 }
 
+                if (key === 'layout' && field.type === 'repeater') {
+                    return (
+                        <SelectSetting
+                            key={key}
+                            label={label}
+                            value={value}
+                            options={repeaterLayouts}
+                            onChange={(v) => onChange(key, v)}
+                        />
+                    );
+                }
+
                 if (enums[key]) {
                     const asNumber = key === 'first_day';
 
@@ -241,7 +302,7 @@ export function TypeSettings({ field, defaults, onChange }: Props) {
                     );
                 }
 
-                if (Array.isArray(def) && key === 'default_value') {
+                if (Array.isArray(def) && key !== 'choices') {
                     return (
                         <Row
                             key={key}

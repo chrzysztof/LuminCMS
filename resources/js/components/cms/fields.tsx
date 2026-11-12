@@ -1,6 +1,9 @@
 import { File as FileIcon, ImagePlus, X } from 'lucide-react';
 import { useState } from 'react';
 import { MediaPicker } from '@/components/cms/media-picker';
+import { RelationControl } from '@/components/cms/relation-control';
+import { RepeaterControl } from '@/components/cms/repeater-control';
+import { WysiwygEditor } from '@/components/cms/wysiwyg-editor';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,6 +21,12 @@ type ControlProps = {
     media: MediaMap;
     rememberMedia: (items: MediaItem[]) => void;
     id: string;
+    errors: Record<string, string | undefined>;
+    /** Pełny klucz błędów tego pola, np. "fields.slajdy" albo "fields.slajdy.0.tytul". */
+    errorKey: string;
+    groupId?: number;
+    /** Ścieżka nazw pola w grupie (bez indeksów wierszy), np. "slajdy.powiazany". */
+    path: string;
 };
 
 const nativeClass =
@@ -464,6 +473,41 @@ function Control(props: ControlProps) {
         case 'file':
         case 'gallery':
             return <MediaControl {...props} />;
+        case 'wysiwyg':
+            return (
+                <WysiwygEditor
+                    id={id}
+                    value={text}
+                    onChange={onChange}
+                    toolbar={field.toolbar === 'basic' ? 'basic' : 'full'}
+                    minHeight={Number(field.min_height) || 200}
+                />
+            );
+        case 'oembed':
+            return (
+                <Input
+                    id={id}
+                    type="url"
+                    value={text}
+                    placeholder="https://www.youtube.com/watch?v=…"
+                    onChange={(e) => onChange(e.target.value)}
+                />
+            );
+        case 'post_object':
+        case 'relationship':
+        case 'taxonomy':
+        case 'user':
+            return (
+                <RelationControl
+                    field={field}
+                    value={value}
+                    onChange={onChange}
+                    groupId={props.groupId}
+                    path={props.path}
+                />
+            );
+        case 'repeater':
+            return <RepeaterControl {...props} />;
         default:
             return (
                 <p className="text-sm text-muted-foreground">
@@ -481,6 +525,11 @@ type FieldListProps = {
     rememberMedia: (items: MediaItem[]) => void;
     onChange: (name: string, value: unknown) => void;
     labelPlacement?: 'top' | 'left';
+    /** Prefiks kluczy błędów (domyślnie "fields"; w wierszach Repeatera "fields.nazwa.indeks"). */
+    errorKey?: string;
+    groupId?: number;
+    /** Nazwy pól nadrzędnych (Repeater), np. "slajdy". */
+    path?: string;
 };
 
 /** Formularz pól grupy: etykiety, instrukcje, błędy, logika warunkowa i elementy układu. */
@@ -492,6 +541,9 @@ export function FieldList({
     rememberMedia,
     onChange,
     labelPlacement = 'top',
+    errorKey = 'fields',
+    groupId,
+    path = '',
 }: FieldListProps) {
     return (
         <div className="flex flex-wrap gap-x-4 gap-y-5">
@@ -524,11 +576,16 @@ export function FieldList({
 
                 const id = `field-${field.name}`;
                 const width = Number(field.wrapper.width);
+                const fieldKey = `${errorKey}.${field.name}`;
+                const fieldPath = path ? `${path}.${field.name}` : field.name;
+                // Dla kontenerów błędy wierszy pokazują same wiersze; tutaj tylko błąd całego pola.
                 const error =
-                    errors[`fields.${field.name}`] ??
-                    Object.entries(errors).find(([k]) =>
-                        k.startsWith(`fields.${field.name}.`),
-                    )?.[1];
+                    errors[fieldKey] ??
+                    (field.type === 'repeater'
+                        ? undefined
+                        : Object.entries(errors).find(([k]) =>
+                              k.startsWith(`${fieldKey}.`),
+                          )?.[1]);
 
                 return (
                     <div
@@ -569,6 +626,10 @@ export function FieldList({
                                 value={values[field.name]}
                                 media={media}
                                 rememberMedia={rememberMedia}
+                                errors={errors}
+                                errorKey={fieldKey}
+                                groupId={groupId}
+                                path={fieldPath}
                                 onChange={(v) => onChange(field.name, v)}
                             />
                             {error && (

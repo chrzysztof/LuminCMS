@@ -40,6 +40,15 @@ class CmsServiceProvider extends ServiceProvider
         Types\ImageField::class,
         Types\FileField::class,
         Types\GalleryField::class,
+
+        Types\WysiwygField::class,
+        Types\OEmbedField::class,
+        Types\PostObjectField::class,
+        Types\RelationshipField::class,
+        Types\TaxonomyField::class,
+        Types\UserField::class,
+
+        Types\RepeaterField::class,
     ];
 
     public function register(): void

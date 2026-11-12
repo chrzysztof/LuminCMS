@@ -135,6 +135,7 @@ export default function ContentEdit({
                             rememberMedia={rememberMedia}
                             onChange={setField}
                             labelPlacement={g.label_placement}
+                            groupId={g.id}
                         />
                     </CardContent>
                 </Card>

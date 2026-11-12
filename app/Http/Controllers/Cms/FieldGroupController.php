@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Cms;
 
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentType;
+use App\Cms\Fields\ContainerFieldType;
 use App\Cms\Fields\FieldGroup;
 use App\Cms\Fields\FieldRegistry;
 use App\Cms\Taxonomy\Term;
@@ -217,6 +218,10 @@ class FieldGroupController extends Controller
                 }
             }
 
+            foreach ((array) ($input['fields'] ?? []) as $i => $field) {
+                $this->checkSubFields($v, $field, "fields.{$i}", 1);
+            }
+
             // Logika warunkowa może odwoływać się tylko do pól tej grupy.
             foreach ((array) ($input['fields'] ?? []) as $i => $field) {
                 foreach ((array) ($field['conditional_logic'] ?? []) as $andGroup) {
@@ -249,6 +254,65 @@ class FieldGroupController extends Controller
         ];
     }
 
+    /** Sprawdza pola podrzędne kontenerów (Repeater): typ, nazwa, unikalność w obrębie wiersza, głębokość. */
+    private function checkSubFields($validator, mixed $field, string $path, int $depth): void
+    {
+        if (! is_array($field) || ! $this->registry->has($field['type'] ?? '')
+            || ! ($this->registry->get($field['type']) instanceof ContainerFieldType)) {
+            return;
+        }
+
+        $subs = $field['sub_fields'] ?? [];
+
+        if (! is_array($subs) || $depth > 3 || count($subs) > 50) {
+            $validator->errors()->add("{$path}.sub_fields", 'Zbyt głębokie zagnieżdżenie lub zbyt wiele pól podrzędnych.');
+
+            return;
+        }
+
+        $names = [];
+
+        foreach ($subs as $j => $sub) {
+            $sp = "{$path}.sub_fields.{$j}";
+            $type = is_array($sub) && $this->registry->has($sub['type'] ?? '') ? $this->registry->get($sub['type']) : null;
+
+            if (! $type) {
+                $validator->errors()->add("{$sp}.type", 'Nieznany typ pola.');
+
+                continue;
+            }
+
+            $name = (string) ($sub['name'] ?? '');
+
+            if ($name !== '' && ! preg_match('/^[a-z][a-z0-9_]*$/', $name)) {
+                $validator->errors()->add("{$sp}.name", 'Nazwa pola: małe litery, cyfry i podkreślenia.');
+            }
+
+            if ($type->storesData() && $name === '') {
+                $validator->errors()->add("{$sp}.name", 'Podaj nazwę pola (małe litery, cyfry i podkreślenia).');
+            }
+
+            if ($name !== '') {
+                if (isset($names[$name])) {
+                    $validator->errors()->add("{$sp}.name", "Nazwa „{$name}” jest już użyta w tym wierszu.");
+                }
+                $names[$name] = true;
+            }
+
+            $this->checkSubFields($validator, $sub, $sp, $depth + 1);
+        }
+
+        foreach ($subs as $j => $sub) {
+            foreach ((array) ($sub['conditional_logic'] ?? []) as $andGroup) {
+                foreach ((array) $andGroup as $rule) {
+                    if (isset($rule['field']) && ! isset($names[$rule['field']])) {
+                        $validator->errors()->add("{$path}.sub_fields.{$j}.conditional_logic", 'Warunek odwołuje się do nieistniejącego pola.');
+                    }
+                }
+            }
+        }
+    }
+
     /** Usuwa klucze robocze z interfejsu (zaczynające się od "_") i puste reguły warunkowe. */
     private function cleanField(array $field): array
     {
@@ -256,6 +320,10 @@ class FieldGroupController extends Controller
 
         if (empty($field['conditional_logic'])) {
             $field['conditional_logic'] = false;
+        }
+
+        if (isset($field['sub_fields']) && is_array($field['sub_fields'])) {
+            $field['sub_fields'] = array_map(fn ($f) => $this->cleanField((array) $f), array_values($field['sub_fields']));
         }
 
         return $field;

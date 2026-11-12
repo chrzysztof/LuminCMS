@@ -153,3 +153,50 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* Edytor tekstu sformatowanego (pole WYSIWYG) */
+.wysiwyg-content > * + * {
+    margin-top: 0.75rem;
+}
+.wysiwyg-content h2 {
+    font-size: 1.35rem;
+    font-weight: 600;
+}
+.wysiwyg-content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+.wysiwyg-content h4 {
+    font-weight: 600;
+}
+.wysiwyg-content ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+}
+.wysiwyg-content ol {
+    list-style: decimal;
+    padding-left: 1.5rem;
+}
+.wysiwyg-content blockquote {
+    border-left: 3px solid var(--border);
+    padding-left: 1rem;
+    color: var(--muted-foreground);
+}
+.wysiwyg-content a {
+    color: var(--brand);
+    text-decoration: underline;
+}
+.wysiwyg-content code {
+    background: var(--muted);
+    border-radius: 0.25rem;
+    padding: 0.1rem 0.3rem;
+    font-size: 0.875em;
+}
+.wysiwyg-content pre {
+    background: var(--muted);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+}
+.wysiwyg-content hr {
+    border-color: var(--border);
+}
