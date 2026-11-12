@@ -46,3 +46,16 @@
     padding: 0.1rem 0.7rem;
     text-decoration: none;
 }
+
+.lm-site-header__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.lm-site-header__brand {
+    font-weight: 700;
+    text-decoration: none;
+    color: inherit;
+}

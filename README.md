@@ -48,6 +48,8 @@ A theme is a folder in `themes/{slug}/` with a `theme.json` manifest and Blade v
 - **Template hierarchy:** chosen template, `single-{type}`, `single`; archives use `archive-{type}` / `archive`; taxonomy terms use `taxonomy-{key}` / `taxonomy` / `archive`.
 - **Public archives:** `/blog` (content type URL prefix) and `/kategoria/{term}` (taxonomy URL prefix, editable in the taxonomy panel), both with pagination, SEO and sitemap entries.
 - **Assets** live in `themes/{slug}/assets` and are served through `theme-assets/{slug}/...`.
+- **Global parts:** the theme declares slots (`parts` in `theme.json`, e.g. header and footer). Appearance → Parts assigns a part, edited in the visual editor, to each slot; an empty slot uses the theme's default markup. Parts are admin-only and never public.
+- **Menus:** Appearance → Menu builds multi-level menus (content, terms, custom links, headings) and assigns them to theme locations (`menus` in `theme.json`). A top-level item can be a **mega menu**: its children become columns, with an optional extra panel from a global part. Insert a menu with the editor's Menu block or `[menu name="slug"]` / `[menu location="primary"]`. Output is accessible (`aria-expanded`, keyboard, mobile accordion) and styled by the theme's `menu.css` / `menu.js`.
 - `php artisan cms:theme` lists themes, `php artisan cms:theme {slug}` activates one.
 
 ## Requirements

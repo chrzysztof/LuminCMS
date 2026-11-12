@@ -53,7 +53,7 @@ class HandleInertiaRequests extends Middleware
             // Menu pokazuje tylko typy treści, które użytkownik może edytować.
             'contentTypes' => fn () => $request->user()
                 ? ContentType::orderBy('id')->get(['key', 'label', 'label_plural', 'icon', 'capability_type'])
-                    ->filter(fn (ContentType $t) => app(ContentAccess::class)->canCreate($request->user(), $t))
+                    ->filter(fn (ContentType $t) => $t->key !== 'part' && app(ContentAccess::class)->canCreate($request->user(), $t))
                     ->map(fn (ContentType $t) => $t->only(['key', 'label', 'label_plural', 'icon']))
                     ->values()
                 : [],

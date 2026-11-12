@@ -113,6 +113,14 @@ const blocks: BlockDef[] = [
         content: `<blockquote class="lm-quote">Treść cytatu lub opinii klienta.</blockquote>`,
     },
     {
+        id: 'menu',
+        label: t('Menu'),
+        category: t('Układ'),
+        icon: icon('<path d="M4 7h16M4 12h16M4 17h10"/>'),
+        // Shortcode zamieni się w menu na stronie; location wskazuje lokalizację motywu, name menu po nazwie (slugu).
+        content: `<div class="lm-menu-slot">[menu location="primary"]</div>`,
+    },
+    {
         id: 'divider',
         label: t('Separator'),
         category: t('Układ'),

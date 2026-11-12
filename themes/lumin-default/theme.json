@@ -3,6 +3,14 @@
     "version": "1.0.0",
     "author": "Lumin CMS",
     "description": "Prosty, szybki motyw startowy.",
+    "parts": [
+        { "slot": "header", "label": "Nagłówek" },
+        { "slot": "footer", "label": "Stopka" }
+    ],
+    "menus": [
+        { "key": "primary", "label": "Menu główne" },
+        { "key": "footer", "label": "Menu w stopce" }
+    ],
     "templates": [
         { "key": "default", "label": "Domyślny", "types": [] },
         {

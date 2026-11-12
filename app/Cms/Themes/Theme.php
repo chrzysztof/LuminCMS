@@ -40,6 +40,28 @@ class Theme
             ->all();
     }
 
+    /** @return list<array{slot: string, label: string}> sloty części globalnych (np. header, footer) */
+    public function parts(): array
+    {
+        return $this->keyed('parts', 'slot');
+    }
+
+    /** @return list<array{key: string, label: string}> lokalizacje menu zadeklarowane przez motyw */
+    public function menuLocations(): array
+    {
+        return array_map(fn ($l) => ['key' => $l['key'], 'label' => $l['label']], $this->keyed('menus', 'key'));
+    }
+
+    /** @return list<array<string, string>> */
+    private function keyed(string $section, string $idKey): array
+    {
+        return collect($this->manifest[$section] ?? [])
+            ->filter(fn ($t) => is_array($t) && preg_match('/^[a-z0-9_-]+$/', (string) ($t[$idKey] ?? '')))
+            ->map(fn ($t) => [$idKey => $t[$idKey], 'label' => (string) ($t['label'] ?? $t[$idKey])])
+            ->values()
+            ->all();
+    }
+
     /** Adres zasobu motywu (z parametrem wersji, żeby przeglądarka odświeżała zmieniony plik). */
     public function asset(string $file): string
     {

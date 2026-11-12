@@ -5,6 +5,8 @@ use App\Http\Controllers\Cms\ContentController;
 use App\Http\Controllers\Cms\FieldGroupController;
 use App\Http\Controllers\Cms\MediaController;
 use App\Http\Controllers\Cms\MediaSizeController;
+use App\Http\Controllers\Cms\MenuController;
+use App\Http\Controllers\Cms\PartController;
 use App\Http\Controllers\Cms\RedirectController;
 use App\Http\Controllers\Cms\RelationController;
 use App\Http\Controllers\Cms\SeoSettingsController;
@@ -58,6 +60,18 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
         Route::post('fields/{group}/toggle', [FieldGroupController::class, 'toggle'])->name('fields.toggle');
         Route::post('fields/{group}/duplicate', [FieldGroupController::class, 'duplicate'])->name('fields.duplicate');
         Route::get('fields/{group}/export', [FieldGroupController::class, 'export'])->name('fields.export');
+    });
+
+    Route::middleware('can:manage_options')->group(function () {
+        Route::get('parts', [PartController::class, 'index'])->name('parts.index');
+        Route::post('parts', [PartController::class, 'store'])->name('parts.store');
+        Route::put('parts/slots/{slot}', [PartController::class, 'assign'])->name('parts.assign');
+        Route::delete('parts/{content}', [PartController::class, 'destroy'])->name('parts.destroy');
+
+        Route::get('menus', [MenuController::class, 'index'])->name('menus.index');
+        Route::post('menus', [MenuController::class, 'store'])->name('menus.store');
+        Route::put('menus/{menu}', [MenuController::class, 'update'])->name('menus.update');
+        Route::delete('menus/{menu}', [MenuController::class, 'destroy'])->name('menus.destroy');
     });
 
     Route::get('shortcodes', ShortcodeController::class)->name('shortcodes')->middleware('can:edit_posts');

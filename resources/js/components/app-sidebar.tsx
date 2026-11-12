@@ -13,6 +13,8 @@ import {
     Newspaper,
     Tags,
     Code2,
+    LayoutTemplate,
+    Menu as MenuIcon,
     type LucideIcon,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
@@ -69,6 +71,12 @@ export function AppSidebar() {
         : [];
     const shortcodeItems: NavItem[] = can('edit_posts')
         ? [{ title: t('Shortcody'), href: cmsUrl.shortcodes, icon: Code2 }]
+        : [];
+    const appearanceItems: NavItem[] = can('manage_options')
+        ? [
+              { title: t('Menu'), href: cmsUrl.menus, icon: MenuIcon },
+              { title: t('Części'), href: cmsUrl.parts, icon: LayoutTemplate },
+          ]
         : [];
     const settingsItems: NavItem[] = [
         ...(can('manage_options')
@@ -131,6 +139,9 @@ export function AppSidebar() {
                             ...shortcodeItems,
                         ]}
                     />
+                )}
+                {appearanceItems.length > 0 && (
+                    <NavMain label={t('Wygląd')} items={appearanceItems} />
                 )}
                 {libraryItems.length > 0 && (
                     <NavMain label={t('Biblioteka')} items={libraryItems} />

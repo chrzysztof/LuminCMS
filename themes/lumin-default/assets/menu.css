@@ -1,0 +1,235 @@
+/* Menu nawigacji (klasy lm-menu__*). Na desktopie podmenu otwiera hover, fokus i przycisk; poniżej 768 px działa akordeon. */
+.lm-menu {
+    position: static;
+}
+/* Megamenu pozycjonuje się względem nagłówka, żeby mogło mieć szerokość kontenera. */
+.lm-site-header {
+    position: relative;
+}
+.lm-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.lm-menu__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    align-items: center;
+}
+.lm-menu__item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+}
+.lm-menu__link,
+.lm-menu__text {
+    color: inherit;
+    text-decoration: none;
+    padding: 0.5rem 0;
+}
+.lm-menu__link:hover {
+    text-decoration: underline;
+}
+.lm-menu__item.is-current > .lm-menu__link,
+.lm-menu__item.is-trail > .lm-menu__link {
+    font-weight: 600;
+}
+.lm-menu__text {
+    opacity: 0.7;
+}
+.lm-menu__toggle {
+    background: none;
+    border: 0;
+    padding: 0.35rem;
+    cursor: pointer;
+    color: inherit;
+    line-height: 1;
+}
+.lm-menu__toggle span {
+    display: block;
+    width: 0.45rem;
+    height: 0.45rem;
+    border: solid currentColor;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    transition: transform 0.15s;
+}
+.lm-menu__toggle[aria-expanded='true'] span {
+    transform: rotate(-135deg);
+}
+.lm-menu__burger {
+    display: none;
+    background: none;
+    border: 1px solid currentColor;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.6rem;
+    cursor: pointer;
+    color: inherit;
+}
+.lm-menu__burger span,
+.lm-menu__burger span::before,
+.lm-menu__burger span::after {
+    display: block;
+    width: 1.1rem;
+    height: 2px;
+    background: currentColor;
+    content: '';
+    position: relative;
+}
+.lm-menu__burger span::before {
+    position: absolute;
+    top: -0.35rem;
+}
+.lm-menu__burger span::after {
+    position: absolute;
+    top: 0.35rem;
+}
+
+.lm-menu__sub,
+.lm-menu__mega {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 50;
+    min-width: 14rem;
+    background: #fff;
+    color: #111827;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.12);
+    padding: 0.5rem;
+}
+.lm-menu__sub .lm-menu__sub {
+    position: static;
+    display: block;
+    border: 0;
+    box-shadow: none;
+    padding: 0 0 0 1rem;
+    min-width: 0;
+}
+.lm-menu__sub .lm-menu__toggle {
+    display: none;
+}
+.lm-menu__sub .lm-menu__link {
+    display: block;
+    padding: 0.4rem 0.6rem;
+}
+.lm-menu__item.has-children:hover > .lm-menu__sub,
+.lm-menu__item.has-children:focus-within > .lm-menu__sub,
+.lm-menu__item.has-children:hover > .lm-menu__mega,
+.lm-menu__item.has-children:focus-within > .lm-menu__mega,
+.lm-menu__toggle[aria-expanded='true'] ~ .lm-menu__sub,
+.lm-menu__toggle[aria-expanded='true'] ~ .lm-menu__mega {
+    display: block;
+}
+
+/* Megamenu: szerokość kontenera (domyślnie) albo pełna szerokość nagłówka. */
+.lm-menu__item.is-mega {
+    position: static;
+}
+.lm-menu__mega {
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 1.5rem;
+}
+.lm-menu__mega--container {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: min(72rem, 100vw - 2rem);
+}
+.lm-menu__cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: 1.5rem;
+}
+.lm-menu__col-title {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+}
+.lm-menu__col .lm-menu__sub {
+    display: block;
+    position: static;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+    min-width: 0;
+}
+.lm-menu__extra {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+@media (max-width: 767px) {
+    .lm-site-header__bar {
+        position: relative;
+        padding-right: 3.25rem;
+    }
+    .lm-site-header__bar .lm-menu {
+        flex: 1 0 100%;
+    }
+    .lm-site-header__bar .lm-menu__burger {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    .lm-menu__burger {
+        display: inline-block;
+    }
+    .lm-menu__list {
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        margin-top: 0.5rem;
+    }
+    .lm-menu.is-open .lm-menu__list {
+        display: flex;
+    }
+    .lm-menu__item {
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .lm-menu__item > .lm-menu__link,
+    .lm-menu__item > .lm-menu__text {
+        flex: 1;
+    }
+    .lm-menu__sub,
+    .lm-menu__mega,
+    .lm-menu__mega--container {
+        position: static;
+        transform: none;
+        width: 100%;
+        min-width: 0;
+        flex-basis: 100%;
+        box-shadow: none;
+        border: 0;
+        padding: 0 0 0 1rem;
+    }
+    .lm-menu__item.has-children:hover > .lm-menu__sub,
+    .lm-menu__item.has-children:focus-within > .lm-menu__sub,
+    .lm-menu__item.has-children:hover > .lm-menu__mega,
+    .lm-menu__item.has-children:focus-within > .lm-menu__mega {
+        display: none;
+    }
+    .lm-menu__item.has-children
+        > .lm-menu__toggle[aria-expanded='true']
+        ~ .lm-menu__sub,
+    .lm-menu__item.has-children
+        > .lm-menu__toggle[aria-expanded='true']
+        ~ .lm-menu__mega {
+        display: block;
+    }
+    .lm-menu__cols {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+}

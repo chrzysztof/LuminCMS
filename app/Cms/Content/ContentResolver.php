@@ -13,7 +13,7 @@ class ContentResolver
             return null;
         }
 
-        foreach (ContentType::all() as $type) {
+        foreach (ContentType::where('key', '!=', 'part')->get() as $type) {
             $prefix = $type->url_prefix;
             $slugs = $segments;
 

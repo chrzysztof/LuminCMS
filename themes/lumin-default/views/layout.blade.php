@@ -3,6 +3,8 @@
     $siteSettings = app(\App\Cms\Settings\Settings::class)->group('site');
     $preview = $preview ?? false;
     $chrome = $chrome ?? true;
+    $parts = app(\App\Cms\Themes\Parts::class);
+    $menus = app(\App\Cms\Menus\MenuRenderer::class);
     $trackOn = ! $preview && ($siteSettings['track_logged_in'] || ! auth()->check());
     $hasTracking = $siteSettings['ga_id'] !== '' || $siteSettings['gtm_id'] !== '' || $siteSettings['pixel_id'] !== '';
 @endphp
@@ -20,12 +22,20 @@
     @include('theme::partials.tracking', ['trackOn' => $trackOn, 'hasTracking' => $hasTracking, 'siteSettings' => $siteSettings])
     <link rel="stylesheet" href="{{ asset('css/lumin-blocks.css') }}">
     <link rel="stylesheet" href="{{ $theme->asset('theme.css') }}">
+    <link rel="stylesheet" href="{{ $theme->asset('menu.css') }}">
     @stack('head')
 </head>
 <body>
     @if ($chrome)
         <header class="lm-site-header">
-            <div class="lm-container"><a href="{{ url('/') }}">{{ $siteName }}</a></div>
+            @if (($headerHtml = $parts->html('header')) !== null)
+                <div class="lm-container">{!! $headerHtml !!}</div>
+            @else
+                <div class="lm-container lm-site-header__bar">
+                    <a class="lm-site-header__brand" href="{{ url('/') }}">{{ $siteName }}</a>
+                    {!! $menus->forLocation('primary') !!}
+                </div>
+            @endif
         </header>
     @endif
     <main>
@@ -34,7 +44,12 @@
     @if ($chrome)
         <footer class="lm-site-footer">
             <div class="lm-container">
-                © {{ date('Y') }} {{ $siteName }}
+                @if (($footerHtml = $parts->html('footer')) !== null)
+                    {!! $footerHtml !!}
+                @else
+                    {!! $menus->forLocation('footer') !!}
+                    © {{ date('Y') }} {{ $siteName }}
+                @endif
                 @if ($trackOn && $hasTracking && $siteSettings['consent_required'])
                     · <a href="#" data-lm-cookie-settings>{{ __('Ustawienia cookies') }}</a>
                 @endif
@@ -44,5 +59,6 @@
     @if ($trackOn && $siteSettings['custom_body_end'] !== '')
         {!! $siteSettings['custom_body_end'] !!}
     @endif
+    <script src="{{ $theme->asset('menu.js') }}" defer></script>
 </body>
 </html>

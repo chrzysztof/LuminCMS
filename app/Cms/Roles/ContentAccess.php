@@ -19,6 +19,11 @@ class ContentAccess
 
     public function can(User $user, ContentType $type, string $action): bool
     {
+        // Części globalne (nagłówek, stopka) zmieniają wygląd całej witryny: tylko administrator.
+        if ($type->key === 'part' && ! RoleRegistry::grants($user->role, 'manage_options')) {
+            return false;
+        }
+
         return RoleRegistry::grants($user->role, $this->cap($type, $action));
     }
 

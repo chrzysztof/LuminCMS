@@ -22,7 +22,7 @@ class SitemapController extends Controller
         $count = 0;
 
         if (! $this->seo->site()['noindex_site']) {
-            Content::published()->with('type', 'parent')->orderBy('id')->lazy(500)->each(function (Content $content) use (&$xml, &$count) {
+            Content::published()->whereHas('type', fn ($q) => $q->where('key', '!=', 'part'))->with('type', 'parent')->orderBy('id')->lazy(500)->each(function (Content $content) use (&$xml, &$count) {
                 if ($count >= self::MAX_URLS || ! $this->seo->indexable($content) || ! empty($content->seo['canonical'])) {
                     return;
                 }

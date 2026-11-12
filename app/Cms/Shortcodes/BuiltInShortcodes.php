@@ -5,6 +5,7 @@ namespace App\Cms\Shortcodes;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentResolver;
 use App\Cms\Content\ContentType;
+use App\Cms\Menus\MenuRenderer;
 use App\Cms\Settings\Settings;
 use App\Cms\Taxonomy\Term;
 
@@ -65,6 +66,15 @@ class BuiltInShortcodes
 
             return '<a href="'.e(url(app(ContentResolver::class)->pathFor($target))).'">'.$label.'</a>';
         }, '[link id="12"]Zobacz ofertę[/link]', 'Odnośnik do treści o podanym id; bez tekstu użyje jej tytułu.');
+
+        // Menu nawigacji po slugu albo lokalizacji motywu.
+        $sc->add('menu', function (array $a) {
+            $renderer = app(MenuRenderer::class);
+
+            return ! empty($a['location'])
+                ? $renderer->forLocation((string) $a['location'])
+                : $renderer->forSlug((string) ($a['name'] ?? ($a[0] ?? '')));
+        }, '[menu name="glowne"] / [menu location="primary"]', 'Menu nawigacji (wielopoziomowe, z megamenu) wskazane nazwą (slugiem) albo lokalizacją motywu.');
 
         // Lista najnowszych treści, opcjonalnie z jednej taksonomii.
         $sc->add('posts', function (array $a) {
