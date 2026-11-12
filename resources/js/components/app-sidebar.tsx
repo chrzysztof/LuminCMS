@@ -12,6 +12,7 @@ import {
     LayoutGrid,
     Newspaper,
     Tags,
+    Code2,
     type LucideIcon,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
@@ -66,6 +67,9 @@ export function AppSidebar() {
               },
           ]
         : [];
+    const shortcodeItems: NavItem[] = can('edit_posts')
+        ? [{ title: t('Shortcody'), href: cmsUrl.shortcodes, icon: Code2 }]
+        : [];
     const settingsItems: NavItem[] = [
         ...(can('manage_options')
             ? [{ title: t('Witryna'), href: cmsUrl.siteSettings, icon: Globe }]
@@ -115,10 +119,17 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainItems} />
-                {contentItems.length + taxonomyItems.length > 0 && (
+                {contentItems.length +
+                    taxonomyItems.length +
+                    shortcodeItems.length >
+                    0 && (
                     <NavMain
                         label={t('Treści')}
-                        items={[...contentItems, ...taxonomyItems]}
+                        items={[
+                            ...contentItems,
+                            ...taxonomyItems,
+                            ...shortcodeItems,
+                        ]}
                     />
                 )}
                 {libraryItems.length > 0 && (

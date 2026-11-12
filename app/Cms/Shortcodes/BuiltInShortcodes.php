@@ -13,17 +13,17 @@ class BuiltInShortcodes
 {
     public static function register(Shortcodes $sc): void
     {
-        $sc->add('year', fn () => e(date('Y')), '[year]');
+        $sc->add('year', fn () => e(date('Y')), '[year]', 'Bieżący rok, np. do stopki.');
 
         $sc->add('date', function (array $a) {
             $format = (string) ($a['format'] ?? 'd.m.Y');
 
             return e(now()->format(mb_substr($format, 0, 30)));
-        }, '[date format="d.m.Y"]');
+        }, '[date format="d.m.Y"]', 'Dzisiejsza data w podanym formacie (format PHP).');
 
-        $sc->add('site_name', fn () => e(app(Settings::class)->get('seo', 'site_name', config('app.name'))), '[site_name]');
+        $sc->add('site_name', fn () => e(app(Settings::class)->get('seo', 'site_name', config('app.name'))), '[site_name]', 'Nazwa witryny z ustawień SEO.');
 
-        $sc->add('site_url', fn () => e(rtrim(url('/'), '/')), '[site_url]');
+        $sc->add('site_url', fn () => e(rtrim(url('/'), '/')), '[site_url]', 'Adres główny witryny.');
 
         $sc->add('button', function (array $a, string $content) {
             $url = self::safeUrl($a['url'] ?? ($a[0] ?? ''));
@@ -37,7 +37,7 @@ class BuiltInShortcodes
             $label = trim($content) !== '' ? strip_tags($content, '<strong><em><b><i>') : e($a['label'] ?? $url);
 
             return '<a class="'.$class.'" href="'.e($url).'"'.($new ? ' target="_blank" rel="noopener noreferrer"' : '').'>'.$label.'</a>';
-        }, '[button url="/kontakt" style="secondary"]Napisz do nas[/button]');
+        }, '[button url="/kontakt" style="secondary"]Napisz do nas[/button]', 'Przycisk z odnośnikiem. Opcje: style="secondary", new="1" (nowa karta).');
 
         // Wartość pola własnego bieżącej treści (albo treści o podanym id).
         $sc->add('field', function (array $a, string $content, ?Content $current) {
@@ -51,7 +51,7 @@ class BuiltInShortcodes
             $value = $source->field($name);
 
             return is_scalar($value) || $value instanceof \Stringable ? e((string) $value) : '';
-        }, '[field name="telefon"] / [field name="telefon" id="12"]');
+        }, '[field name="telefon"] / [field name="telefon" id="12"]', 'Wartość pola własnego tej treści albo treści o podanym id.');
 
         // Odnośnik do treści po id.
         $sc->add('link', function (array $a, string $content) {
@@ -64,7 +64,7 @@ class BuiltInShortcodes
             $label = trim($content) !== '' ? strip_tags($content, '<strong><em><b><i>') : e($target->title);
 
             return '<a href="'.e(url(app(ContentResolver::class)->pathFor($target))).'">'.$label.'</a>';
-        }, '[link id="12"]Zobacz ofertę[/link]');
+        }, '[link id="12"]Zobacz ofertę[/link]', 'Odnośnik do treści o podanym id; bez tekstu użyje jej tytułu.');
 
         // Lista najnowszych treści, opcjonalnie z jednej taksonomii.
         $sc->add('posts', function (array $a) {
@@ -102,7 +102,7 @@ class BuiltInShortcodes
             }
 
             return $html.'</ul>';
-        }, '[posts type="post" limit="5" taxonomy="category" term="nowosci" orderby="date|title" order="desc|asc"]');
+        }, '[posts type="post" limit="5" taxonomy="category" term="nowosci" orderby="date|title" order="desc|asc"]', 'Lista najnowszych opublikowanych treści, opcjonalnie z jednej kategorii lub tagu.');
 
         // Lista terminów taksonomii.
         $sc->add('terms', function (array $a) {
@@ -113,7 +113,7 @@ class BuiltInShortcodes
             }
 
             return '<ul class="lm-terms">'.$terms->map(fn ($t) => '<li>'.e($t->name).'</li>')->implode('').'</ul>';
-        }, '[terms taxonomy="category"]');
+        }, '[terms taxonomy="category"]', 'Lista terminów wybranej taksonomii.');
     }
 
     /** Tylko adresy względne, http(s), mailto i tel; resztę (np. javascript:) odrzucamy. */

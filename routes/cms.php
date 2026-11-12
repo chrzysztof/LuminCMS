@@ -8,6 +8,7 @@ use App\Http\Controllers\Cms\MediaSizeController;
 use App\Http\Controllers\Cms\RedirectController;
 use App\Http\Controllers\Cms\RelationController;
 use App\Http\Controllers\Cms\SeoSettingsController;
+use App\Http\Controllers\Cms\ShortcodeController;
 use App\Http\Controllers\Cms\SiteSettingsController;
 use App\Http\Controllers\Cms\TaxonomyController;
 use App\Http\Controllers\Cms\UserController;
@@ -58,6 +59,8 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
         Route::post('fields/{group}/duplicate', [FieldGroupController::class, 'duplicate'])->name('fields.duplicate');
         Route::get('fields/{group}/export', [FieldGroupController::class, 'export'])->name('fields.export');
     });
+
+    Route::get('shortcodes', ShortcodeController::class)->name('shortcodes')->middleware('can:edit_posts');
 
     Route::middleware('can:manage_categories')->group(function () {
         Route::get('taxonomies', [TaxonomyController::class, 'index'])->name('taxonomies.index');

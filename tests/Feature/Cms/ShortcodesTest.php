@@ -7,6 +7,7 @@ use App\Cms\Content\ContentType;
 use App\Cms\Shortcodes\Shortcodes;
 use App\Cms\Taxonomy\Taxonomy;
 use App\Cms\Taxonomy\Term;
+use App\Models\User;
 use Database\Seeders\CmsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -118,5 +119,22 @@ class ShortcodesTest extends TestCase
         ]);
 
         $this->get('/')->assertOk()->assertSee('Rok: '.date('Y'), false)->assertSee('[year]', false);
+    }
+
+    public function test_reference_page_lists_built_in_and_custom_shortcodes(): void
+    {
+        app(Shortcodes::class)->add('hello', fn () => 'hi', '[hello name="x"]', 'Opis własnego kodu');
+
+        $this->actingAs(User::factory()->role('contributor')->create());
+
+        $this->get('/cms/shortcodes')->assertOk()->assertInertia(fn ($page) => $page
+            ->component('shortcodes/index')
+            ->has('shortcodes', 10)
+            ->where('shortcodes.0.name', 'button')
+            ->where('shortcodes.0.usage', fn ($u) => str_starts_with($u, '[button'))
+            ->where('shortcodes.0.description', fn ($d) => $d !== ''));
+
+        $this->actingAs(User::factory()->role('subscriber')->create());
+        $this->get('/cms/shortcodes')->assertForbidden();
     }
 }

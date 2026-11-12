@@ -23,6 +23,7 @@ export const cmsUrl = {
     fieldToggle: (id: number) => `/cms/fields/${id}/toggle`,
     fieldDuplicate: (id: number) => `/cms/fields/${id}/duplicate`,
     fieldExport: (id: number) => `/cms/fields/${id}/export`,
+    shortcodes: '/cms/shortcodes',
     taxonomies: '/cms/taxonomies',
     taxonomy: (key: string) => `/cms/taxonomies/${key}`,
     termStore: (key: string) => `/cms/taxonomies/${key}/terms`,

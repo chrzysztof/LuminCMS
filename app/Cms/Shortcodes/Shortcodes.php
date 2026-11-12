@@ -20,10 +20,10 @@ class Shortcodes
     /** @var array<string, Closure> */
     private array $handlers = [];
 
-    /** @var array<string, string> opisy do dokumentacji */
+    /** @var array<string, array{usage: string, description: string}> dokumentacja do panelu */
     private array $docs = [];
 
-    public function add(string $name, Closure $handler, string $usage = ''): void
+    public function add(string $name, Closure $handler, string $usage = '', string $description = ''): void
     {
         $name = strtolower($name);
 
@@ -32,7 +32,7 @@ class Shortcodes
         }
 
         $this->handlers[$name] = $handler;
-        $this->docs[$name] = $usage;
+        $this->docs[$name] = ['usage' => $usage ?: '['.$name.']', 'description' => $description];
     }
 
     public function has(string $name): bool
@@ -40,7 +40,7 @@ class Shortcodes
         return isset($this->handlers[strtolower($name)]);
     }
 
-    /** @return array<string, string> nazwa => przykład użycia */
+    /** @return array<string, array{usage: string, description: string}> nazwa => przykład użycia i opis (klucz tłumaczenia) */
     public function all(): array
     {
         ksort($this->docs);
