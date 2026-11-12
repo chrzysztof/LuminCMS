@@ -74,26 +74,56 @@ Structure → Import and export moves content types, taxonomies with terms, fiel
 - Field groups, content fields and slugs go through the same validation as the panel forms; visual-editor content (`builder_data`) is re-rendered to clean HTML on import.
 - Media library files are not transferred, so fields holding media ids need to be filled in afterwards.
 
+## Installation
+
+### Release package (no Composer or Node needed)
+
+Download `lumin-cms-<version>.zip` from the GitHub releases page, unpack it on your server and point the web root at the `public/` directory. Open the site in a browser: the installer starts by itself.
+
+The installer (`/install`) checks the requirements (PHP version, extensions, writable folders), tests and saves the database connection (SQLite, MySQL/MariaDB or PostgreSQL), then creates the administrator account and site settings, with optional sample content (home page, about page, a sample post and a main menu). The wizard is available in all eleven admin languages. It creates `.env` and the application key on the first request, switches to production settings (`APP_ENV=production`, `APP_DEBUG=false`) and to database-backed sessions, cache and queue when it finishes.
+
+Security notes:
+
+- The installer disables itself once it finishes: `/install` returns 404 and a lock file `storage/app/installed` is written. Install on a private URL or finish the wizard right after unpacking, because until then anyone who reaches the site can run it.
+- Point the web server at `public/`, not at the project root, so `.env` is never served.
+- To run the installer again, remove `storage/app/installed` and use an empty database.
+
+### Command line
+
+```bash
+php artisan cms:install
+```
+
+It asks for the same data as the wizard. Everything can be passed as options for unattended installs:
+
+```bash
+php artisan cms:install --no-interaction --db=mysql --db-host=127.0.0.1 --db-name=lumin --db-user=lumin --db-password=secret \
+  --name="My site" --url=https://example.com --locale=en \
+  --admin-name=Ada --admin-email=ada@example.com --admin-password='correct horse battery' --starter
+```
+
+Use `--dev` to keep `APP_ENV` and `APP_DEBUG` from your `.env` instead of switching to production.
+
+### Building a release
+
+`scripts/build-release.sh [version]` produces `dist/lumin-cms-<version>.zip` (with `vendor/` and the built front end). Pushing a `v*` tag runs the same script in GitHub Actions and attaches the ZIP to a GitHub release.
+
 ## Requirements
 
-- PHP 8.3+
-- Composer
-- Node.js 20+
-- SQLite, MySQL or PostgreSQL
+- PHP 8.3+ (extensions: ctype, dom, fileinfo, json, mbstring, openssl, pdo, tokenizer, xml; GD or Imagick for media; zip for theme uploads)
+- SQLite, MySQL/MariaDB or PostgreSQL
+- Composer and Node.js 20+ only when installing from source
 
-## Getting started
+## Getting started (from source)
 
 ```bash
 composer install
-cp .env.example .env && php artisan key:generate
-php artisan migrate
-php artisan db:seed --class=CmsSeeder
-php artisan storage:link
-npm install && npm run dev
+npm install && npm run build   # or npm run dev while developing
+php artisan cms:install --dev
 php artisan serve
 ```
 
-Then open the admin panel at `/cms` after registering a user.
+Or open the site and use the browser installer. Then open the admin panel at `/cms`.
 
 ## Testing
 

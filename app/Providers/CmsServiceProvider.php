@@ -8,6 +8,7 @@ use App\Cms\Fields\FieldRegistry;
 use App\Cms\Fields\FieldValidator;
 use App\Cms\Fields\LocationMatcher;
 use App\Cms\Fields\Types;
+use App\Cms\Install\EnvFile;
 use App\Cms\Menus\MenuRenderer;
 use App\Cms\Roles\RoleRegistry;
 use App\Cms\Settings\Settings;
@@ -96,6 +97,7 @@ class CmsServiceProvider extends ServiceProvider
         $this->app->singleton(LocationMatcher::class);
         $this->app->singleton(FieldValidator::class);
 
+        $this->app->bind(EnvFile::class, fn () => new EnvFile(base_path('.env')));
         $this->app->singleton(Settings::class, fn () => new Settings([
             'seo' => [
                 'site_name' => config('app.name'),

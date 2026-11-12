@@ -1,6 +1,8 @@
 <?php
 
+use App\Cms\Install\InstallState;
 use App\Http\Controllers\SiteController;
+use App\Http\Middleware\EnsureInstalled;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\RegistrationGate;
@@ -13,6 +15,9 @@ use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+// Świeża paczka: .env i klucz aplikacji powstają przy pierwszym żądaniu WWW (patrz kreator /install).
+InstallState::prepareEnvironment(dirname(__DIR__));
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
@@ -21,6 +26,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+
+        $middleware->prepend(EnsureInstalled::class);
 
         $middleware->web(append: [
             SetLocale::class,
