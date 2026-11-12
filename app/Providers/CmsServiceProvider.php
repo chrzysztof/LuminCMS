@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Cms\Builder\BlockRegistry;
 use App\Cms\Fields\ConditionalLogic;
 use App\Cms\Fields\FieldRegistry;
 use App\Cms\Fields\FieldValidator;
@@ -82,6 +83,7 @@ class CmsServiceProvider extends ServiceProvider
             return $shortcodes;
         });
         $this->app->singleton(ThemeManager::class, fn ($app) => new ThemeManager($app->make(Settings::class), base_path('themes')));
+        $this->app->singleton(BlockRegistry::class);
         $this->app->singleton(Parts::class);
         $this->app->singleton(Customizer::class);
         $this->app->singleton(MenuRenderer::class);

@@ -1,0 +1,28 @@
+{
+    "label": "Opinie klientów",
+    "category": "Sekcje motywu",
+    "icon": "<path d=\"M7 7h4v5H7zM13 7h4v5h-4zM7 12c0 3-1 4-2 5M13 12c0 3-1 4-2 5\"/>",
+    "fields": [
+        {
+            "type": "text",
+            "name": "title",
+            "label": "Tytuł sekcji",
+            "default_value": "Co mówią klienci"
+        },
+        {
+            "type": "repeater",
+            "name": "items",
+            "label": "Opinie",
+            "button_label": "Dodaj opinię",
+            "sub_fields": [
+                {
+                    "type": "textarea",
+                    "name": "quote",
+                    "label": "Treść opinii",
+                    "required": true
+                },
+                { "type": "text", "name": "author", "label": "Autor" }
+            ]
+        }
+    ]
+}

@@ -1,5 +1,6 @@
 <?php
 
+use App\Cms\Builder\BlockRegistry;
 use App\Cms\Themes\Customizer;
 use App\Http\Controllers\Cms\DashboardController;
 use App\Http\Controllers\LocaleController;
@@ -13,6 +14,7 @@ Route::get('sitemap.xml', [SitemapController::class, 'sitemap'])->name('sitemap'
 Route::get('robots.txt', [SitemapController::class, 'robots'])->name('robots');
 
 Route::get('theme-vars.css', fn () => response(app(Customizer::class)->css(), 200, ['Content-Type' => 'text/css; charset=UTF-8', 'Cache-Control' => 'no-cache']))->name('theme.vars');
+Route::get('theme-blocks.css', fn () => response(app(BlockRegistry::class)->css(), 200, ['Content-Type' => 'text/css; charset=UTF-8', 'Cache-Control' => 'no-cache']))->name('theme.blocks');
 Route::get('theme-assets/{theme}/{path}', ThemeAssetController::class)->where('path', '.+')->name('theme.asset');
 
 Route::post('locale', LocaleController::class)->name('locale');

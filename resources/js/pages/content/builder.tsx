@@ -1,6 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import grapesjs from 'grapesjs';
-import type { Block, Editor, ProjectData } from 'grapesjs';
+import type { Block, Component, Editor, ProjectData } from 'grapesjs';
 import 'grapesjs/dist/css/grapes.min.css';
 import '../../../css/builder.css';
 import {
@@ -15,6 +15,7 @@ import {
     PanelRight,
     Redo2,
     Save,
+    Settings2,
     SlidersHorizontal,
     Smartphone,
     Tablet,
@@ -23,10 +24,15 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { MediaPicker } from '@/components/cms/media-picker';
+import { ThemeBlockDialog } from '@/components/cms/theme-block-dialog';
 import { StatusBadge } from '@/components/cms/status-badge';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
 import { registerBlocks } from '@/lib/builder/blocks';
+import {
+    registerThemeBlocks,
+    type ThemeBlock,
+} from '@/lib/builder/theme-blocks';
 import { registerComponentTypes } from '@/lib/builder/types';
 import { cmsUrl } from '@/lib/cms-urls';
 import { cn } from '@/lib/utils';
@@ -37,6 +43,7 @@ type Props = {
     type: ContentTypeInfo;
     content: { id: number; title: string; status: ContentStatus; slug: string };
     project: ProjectData | null;
+    themeBlocks: ThemeBlock[];
 };
 
 const devices = [
@@ -48,7 +55,12 @@ const devices = [
 const panelClass =
     'pointer-events-auto flex min-h-0 flex-col overflow-hidden rounded-2xl border bg-white/95 shadow-xl backdrop-blur';
 
-export default function Builder({ type, content, project }: Props) {
+export default function Builder({
+    type,
+    content,
+    project,
+    themeBlocks,
+}: Props) {
     const canvas = useRef<HTMLDivElement>(null);
     const blocksEl = useRef<HTMLDivElement>(null);
     const layersEl = useRef<HTMLDivElement>(null);
@@ -66,6 +78,11 @@ export default function Builder({ type, content, project }: Props) {
     const [selected, setSelected] = useState<{
         name: string;
         isImage: boolean;
+        isBlock: boolean;
+    } | null>(null);
+    const [blockDialog, setBlockDialog] = useState<{
+        block: ThemeBlock;
+        values: Record<string, unknown>;
     } | null>(null);
     const [history, setHistory] = useState({ undo: false, redo: false });
     const [picking, setPicking] = useState(false);
@@ -106,6 +123,32 @@ export default function Builder({ type, content, project }: Props) {
         saveRef.current = save;
     }, [save]);
 
+    const openBlockSettings = useCallback(
+        (component: Component) => {
+            const block = themeBlocks.find(
+                (b) => b.name === component.get('block'),
+            );
+            if (block)
+                setBlockDialog({
+                    block,
+                    values: (component.get('attrs') ?? {}) as Record<
+                        string,
+                        unknown
+                    >,
+                });
+        },
+        [themeBlocks],
+    );
+
+    const applyBlockSettings = (values: Record<string, unknown>) => {
+        const component = editorRef.current?.getSelected();
+        if (component?.is('lm-block')) {
+            component.set('attrs', { ...values });
+            setDirty(true);
+        }
+        setBlockDialog(null);
+    };
+
     useEffect(() => {
         if (
             !canvas.current ||
@@ -127,7 +170,13 @@ export default function Builder({ type, content, project }: Props) {
             traitManager: { appendTo: traitsEl.current },
             styleManager: { sectors: [] },
             selectorManager: { componentFirst: true },
-            canvas: { styles: ['/css/lumin-blocks.css', '/theme-vars.css'] },
+            canvas: {
+                styles: [
+                    '/css/lumin-blocks.css',
+                    '/theme-vars.css',
+                    '/theme-blocks.css',
+                ],
+            },
             deviceManager: {
                 devices: devices.map((d) => ({
                     id: d.id,
@@ -139,6 +188,7 @@ export default function Builder({ type, content, project }: Props) {
 
         registerComponentTypes(editor);
         registerBlocks(editor);
+        registerThemeBlocks(editor, themeBlocks);
 
         if (project) editor.loadProjectData(project);
 
@@ -156,9 +206,17 @@ export default function Builder({ type, content, project }: Props) {
         });
         editor.on('load', refresh);
         editor.on('component:selected', (c) =>
-            setSelected({ name: c.getName(), isImage: c.is('lm-image') }),
+            setSelected({
+                name: c.getName(),
+                isImage: c.is('lm-image'),
+                isBlock: c.is('lm-block'),
+            }),
         );
         editor.on('component:deselected', () => setSelected(null));
+        // Po upuszczeniu bloku motywu od razu pokazujemy jego ustawienia.
+        editor.on('block:drag:stop', (c) => {
+            if (c?.is('lm-block')) openBlockSettings(c);
+        });
         editor.Keymaps.add(
             'lumin-save',
             '⌘+s, ctrl+s',
@@ -181,6 +239,7 @@ export default function Builder({ type, content, project }: Props) {
                 editor.getWrapper()?.append(block.getContent() as string) ?? [];
             if (added[0]) {
                 editor.select(added[0]);
+                if (added[0].is('lm-block')) openBlockSettings(added[0]);
                 editor.Canvas.scrollTo(added[0], { behavior: 'smooth' });
             }
         };
@@ -491,6 +550,22 @@ export default function Builder({ type, content, project }: Props) {
                                             {selected.name}
                                         </p>
                                     )}
+                                    {selected?.isBlock && (
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="sm"
+                                            className="mb-2 w-full"
+                                            onClick={() => {
+                                                const c =
+                                                    editorRef.current?.getSelected();
+                                                if (c) openBlockSettings(c);
+                                            }}
+                                        >
+                                            <Settings2 />{' '}
+                                            {t('Ustawienia bloku')}
+                                        </Button>
+                                    )}
                                     {selected?.isImage && (
                                         <Button
                                             type="button"
@@ -516,6 +591,15 @@ export default function Builder({ type, content, project }: Props) {
                         </div>
                     </div>
                 </div>
+
+                {blockDialog && (
+                    <ThemeBlockDialog
+                        block={blockDialog.block}
+                        values={blockDialog.values}
+                        onApply={applyBlockSettings}
+                        onClose={() => setBlockDialog(null)}
+                    />
+                )}
 
                 <MediaPicker
                     open={picking}

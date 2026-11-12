@@ -2,6 +2,7 @@
 
 namespace App\Cms\Shortcodes;
 
+use App\Cms\Builder\BlockRegistry;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentResolver;
 use App\Cms\Content\ContentType;
@@ -66,6 +67,14 @@ class BuiltInShortcodes
 
             return '<a href="'.e(url(app(ContentResolver::class)->pathFor($target))).'">'.$label.'</a>';
         }, '[link id="12"]Zobacz ofertę[/link]', 'Odnośnik do treści o podanym id; bez tekstu użyje jej tytułu.');
+
+        // Blok motywu wstawiony w edytorze wizualnym (markup z szablonu bloku aktywnego motywu).
+        $sc->add('block', function (array $a) {
+            return app(BlockRegistry::class)->render(
+                (string) ($a['name'] ?? ''),
+                BlockRegistry::decode((string) ($a['data'] ?? '')),
+            );
+        }, '[block name="hero-banner" data="…"]', 'Blok motywu dodany w edytorze wizualnym. Wstawia go edytor, nie wpisuj tego kodu ręcznie.');
 
         // Menu nawigacji po slugu albo lokalizacji motywu.
         $sc->add('menu', function (array $a) {

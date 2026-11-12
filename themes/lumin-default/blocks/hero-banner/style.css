@@ -1,0 +1,24 @@
+.lm-hero-banner {
+    background: var(--lm-bg-dark) center / cover no-repeat;
+    color: #fff;
+    padding-block: var(--lm-space-lg);
+}
+.lm-hero-banner__inner {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+}
+.lm-hero-banner--center .lm-hero-banner__inner {
+    justify-items: center;
+    text-align: center;
+}
+.lm-hero-banner h2 {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1.1;
+}
+.lm-hero-banner p {
+    margin: 0;
+    max-width: 40rem;
+    opacity: 0.85;
+}

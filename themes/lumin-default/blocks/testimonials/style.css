@@ -1,0 +1,28 @@
+.lm-testimonials {
+    padding-block: var(--lm-space);
+    background: var(--lm-bg-muted);
+}
+.lm-testimonials h2 {
+    margin: 0 0 1.5rem;
+    text-align: center;
+}
+.lm-testimonials__grid {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+.lm-testimonials__item {
+    margin: 0;
+    padding: 1.5rem;
+    background: var(--lm-bg);
+    border: 1px solid var(--lm-border);
+    border-radius: var(--lm-radius);
+}
+.lm-testimonials__item blockquote {
+    margin: 0 0 1rem;
+}
+.lm-testimonials__item figcaption {
+    color: var(--lm-muted-text);
+    font-size: 0.9rem;
+    font-weight: 600;
+}

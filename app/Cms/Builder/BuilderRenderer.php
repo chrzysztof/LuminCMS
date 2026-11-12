@@ -109,6 +109,11 @@ class BuilderRenderer
             return '';
         }
 
+        // Blok motywu: zapisujemy tylko nazwę i poprawne wartości, markup powstaje przy wyświetleniu ([block]).
+        if ($type === 'lm-block') {
+            return $this->themeBlock($component);
+        }
+
         $tag = strtolower((string) ($component['tagName'] ?? self::TYPE_TAGS[$type] ?? 'div'));
 
         if (! in_array($tag, self::TAGS, true)) {
@@ -135,6 +140,20 @@ class BuilderRenderer
         }
 
         return $open.'>'.$this->inner($component, $depth).'</'.$tag.'>';
+    }
+
+    private function themeBlock(array $component): string
+    {
+        $name = (string) ($component['block'] ?? '');
+        $registry = app(BlockRegistry::class);
+
+        if (! $registry->get($name)) {
+            return '';
+        }
+
+        $attrs = $registry->normalize($name, (array) ($component['attrs'] ?? []));
+
+        return '[block name="'.$name.'" data="'.BlockRegistry::encode($attrs).'"]';
     }
 
     private function inner(array $component, int $depth): string

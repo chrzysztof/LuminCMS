@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Cms\BlockController;
 use App\Http\Controllers\Cms\BuilderController;
 use App\Http\Controllers\Cms\ContentController;
 use App\Http\Controllers\Cms\CustomizeController;
@@ -29,6 +30,7 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
     Route::put('content/{type:key}/{content}', [ContentController::class, 'update'])->name('content.update');
     Route::delete('content/{type:key}/{content}', [ContentController::class, 'destroy'])->name('content.destroy');
 
+    Route::post('blocks/preview', [BlockController::class, 'preview'])->name('blocks.preview')->middleware('can:edit_posts');
     Route::get('content/{type:key}/{content}/builder', [BuilderController::class, 'edit'])->name('content.builder');
     Route::put('content/{type:key}/{content}/builder', [BuilderController::class, 'save'])->name('content.builder.save');
     Route::get('content/{type:key}/{content}/preview', [SiteController::class, 'preview'])->name('content.preview');

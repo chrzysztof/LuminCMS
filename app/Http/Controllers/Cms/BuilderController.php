@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cms;
 
+use App\Cms\Builder\BlockRegistry;
 use App\Cms\Builder\BuilderRenderer;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentType;
@@ -17,7 +18,7 @@ class BuilderController extends Controller
 {
     private const MAX_PROJECT_BYTES = 2_000_000;
 
-    public function __construct(private readonly BuilderRenderer $renderer, private readonly ContentAccess $access) {}
+    public function __construct(private readonly BuilderRenderer $renderer, private readonly ContentAccess $access, private readonly BlockRegistry $blocks) {}
 
     public function edit(Request $request, ContentType $type, Content $content): Response
     {
@@ -32,6 +33,7 @@ class BuilderController extends Controller
                 'slug' => $content->slug,
             ],
             'project' => $content->builder_data,
+            'themeBlocks' => $this->blocks->definitions(),
         ]);
     }
 
