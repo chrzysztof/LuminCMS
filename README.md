@@ -16,7 +16,9 @@ Status: wczesny etap rozwoju (fundamenty + system pól).
 ```bash
 composer install
 cp .env.example .env && php artisan key:generate
-php artisan migrate --seed --seeder=CmsSeeder
+php artisan migrate
+php artisan db:seed --class=CmsSeeder
+php artisan storage:link
 npm install && npm run dev
 php artisan serve
 ```

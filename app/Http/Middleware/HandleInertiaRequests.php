@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Cms\Content\ContentType;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,6 +42,9 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'contentTypes' => fn () => $request->user()
+                ? ContentType::orderBy('id')->get(['key', 'label', 'label_plural', 'icon'])
+                : [],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

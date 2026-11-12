@@ -1,7 +1,13 @@
-import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import {
+    Boxes,
+    FileText,
+    Image as ImageIcon,
+    LayoutGrid,
+    Newspaper,
+    type LucideIcon,
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
-import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import {
@@ -14,30 +20,33 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import { cmsUrl } from '@/lib/cms-urls';
 import type { NavItem } from '@/types';
+import type { ContentTypeInfo } from '@/types/cms';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-];
-
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
-];
+const typeIcons: Record<string, LucideIcon> = {
+    'file-text': FileText,
+    newspaper: Newspaper,
+};
 
 export function AppSidebar() {
+    const { contentTypes = [] } = usePage<{
+        contentTypes?: ContentTypeInfo[];
+    }>().props;
+
+    const contentItems: NavItem[] = contentTypes.map((type) => ({
+        title: type.label_plural,
+        href: cmsUrl.contentIndex(type.key),
+        icon: typeIcons[type.icon ?? ''] ?? Boxes,
+    }));
+
+    const mainItems: NavItem[] = [
+        { title: 'Pulpit', href: dashboard(), icon: LayoutGrid },
+    ];
+    const libraryItems: NavItem[] = [
+        { title: 'Media', href: cmsUrl.library, icon: ImageIcon },
+    ];
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -53,11 +62,14 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={mainItems} />
+                {contentItems.length > 0 && (
+                    <NavMain label="Treści" items={contentItems} />
+                )}
+                <NavMain label="Biblioteka" items={libraryItems} />
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

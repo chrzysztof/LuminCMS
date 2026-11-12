@@ -1,11 +1,21 @@
 <?php
 
+use App\Http\Controllers\Cms\ContentController;
 use App\Http\Controllers\Cms\MediaController;
 use App\Http\Controllers\Cms\MediaSizeController;
 use Illuminate\Support\Facades\Route;
 
 // API panelu administracyjnego (sesja + uwierzytelnienie).
 Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(function () {
+    Route::inertia('library', 'media/library')->name('library');
+
+    Route::get('content/{type:key}', [ContentController::class, 'index'])->name('content.index');
+    Route::get('content/{type:key}/create', [ContentController::class, 'create'])->name('content.create');
+    Route::post('content/{type:key}', [ContentController::class, 'store'])->name('content.store');
+    Route::get('content/{type:key}/{content}/edit', [ContentController::class, 'edit'])->name('content.edit');
+    Route::put('content/{type:key}/{content}', [ContentController::class, 'update'])->name('content.update');
+    Route::delete('content/{type:key}/{content}', [ContentController::class, 'destroy'])->name('content.destroy');
+
     Route::get('media', [MediaController::class, 'index'])->name('media.index');
     Route::post('media', [MediaController::class, 'store'])->name('media.store');
     Route::patch('media/{media}', [MediaController::class, 'update'])->name('media.update');

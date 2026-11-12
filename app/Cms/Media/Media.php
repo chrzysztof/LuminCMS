@@ -132,6 +132,8 @@ class Media extends Model
             'size' => $this->size,
             'width' => $width ?: null,
             'height' => $height ?: null,
+            'original_width' => $this->width,
+            'original_height' => $this->height,
             'alt' => $this->alt,
             'title' => $this->title,
             'caption' => $this->caption,
