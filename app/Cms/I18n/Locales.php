@@ -23,6 +23,10 @@ class Locales
         'uk' => 'Українська',
         'cs' => 'Čeština',
         'pt' => 'Português',
+        'it' => 'Italiano',
+        'fr' => 'Français',
+        'hu' => 'Magyar',
+        'nl' => 'Nederlands',
     ];
 
     public static function supported(?string $locale): bool

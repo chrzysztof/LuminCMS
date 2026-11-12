@@ -14,13 +14,13 @@ class I18nTest extends TestCase
 
     public function test_supported_languages(): void
     {
-        $this->assertSame(['pl', 'en', 'de', 'es', 'uk', 'cs', 'pt'], array_keys(Locales::SUPPORTED));
+        $this->assertSame(['pl', 'en', 'de', 'es', 'uk', 'cs', 'pt', 'it', 'fr', 'hu', 'nl'], array_keys(Locales::SUPPORTED));
     }
 
     public function test_dictionaries_are_complete_and_keep_placeholders(): void
     {
         $dict = fn (string $l) => Locales::dictionary($l);
-        $foreign = ['de', 'es', 'uk', 'cs', 'pt'];
+        $foreign = ['de', 'es', 'uk', 'cs', 'pt', 'it', 'fr', 'hu', 'nl'];
 
         // Teksty źródłowe są po polsku (en ma tłumaczenia) albo po angielsku (pl ma tłumaczenia).
         $all = array_keys($dict('de'));
@@ -53,7 +53,7 @@ class I18nTest extends TestCase
         $this->get('/login')->assertSee('<html lang="pl"', false);
 
         $this->get('/login', ['Accept-Language' => 'de-DE,de;q=0.9'])->assertSee('<html lang="de"', false);
-        $this->get('/login', ['Accept-Language' => 'fr-FR,ja;q=0.8'])->assertSee('<html lang="pl"', false);
+        $this->get('/login', ['Accept-Language' => 'ja-JP,ja;q=0.8'])->assertSee('<html lang="pl"', false);
         $this->withCookie(Locales::COOKIE, 'uk')->get('/login', ['Accept-Language' => 'de'])->assertSee('<html lang="uk"', false);
     }
 
