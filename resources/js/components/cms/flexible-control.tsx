@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { t } from '@/lib/i18n';
 import type { FieldDefinition, MediaItem } from '@/types/cms';
+import { str } from '@/lib/str';
 
 type Row = Record<string, unknown>;
 type Layout = {
@@ -102,7 +103,7 @@ export function FlexibleControl({
         onChange(rows.map((r, j) => (j === i ? { ...r, [name]: v } : r)));
 
     const addable = layouts.filter(canAdd);
-    const label = String(field.button_label || t('Dodaj układ'));
+    const label = str(field.button_label) || t('Dodaj układ');
 
     return (
         <div className="space-y-3">

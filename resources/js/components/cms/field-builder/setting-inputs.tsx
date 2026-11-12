@@ -1,6 +1,7 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { str } from '@/lib/str';
 
 export const nativeClass =
     'border-input bg-transparent flex h-9 w-full rounded-md border px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/30';
@@ -111,7 +112,7 @@ export function SelectSetting({
         <Row label={label}>
             <select
                 className={nativeClass}
-                value={String(value ?? '')}
+                value={str(value)}
                 onChange={(e) => onChange(e.target.value)}
             >
                 {options.map(([v, l]) => (

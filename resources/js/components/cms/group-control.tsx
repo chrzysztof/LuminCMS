@@ -1,6 +1,7 @@
 import { FieldList } from '@/components/cms/fields';
 import { cn } from '@/lib/utils';
 import type { FieldDefinition, MediaItem } from '@/types/cms';
+import { str } from '@/lib/str';
 
 type Props = {
     field: FieldDefinition;
@@ -37,7 +38,7 @@ export function GroupControl({
     return (
         <div
             className={cn(
-                String(field.layout ?? 'block') === 'block' &&
+                str(field.layout, 'block') === 'block' &&
                     'rounded-lg border bg-card/50 p-3',
             )}
         >

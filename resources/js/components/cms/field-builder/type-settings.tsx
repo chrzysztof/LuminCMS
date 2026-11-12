@@ -8,6 +8,7 @@ import {
 } from '@/components/cms/field-builder/setting-inputs';
 import type { FieldDraft } from '@/types/field-builder';
 import { t } from '@/lib/i18n';
+import { str } from '@/lib/str';
 
 /** Polskie etykiety ustawień typów. Nieznane klucze pokazujemy pod ich nazwą. */
 const labels: Record<string, string> = {
@@ -288,7 +289,7 @@ export function TypeSettings({ field, defaults, onChange }: Props) {
                             <textarea
                                 rows={3}
                                 className={`${nativeClass} h-auto py-2`}
-                                value={String(value ?? '')}
+                                value={str(value)}
                                 onChange={(e) => onChange(key, e.target.value)}
                             />
                         </Row>

@@ -113,7 +113,9 @@ export function registerComponentTypes(editor: Editor) {
                 : false,
         model: {
             defaults: { ...base, name: t('Sekcja'), traits: section.traits },
-            init: section.init,
+            init(this: Component) {
+                section.init.call(this);
+            },
         },
     });
 
@@ -125,7 +127,9 @@ export function registerComponentTypes(editor: Editor) {
                 : false,
         model: {
             defaults: { ...base, name: t('Kolumny'), traits: grid.traits },
-            init: grid.init,
+            init(this: Component) {
+                grid.init.call(this);
+            },
         },
     });
 
@@ -178,7 +182,9 @@ export function registerComponentTypes(editor: Editor) {
             el.tagName === 'P' ? { type: 'lm-paragraph' } : false,
         model: {
             defaults: { ...base, name: t('Akapit'), traits: textAlign.traits },
-            init: textAlign.init,
+            init(this: Component) {
+                textAlign.init.call(this);
+            },
         },
     });
 
@@ -208,7 +214,9 @@ export function registerComponentTypes(editor: Editor) {
                     ...button.traits,
                 ],
             },
-            init: button.init,
+            init(this: Component) {
+                button.init.call(this);
+            },
         },
     });
 

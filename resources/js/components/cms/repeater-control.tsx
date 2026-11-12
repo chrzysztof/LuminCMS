@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { FieldDefinition, MediaItem } from '@/types/cms';
 import { t } from '@/lib/i18n';
+import { str } from '@/lib/str';
 
 type Row = Record<string, unknown>;
 
@@ -48,8 +49,8 @@ export function RepeaterControl({
     ) as FieldDefinition[];
     const max = Number(field.max) || 200;
     const min = Number(field.min) || 0;
-    const layout = String(field.layout ?? 'block');
-    const titleField = String(field.collapsed ?? '');
+    const layout = str(field.layout, 'block');
+    const titleField = str(field.collapsed);
 
     // Stabilne klucze wierszy, żeby edytory w wierszach nie traciły stanu przy zmianie kolejności.
     const keys = useRef<string[]>([]);
@@ -205,7 +206,7 @@ export function RepeaterControl({
                 disabled={rows.length >= max}
                 onClick={add}
             >
-                <Plus /> {String(field.button_label || t('Dodaj wiersz'))}
+                <Plus /> {str(field.button_label) || t('Dodaj wiersz')}
             </Button>
         </div>
     );

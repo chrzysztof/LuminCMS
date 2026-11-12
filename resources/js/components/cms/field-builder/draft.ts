@@ -16,7 +16,7 @@ export function toDraft(raw: Record<string, unknown>): FieldDraft {
             width: '',
             class: '',
             id: '',
-            ...((raw.wrapper as object) ?? {}),
+            ...(raw.wrapper as object),
         },
         _id: uid(),
     } as FieldDraft;

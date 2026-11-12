@@ -15,6 +15,7 @@ import { isVisible } from '@/lib/conditional-logic';
 import { cn } from '@/lib/utils';
 import type { FieldDefinition, MediaItem } from '@/types/cms';
 import { t } from '@/lib/i18n';
+import { str } from '@/lib/str';
 
 type Values = Record<string, unknown>;
 type MediaMap = Record<number, MediaItem>;
@@ -38,7 +39,7 @@ const nativeClass =
     'border-input bg-transparent flex h-9 w-full rounded-md border px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/30';
 
 const s = (field: FieldDefinition, key: string): string =>
-    field[key] === undefined || field[key] === null ? '' : String(field[key]);
+    field[key] === undefined || field[key] === null ? '' : str(field[key]);
 
 /** Opcje wyboru: obiekt {wartość: etykieta} albo lista. */
 function choicesOf(field: FieldDefinition): [string, string][] {
@@ -58,7 +59,7 @@ const toList = (v: unknown): string[] =>
         ? v.map(String)
         : v === null || v === undefined || v === ''
           ? []
-          : [String(v)];
+          : [str(v)];
 
 // --- Konwersje formatów pól daty (serwer zapisuje Y-m-d H:i:s oraz H:i:s) ---
 const dtToInput = (v: unknown) =>
@@ -205,7 +206,7 @@ function MediaControl({
 
 function Control(props: ControlProps) {
     const { field, value, onChange, id } = props;
-    const text = value === null || value === undefined ? '' : String(value);
+    const text = value === null || value === undefined ? '' : str(value);
 
     switch (field.type) {
         case 'text':
