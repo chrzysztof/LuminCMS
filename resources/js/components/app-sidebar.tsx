@@ -2,6 +2,7 @@ import { Link, usePage } from '@inertiajs/react';
 import {
     Boxes,
     ListTree,
+    Search,
     FileText,
     Image as ImageIcon,
     LayoutGrid,
@@ -47,6 +48,9 @@ export function AppSidebar() {
     const structureItems: NavItem[] = [
         { title: 'Pola własne', href: cmsUrl.fieldIndex, icon: ListTree },
     ];
+    const settingsItems: NavItem[] = [
+        { title: 'SEO', href: cmsUrl.seoSettings, icon: Search },
+    ];
     const libraryItems: NavItem[] = [
         { title: 'Media', href: cmsUrl.library, icon: ImageIcon },
     ];
@@ -72,6 +76,7 @@ export function AppSidebar() {
                 )}
                 <NavMain label="Biblioteka" items={libraryItems} />
                 <NavMain label="Struktura" items={structureItems} />
+                <NavMain label="Ustawienia" items={settingsItems} />
             </SidebarContent>
 
             <SidebarFooter>

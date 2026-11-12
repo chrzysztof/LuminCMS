@@ -10,12 +10,14 @@ import {
 import { useState } from 'react';
 import { FieldList } from '@/components/cms/fields';
 import { MediaPicker } from '@/components/cms/media-picker';
+import { SeoPanel, type SeoValues } from '@/components/cms/seo-panel';
 import { StatusBadge } from '@/components/cms/status-badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cmsUrl } from '@/lib/cms-urls';
+import type { SeoSite } from '@/lib/seo';
 import { cn } from '@/lib/utils';
 import type {
     ContentStatus,
@@ -42,6 +44,8 @@ type Props = {
     type: ContentTypeInfo;
     content: ContentData | null;
     values: Record<string, unknown>;
+    seo: SeoValues;
+    seoSite: SeoSite;
     groups: FieldGroupData[];
     media: Record<number, MediaItem>;
     parents: { id: number; title: string }[];
@@ -54,6 +58,8 @@ export default function ContentEdit({
     type,
     content,
     values,
+    seo,
+    seoSite,
     groups,
     media: initialMedia,
     parents,
@@ -71,6 +77,7 @@ export default function ContentEdit({
             content?.featured_media_id ?? (null as number | null),
         published_at: content?.published_at ?? '',
         fields: values as Record<string, FieldValue>,
+        seo: seo as SeoValues,
     });
 
     const errors = form.errors as Record<string, string | undefined>;
@@ -273,6 +280,30 @@ export default function ContentEdit({
 
                         {renderGroups('after_title')}
                         {renderGroups('normal')}
+
+                        {supports('seo') && (
+                            <SeoPanel
+                                seo={form.data.seo}
+                                onChange={(patch) =>
+                                    form.setData('seo', {
+                                        ...form.data.seo,
+                                        ...patch,
+                                    })
+                                }
+                                site={seoSite}
+                                title={form.data.title}
+                                slug={form.data.slug}
+                                excerpt={form.data.excerpt}
+                                media={media}
+                                rememberMedia={rememberMedia}
+                                errors={errors}
+                                isHome={
+                                    type.key === 'page' &&
+                                    form.data.slug === 'home' &&
+                                    !form.data.parent_id
+                                }
+                            />
+                        )}
                     </div>
 
                     <div className="min-w-0 space-y-5">

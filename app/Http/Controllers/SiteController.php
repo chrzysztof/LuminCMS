@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentResolver;
 use App\Cms\Content\ContentType;
+use App\Cms\Seo\SeoResolver;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,7 +14,7 @@ use Inertia\Response;
 /** Publiczna strona: renderuje zapisany HTML treści. */
 class SiteController extends Controller
 {
-    public function __construct(private readonly ContentResolver $resolver) {}
+    public function __construct(private readonly ContentResolver $resolver, private readonly SeoResolver $seo) {}
 
     public function show(Request $request): View
     {
@@ -46,6 +47,7 @@ class SiteController extends Controller
             'content' => $content,
             'html' => (string) $content->html_cache,
             'preview' => $preview,
+            'seo' => $this->seo->forContent($content, $preview),
         ]);
     }
 }

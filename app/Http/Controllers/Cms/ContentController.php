@@ -9,6 +9,7 @@ use App\Cms\Fields\FieldGroup;
 use App\Cms\Fields\FieldRegistry;
 use App\Cms\Fields\FieldValidator;
 use App\Cms\Media\Media;
+use App\Cms\Settings\Settings;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -166,9 +167,11 @@ class ContentController extends Controller
                 'published_at' => $content->published_at?->format('Y-m-d\TH:i'),
                 'updated_at' => $content->updated_at?->toIso8601String(),
             ] : null,
+            'seo' => (object) ($content?->seo ?? []),
+            'seoSite' => $this->seoSite($type, $content),
             'values' => (object) $values,
             'groups' => $groups,
-            'media' => (object) $media,
+            'media' => (object) ($media + $this->seoImage($content?->seo['og_image_id'] ?? null, $media)),
             'parents' => $type->hierarchical
                 ? Content::where('content_type_id', $type->id)->when($content, fn ($q) => $q->where('id', '!=', $content->id))
                     ->orderBy('title')->get(['id', 'title'])
@@ -187,6 +190,16 @@ class ContentController extends Controller
             'featured_media_id' => ['nullable', 'integer', Rule::exists('media', 'id')],
             'published_at' => ['nullable', 'date', Rule::requiredIf($request->input('status') === Content::STATUS_SCHEDULED)],
             'fields' => ['nullable', 'array'],
+            'seo' => ['nullable', 'array'],
+            'seo.title' => ['nullable', 'string', 'max:200'],
+            'seo.description' => ['nullable', 'string', 'max:400'],
+            'seo.canonical' => ['nullable', 'string', 'max:500', 'regex:~^https?://\S+$~i'],
+            'seo.noindex' => ['nullable', 'boolean'],
+            'seo.nofollow' => ['nullable', 'boolean'],
+            'seo.og_title' => ['nullable', 'string', 'max:200'],
+            'seo.og_description' => ['nullable', 'string', 'max:400'],
+            'seo.og_image_id' => ['nullable', 'integer', Rule::exists('media', 'id')],
+            'seo.focus_keyword' => ['nullable', 'string', 'max:100'],
         ]);
 
         if ($content->exists && ! empty($data['parent_id']) && $data['parent_id'] === $content->id) {
@@ -232,7 +245,62 @@ class ContentController extends Controller
             'featured_media_id' => $data['featured_media_id'] ?? null,
             'published_at' => $publishedAt,
             'fields' => $fields,
+            'seo' => $this->cleanSeo($data['seo'] ?? []),
         ])->save();
+    }
+
+    /** Dane potrzebne panelowi SEO do podglądu wyniku w Google i prostej analizy. */
+    private function seoSite(ContentType $type, ?Content $content): array
+    {
+        $site = app(Settings::class)->group('seo');
+        $body = $content ? trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags((string) $content->html_cache), ENT_QUOTES | ENT_HTML5)) ?? '') : '';
+
+        return [
+            'site_name' => $site['site_name'],
+            'tagline' => $site['tagline'],
+            'title_template' => $site['title_template'],
+            'separator' => $site['separator'],
+            'base_url' => rtrim(url('/'), '/'),
+            'url_prefix' => $type->url_prefix,
+            'body' => mb_substr($body, 0, 3000),
+            'noindex_site' => (bool) $site['noindex_site'],
+        ];
+    }
+
+    /** @return array<int, array> obraz Open Graph treści (jeśli nie ma go jeszcze w mapie mediów) */
+    private function seoImage(mixed $id, array $media): array
+    {
+        if (! $id || isset($media[$id])) {
+            return [];
+        }
+
+        $item = Media::find($id);
+
+        return $item ? [$item->id => $item->asArray('medium')] : [];
+    }
+
+    /** Zapisujemy tylko niepuste ustawienia SEO; flagi jako boolean. */
+    private function cleanSeo(array $seo): ?array
+    {
+        $clean = [];
+
+        foreach (['title', 'description', 'canonical', 'og_title', 'og_description', 'focus_keyword'] as $key) {
+            if (trim((string) ($seo[$key] ?? '')) !== '') {
+                $clean[$key] = trim((string) $seo[$key]);
+            }
+        }
+
+        foreach (['noindex', 'nofollow'] as $flag) {
+            if (! empty($seo[$flag])) {
+                $clean[$flag] = true;
+            }
+        }
+
+        if (! empty($seo['og_image_id'])) {
+            $clean['og_image_id'] = (int) $seo['og_image_id'];
+        }
+
+        return $clean ?: null;
     }
 
     private function uniqueSlug(ContentType $type, string $source, Content $content): string

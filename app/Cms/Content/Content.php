@@ -28,6 +28,7 @@ class Content extends Model
     {
         return [
             'fields' => 'array',
+            'seo' => 'array',
             'builder_data' => 'array',
             'published_at' => 'datetime',
         ];

@@ -7,6 +7,7 @@ use App\Cms\Fields\FieldRegistry;
 use App\Cms\Fields\FieldValidator;
 use App\Cms\Fields\LocationMatcher;
 use App\Cms\Fields\Types;
+use App\Cms\Settings\Settings;
 use Illuminate\Support\ServiceProvider;
 
 class CmsServiceProvider extends ServiceProvider
@@ -56,6 +57,19 @@ class CmsServiceProvider extends ServiceProvider
         $this->app->singleton(ConditionalLogic::class);
         $this->app->singleton(LocationMatcher::class);
         $this->app->singleton(FieldValidator::class);
+
+        $this->app->singleton(Settings::class, fn () => new Settings([
+            'seo' => [
+                'site_name' => config('app.name'),
+                'tagline' => '',
+                'description' => '',
+                'title_template' => '%title% %sep% %site%',
+                'separator' => '–',
+                'default_og_image_id' => null,
+                'twitter_handle' => '',
+                'noindex_site' => false,
+            ],
+        ]));
 
         $this->app->singleton(FieldRegistry::class, function () {
             $registry = new FieldRegistry;

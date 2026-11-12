@@ -3,10 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $content->title }} – {{ config('app.name') }}</title>
-    @if ($preview)
-        <meta name="robots" content="noindex, nofollow">
-    @endif
+    @include('site.partials.seo', ['seo' => $seo])
     <link rel="stylesheet" href="{{ asset('css/lumin-blocks.css') }}">
 </head>
 <body>

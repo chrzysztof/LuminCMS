@@ -1,6 +1,7 @@
 /** Adresy panelu (zgodne z routes/cms.php). */
 export const cmsUrl = {
     library: '/cms/library',
+    seoSettings: '/cms/settings/seo',
     fieldIndex: '/cms/fields',
     fieldCreate: '/cms/fields/create',
     fieldImport: '/cms/fields/import',
