@@ -24,7 +24,7 @@ Early development. The foundation, admin panel, media library, visual editor and
 
 ## Admin languages
 
-The admin panel ships in six languages: Polski, English, Deutsch, Español, Українська and Čeština. Users pick a language from the user menu or in Settings → Appearance (stored per user, with a cookie fallback for guests; otherwise the browser language is detected).
+The admin panel ships in seven languages: Polski, English, Deutsch, Español, Українська, Čeština and Português (Brazilian). Users pick a language from the user menu or in Settings → Appearance (stored per user, with a cookie fallback for guests; otherwise the browser language is detected).
 
 Translations live in `lang/{locale}.json` (UI strings, keyed by source text) and `lang/{locale}/*.php` (framework messages). In React use `t('Text', { name })`; in PHP use `__('Text')`. Adding a language means registering it in `App\Cms\I18n\Locales` and adding its JSON file. The public site and labels stored in the database (content types, field groups) are not translated yet.
 

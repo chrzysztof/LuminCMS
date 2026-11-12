@@ -22,6 +22,7 @@ class Locales
         'es' => 'Español',
         'uk' => 'Українська',
         'cs' => 'Čeština',
+        'pt' => 'Português',
     ];
 
     public static function supported(?string $locale): bool

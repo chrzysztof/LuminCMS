@@ -14,13 +14,13 @@ class I18nTest extends TestCase
 
     public function test_supported_languages(): void
     {
-        $this->assertSame(['pl', 'en', 'de', 'es', 'uk', 'cs'], array_keys(Locales::SUPPORTED));
+        $this->assertSame(['pl', 'en', 'de', 'es', 'uk', 'cs', 'pt'], array_keys(Locales::SUPPORTED));
     }
 
     public function test_dictionaries_are_complete_and_keep_placeholders(): void
     {
         $dict = fn (string $l) => Locales::dictionary($l);
-        $foreign = ['de', 'es', 'uk', 'cs'];
+        $foreign = ['de', 'es', 'uk', 'cs', 'pt'];
 
         // Teksty źródłowe są po polsku (en ma tłumaczenia) albo po angielsku (pl ma tłumaczenia).
         $all = array_keys($dict('de'));
