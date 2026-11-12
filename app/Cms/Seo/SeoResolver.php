@@ -147,6 +147,42 @@ class SeoResolver
         ];
     }
 
+    /**
+     * Dane SEO strony listy (archiwum, termin taksonomii). Kolejne strony listy mają własny canonical.
+     *
+     * @return array<string, mixed>
+     */
+    public function forListing(string $heading, string $description, string $url, int $page = 1): array
+    {
+        $site = $this->site();
+        $title = $this->applyTemplate($site['title_template'], $page > 1 ? $heading.' ('.__('strona').' '.$page.')' : $heading, $site);
+        $description = $description !== '' ? $description : (string) $site['description'];
+        $canonical = $page > 1 ? $url.'?page='.$page : $url;
+
+        return [
+            'title' => $title,
+            'description' => $description,
+            'canonical' => $canonical,
+            'robots' => $site['noindex_site'] ? 'noindex, nofollow' : 'index, follow, max-image-preview:large',
+            'og' => array_filter([
+                'og:type' => 'website', 'og:title' => $title, 'og:description' => $description, 'og:url' => $canonical,
+                'og:site_name' => $site['site_name'], 'og:locale' => str_replace('-', '_', app()->getLocale()),
+            ]),
+            'twitter' => ['twitter:card' => 'summary', 'twitter:title' => $title, 'twitter:description' => $description],
+            'jsonld' => [
+                '@context' => 'https://schema.org',
+                '@graph' => [
+                    ['@type' => 'WebSite', '@id' => url('/').'#website', 'url' => url('/'), 'name' => $site['site_name']],
+                    ['@type' => 'CollectionPage', '@id' => $url.'#page', 'url' => $canonical, 'name' => $heading, 'description' => $description, 'isPartOf' => ['@id' => url('/').'#website']],
+                    ['@type' => 'BreadcrumbList', 'itemListElement' => [
+                        ['@type' => 'ListItem', 'position' => 1, 'name' => $site['site_name'], 'item' => url('/')],
+                        ['@type' => 'ListItem', 'position' => 2, 'name' => $heading, 'item' => $url],
+                    ]],
+                ],
+            ],
+        ];
+    }
+
     private function jsonLd(Content $content, string $title, string $description, string $canonical, ?array $image): array
     {
         $site = $this->site();

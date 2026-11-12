@@ -15,6 +15,7 @@ type Taxonomy = {
     label: string;
     label_plural: string;
     hierarchical: boolean;
+    rewrite_base: string | null;
     is_system: boolean;
     terms_count: number;
     content_types: string[];
@@ -47,6 +48,7 @@ type TermForm = {
 
 type TaxForm = {
     key: string;
+    rewrite_base: string;
     label: string;
     label_plural: string;
     hierarchical: boolean;
@@ -61,6 +63,7 @@ const emptyTerm: TermForm = {
 };
 const emptyTax: TaxForm = {
     key: '',
+    rewrite_base: '',
     label: '',
     label_plural: '',
     hierarchical: false,
@@ -138,6 +141,7 @@ export default function TaxonomiesIndex({
             mode === 'edit' && tax
                 ? {
                       key: tax.key,
+                      rewrite_base: tax.rewrite_base ?? '',
                       label: tax.label,
                       label_plural: tax.label_plural,
                       hierarchical: tax.hierarchical,
@@ -311,6 +315,33 @@ export default function TaxonomiesIndex({
                                     {errors.label_plural && (
                                         <p className="text-xs text-destructive">
                                             {errors.label_plural}
+                                        </p>
+                                    )}
+                                </div>
+                                <div className="grid gap-1.5">
+                                    <Label htmlFor="tax_base">
+                                        {t('Przedrostek adresu')}
+                                    </Label>
+                                    <Input
+                                        id="tax_base"
+                                        className="font-mono"
+                                        value={taxForm.rewrite_base}
+                                        placeholder={t('np. kategoria')}
+                                        onChange={(e) =>
+                                            setTaxForm({
+                                                ...taxForm,
+                                                rewrite_base: e.target.value,
+                                            })
+                                        }
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        {t(
+                                            'Adres terminu: /przedrostek/slug-terminu.',
+                                        )}
+                                    </p>
+                                    {errors.rewrite_base && (
+                                        <p className="text-xs text-destructive">
+                                            {errors.rewrite_base}
                                         </p>
                                     )}
                                 </div>

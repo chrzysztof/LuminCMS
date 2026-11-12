@@ -11,8 +11,10 @@ use App\Cms\Roles\RoleRegistry;
 use App\Cms\Settings\Settings;
 use App\Cms\Shortcodes\BuiltInShortcodes;
 use App\Cms\Shortcodes\Shortcodes;
+use App\Cms\Themes\ThemeManager;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class CmsServiceProvider extends ServiceProvider
@@ -62,6 +64,10 @@ class CmsServiceProvider extends ServiceProvider
     {
         // Uprawnienia ról działają jak zwykłe zdolności: $user->can('edit_posts'), middleware can:manage_options.
         Gate::before(fn (User $user, string $ability) => RoleRegistry::grants($user->role, $ability) ? true : null);
+
+        $themes = $this->app->make(ThemeManager::class);
+        $themes->register();
+        View::composer('theme::*', fn ($view) => $view->with('theme', $themes->active()));
     }
 
     public function register(): void
@@ -72,6 +78,7 @@ class CmsServiceProvider extends ServiceProvider
 
             return $shortcodes;
         });
+        $this->app->singleton(ThemeManager::class, fn ($app) => new ThemeManager($app->make(Settings::class), base_path('themes')));
         $this->app->singleton(ConditionalLogic::class);
         $this->app->singleton(LocationMatcher::class);
         $this->app->singleton(FieldValidator::class);
@@ -88,6 +95,7 @@ class CmsServiceProvider extends ServiceProvider
                 'noindex_site' => false,
             ],
             'pages' => ['not_found_content_id' => null],
+            'theme' => ['active' => ThemeManager::DEFAULT],
             'users' => ['default_role' => 'subscriber', 'registration_enabled' => false],
             'site' => [
                 'ga_id' => '', 'gtm_id' => '', 'pixel_id' => '',

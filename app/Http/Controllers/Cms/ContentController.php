@@ -12,6 +12,7 @@ use App\Cms\Media\Media;
 use App\Cms\Redirects\RedirectManager;
 use App\Cms\Roles\ContentAccess;
 use App\Cms\Settings\Settings;
+use App\Cms\Themes\ThemeManager;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,6 +30,7 @@ class ContentController extends Controller
         private readonly FieldRegistry $registry,
         private readonly FieldValidator $validator,
         private readonly ContentAccess $access,
+        private readonly ThemeManager $themes,
     ) {}
 
     public function index(Request $request, ContentType $type): Response
@@ -184,6 +186,7 @@ class ContentController extends Controller
                 'status' => $content->status,
                 'excerpt' => $content->excerpt,
                 'parent_id' => $content->parent_id,
+                'template' => $content->template ?: 'default',
                 'featured_media_id' => $content->featured_media_id,
                 'published_at' => $content->published_at?->format('Y-m-d\TH:i'),
                 'updated_at' => $content->updated_at?->toIso8601String(),
@@ -194,6 +197,7 @@ class ContentController extends Controller
                 'label_plural' => $t->label_plural,
                 'terms' => collect($t->flatTerms())->map(fn ($x) => ['id' => $x['id'], 'name' => $x['name'], 'depth' => $x['depth']])->values(),
             ])->values(),
+            'templates' => $this->themes->templatesFor($type),
             'termIds' => $content ? $content->terms()->pluck('terms.id')->all() : [],
             'canManageTerms' => $request->user()->can('manage_categories'),
             'seo' => (object) ($content?->seo ?? []),
@@ -225,6 +229,7 @@ class ContentController extends Controller
                     ['after:now'],
                 )],
             'fields' => ['nullable', 'array'],
+            'template' => ['nullable', 'string', Rule::in(['default', ...array_column($this->themes->templatesFor($type), 'key')])],
             'term_ids' => ['nullable', 'array'],
             'term_ids.*' => ['integer', Rule::exists('terms', 'id')->whereIn('taxonomy_id', $type->taxonomies()->pluck('taxonomies.id'))],
             'seo' => ['nullable', 'array'],
@@ -259,7 +264,7 @@ class ContentController extends Controller
 
         $context = [
             'content_type' => $type->key,
-            'template' => $content->template ?: 'default',
+            'template' => $data['template'] ?? ($content->template ?: 'default'),
             'parent' => $data['parent_id'] ?? null,
             'status' => $data['status'],
             'term' => $request->has('term_ids')
@@ -301,7 +306,7 @@ class ContentController extends Controller
             'published_at' => $publishedAt,
             'fields' => $fields,
             'seo' => $this->cleanSeo($data['seo'] ?? []),
-        ])->save();
+        ] + (array_key_exists('template', $data) ? ['template' => ($data['template'] ?? 'default') === 'default' ? null : $data['template']] : []))->save();
 
         // Terminy przypisujemy tylko, gdy formularz je przysłał (np. nie ma ich w edytorze wizualnym).
         if ($request->has('term_ids')) {

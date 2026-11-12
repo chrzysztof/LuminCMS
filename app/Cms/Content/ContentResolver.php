@@ -48,6 +48,11 @@ class ContentResolver
         return ($prefix ? $prefix.'/' : '').implode('/', $slugs);
     }
 
+    public function urlFor(Content $content): string
+    {
+        return url($this->pathFor($content));
+    }
+
     /** @param  list<string>  $slugs */
     private function findInType(ContentType $type, array $slugs): ?Content
     {

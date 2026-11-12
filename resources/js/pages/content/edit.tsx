@@ -35,6 +35,7 @@ type ContentData = {
     status: ContentStatus;
     excerpt: string | null;
     parent_id: number | null;
+    template: string;
     featured_media_id: number | null;
     published_at: string | null;
 };
@@ -51,6 +52,7 @@ type Props = {
     groups: FieldGroupData[];
     media: Record<number, MediaItem>;
     parents: { id: number; title: string }[];
+    templates: { key: string; label: string }[];
     taxonomies: TaxonomyOption[];
     termIds: number[];
     canManageTerms: boolean;
@@ -70,6 +72,7 @@ export default function ContentEdit({
     groups,
     media: initialMedia,
     parents,
+    templates,
     taxonomies,
     termIds,
     canManageTerms,
@@ -88,6 +91,7 @@ export default function ContentEdit({
         featured_media_id:
             content?.featured_media_id ?? (null as number | null),
         published_at: content?.published_at ?? '',
+        template: content?.template ?? 'default',
         term_ids: termIds,
         fields: values as Record<string, FieldValue>,
         seo: seo as SeoValues,
@@ -447,6 +451,37 @@ export default function ContentEdit({
                                 )}
                             </CardContent>
                         </Card>
+
+                        {templates.length > 1 && (
+                            <Card className="gap-4">
+                                <CardHeader>
+                                    <CardTitle className="text-base">
+                                        {t('Szablon')}
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <select
+                                        className={nativeClass}
+                                        value={form.data.template}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                'template',
+                                                e.target.value,
+                                            )
+                                        }
+                                    >
+                                        {templates.map((tpl) => (
+                                            <option
+                                                key={tpl.key}
+                                                value={tpl.key}
+                                            >
+                                                {tpl.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </CardContent>
+                            </Card>
+                        )}
 
                         <TermsPanel
                             taxonomies={taxonomies}

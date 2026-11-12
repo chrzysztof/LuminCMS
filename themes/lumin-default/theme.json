@@ -1,0 +1,14 @@
+{
+    "name": "Lumin Default",
+    "version": "1.0.0",
+    "author": "Lumin CMS",
+    "description": "Prosty, szybki motyw startowy.",
+    "templates": [
+        { "key": "default", "label": "Domyślny", "types": [] },
+        {
+            "key": "landing",
+            "label": "Landing (bez nagłówka i stopki)",
+            "types": ["page"]
+        }
+    ]
+}

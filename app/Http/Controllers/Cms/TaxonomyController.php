@@ -29,6 +29,7 @@ class TaxonomyController extends Controller
                 'label' => $t->label,
                 'label_plural' => $t->label_plural,
                 'hierarchical' => $t->hierarchical,
+                'rewrite_base' => $t->rewrite_base,
                 'is_system' => $t->is_system,
                 'terms_count' => $t->terms_count,
                 'content_types' => $t->contentTypes->pluck('key')->all(),
@@ -75,6 +76,7 @@ class TaxonomyController extends Controller
             'key' => $data['key'],
             'label' => $data['label'],
             'label_plural' => $data['label_plural'],
+            'rewrite_base' => $data['rewrite_base'] ?? str_replace('_', '-', $data['key']),
             'hierarchical' => $data['hierarchical'] ?? false,
         ]);
         $taxonomy->contentTypes()->sync($this->typeIds($data['content_types'] ?? []));
@@ -87,6 +89,10 @@ class TaxonomyController extends Controller
         $data = $this->validateTaxonomy($request, $taxonomy);
 
         $attributes = ['label' => $data['label'], 'label_plural' => $data['label_plural']];
+
+        if (! empty($data['rewrite_base'])) {
+            $attributes['rewrite_base'] = $data['rewrite_base'];
+        }
 
         // Zmiana typu (płaska/hierarchiczna) tylko dla własnych taksonomii; płaska gubi rodziców.
         if (! $taxonomy->is_system && array_key_exists('hierarchical', $data)) {
@@ -174,6 +180,10 @@ class TaxonomyController extends Controller
             'key' => $taxonomy ? ['prohibited'] : ['required', 'string', 'max:50', 'regex:/^[a-z][a-z0-9_]*$/', Rule::unique('taxonomies', 'key')],
             'label' => ['required', 'string', 'max:255'],
             'label_plural' => ['required', 'string', 'max:255'],
+            'rewrite_base' => ['nullable', 'string', 'max:50', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/', Rule::unique('taxonomies', 'rewrite_base')->ignore($taxonomy?->id),
+                // Przedrostek nie może zasłaniać archiwum typu treści ani panelu.
+                fn ($attr, $value, $fail) => (ContentType::where('url_prefix', $value)->exists() || in_array($value, ['cms', 'login', 'register', 'dashboard', 'settings', 'theme-assets', 'sitemap', 'robots'], true))
+                    ? $fail(__('Ten przedrostek jest zajęty.')) : null],
             'hierarchical' => ['nullable', 'boolean'],
             'content_types' => ['nullable', 'array'],
             'content_types.*' => ['string', Rule::exists('content_types', 'key')],

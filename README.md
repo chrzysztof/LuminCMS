@@ -40,6 +40,16 @@ app(\App\Cms\Shortcodes\Shortcodes::class)->add('hello', fn (array $attrs, strin
 
 Handlers return trusted HTML, so escape attribute values yourself.
 
+## Themes
+
+A theme is a folder in `themes/{slug}/` with a `theme.json` manifest and Blade views (exposed as the `theme::` namespace). Missing views fall back to the default theme (`lumin-default`), so a theme only needs to override what it changes.
+
+- **Page templates** are declared in `theme.json` and picked per entry in the editor.
+- **Template hierarchy:** chosen template, `single-{type}`, `single`; archives use `archive-{type}` / `archive`; taxonomy terms use `taxonomy-{key}` / `taxonomy` / `archive`.
+- **Public archives:** `/blog` (content type URL prefix) and `/kategoria/{term}` (taxonomy URL prefix, editable in the taxonomy panel), both with pagination, SEO and sitemap entries.
+- **Assets** live in `themes/{slug}/assets` and are served through `theme-assets/{slug}/...`.
+- `php artisan cms:theme` lists themes, `php artisan cms:theme {slug}` activates one.
+
 ## Requirements
 
 - PHP 8.3+

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Cms\Content\ArchiveResolver;
 use App\Cms\Content\Content;
+use App\Cms\Content\ContentType;
 use App\Cms\Seo\SeoResolver;
+use App\Cms\Taxonomy\Term;
 use Illuminate\Http\Response;
 
 /** sitemap.xml i robots.txt generowane z aktualnych treści i ustawień SEO. */
@@ -11,7 +14,7 @@ class SitemapController extends Controller
 {
     private const MAX_URLS = 50000;
 
-    public function __construct(private readonly SeoResolver $seo) {}
+    public function __construct(private readonly SeoResolver $seo, private readonly ArchiveResolver $archives) {}
 
     public function sitemap(): Response
     {
@@ -26,6 +29,23 @@ class SitemapController extends Controller
 
                 $count++;
                 $xml[] = '<url><loc>'.e($this->seo->urlFor($content)).'</loc><lastmod>'.$content->updated_at->toIso8601String().'</lastmod></url>';
+            });
+        }
+
+        // Archiwa typów treści i terminy, które mają przynajmniej jedną opublikowaną treść.
+        if (! $this->seo->site()['noindex_site']) {
+            ContentType::whereNotNull('url_prefix')->where('hierarchical', false)->get()->each(function (ContentType $type) use (&$xml, &$count) {
+                if ($count < self::MAX_URLS && Content::published()->where('content_type_id', $type->id)->exists()) {
+                    $count++;
+                    $xml[] = '<url><loc>'.e($this->archives->urlForArchive($type)).'</loc></url>';
+                }
+            });
+
+            Term::with('taxonomy')->whereHas('contents', fn ($q) => $q->published())->orderBy('id')->lazy(500)->each(function (Term $term) use (&$xml, &$count) {
+                if ($count < self::MAX_URLS) {
+                    $count++;
+                    $xml[] = '<url><loc>'.e($this->archives->urlForTerm($term)).'</loc></url>';
+                }
             });
         }
 

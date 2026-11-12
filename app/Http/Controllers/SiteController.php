@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cms\Content\ArchiveResolver;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentResolver;
 use App\Cms\Content\ContentType;
@@ -10,6 +11,7 @@ use App\Cms\Roles\ContentAccess;
 use App\Cms\Seo\SeoResolver;
 use App\Cms\Settings\Settings;
 use App\Cms\Shortcodes\Shortcodes;
+use App\Cms\Themes\ThemeManager;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,6 +28,8 @@ class SiteController extends Controller
         private readonly RedirectManager $redirects,
         private readonly Settings $settings,
         private readonly Shortcodes $shortcodes,
+        private readonly ThemeManager $themes,
+        private readonly ArchiveResolver $archives,
     ) {}
 
     public function show(Request $request): View|RedirectResponse
@@ -38,9 +42,15 @@ class SiteController extends Controller
 
         $content = $this->resolver->find($request->path());
 
-        abort_if($content === null, 404);
+        if ($content !== null) {
+            return $this->view($content, preview: false);
+        }
 
-        return $this->view($content, preview: false);
+        $listing = $this->archives->find($request->path());
+
+        abort_if($listing === null, 404);
+
+        return $this->listing($listing, max(1, $request->integer('page', 1)));
     }
 
     /** Odpowiedź 404: wybrana w ustawieniach strona albo domyślny widok. Zapisuje adres w monitorze 404. */
@@ -53,12 +63,7 @@ class SiteController extends Controller
 
         if ($page) {
             // Podgląd = noindex i brak canonical; kod odpowiedzi zostaje 404.
-            return response()->view('site.show', [
-                'content' => $page,
-                'html' => $this->shortcodes->render($page->html_cache, $page),
-                'preview' => true,
-                'seo' => $this->seo->forContent($page, preview: true),
-            ], 404);
+            return response($this->render($page, preview: true), 404);
         }
 
         return response()->view('errors.404', [], 404);
@@ -83,11 +88,64 @@ class SiteController extends Controller
 
     private function view(Content $content, bool $preview): View
     {
-        return view('site.show', [
+        return $this->render($content, $preview);
+    }
+
+    /**
+     * Wybiera szablon: wskazany w treści, potem single-{typ}, single, templates.default.
+     * Nazwę z bazy filtrujemy, bo trafia do nazwy widoku.
+     */
+    private function render(Content $content, bool $preview): View
+    {
+        $content->loadMissing('type');
+        $chosen = preg_match('/^[a-z0-9_-]+$/', (string) $content->template) ? (string) $content->template : 'default';
+
+        $candidates = [
+            ...($chosen !== 'default' ? ["templates.{$chosen}"] : []),
+            "single-{$content->type->key}",
+            'single',
+            'templates.default',
+        ];
+
+        return $this->themes->view($candidates, [
             'content' => $content,
             'html' => $this->shortcodes->render($content->html_cache, $content),
             'preview' => $preview,
             'seo' => $this->seo->forContent($content, $preview),
+        ]);
+    }
+
+    /** @param  array<string, mixed>  $listing */
+    private function listing(array $listing, int $page): View
+    {
+        if ($listing['kind'] === 'archive') {
+            $type = $listing['type'];
+            $heading = $type->label_plural;
+            $description = '';
+            $url = $this->archives->urlForArchive($type);
+            $items = $this->archives->itemsOfType($type);
+            $candidates = ["archive-{$type->key}", 'archive'];
+            $extra = ['type' => $type];
+        } else {
+            $term = $listing['term'];
+            $heading = $term->name;
+            $description = (string) $term->description;
+            $url = $this->archives->urlForTerm($term);
+            $items = $this->archives->itemsOfTerm($term);
+            $candidates = ["taxonomy-{$listing['taxonomy']->key}", 'taxonomy', 'archive'];
+            $extra = ['term' => $term, 'taxonomy' => $listing['taxonomy']];
+        }
+
+        abort_if($page > 1 && $items->isEmpty(), 404);
+
+        return $this->themes->view($candidates, [
+            'heading' => $heading,
+            'description' => $description,
+            'items' => $items,
+            'paths' => app(ContentResolver::class),
+            'preview' => false,
+            'seo' => $this->seo->forListing($heading, $description, $url, $page),
+            ...$extra,
         ]);
     }
 }

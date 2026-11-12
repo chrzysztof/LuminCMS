@@ -19,6 +19,12 @@ class Taxonomy extends Model
         ];
     }
 
+    /** Przedrostek publicznego adresu terminów (domyślnie klucz taksonomii). */
+    public function base(): string
+    {
+        return $this->rewrite_base ?: str_replace('_', '-', $this->key);
+    }
+
     public function terms(): HasMany
     {
         return $this->hasMany(Term::class);

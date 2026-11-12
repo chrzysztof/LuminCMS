@@ -37,6 +37,7 @@ class CmsSeeder extends Seeder
         $category = Taxonomy::updateOrCreate(['key' => 'category'], [
             'label' => 'Kategoria',
             'label_plural' => 'Kategorie',
+            'rewrite_base' => 'kategoria',
             'hierarchical' => true,
             'is_system' => true,
         ]);
@@ -44,6 +45,7 @@ class CmsSeeder extends Seeder
         $tag = Taxonomy::updateOrCreate(['key' => 'tag'], [
             'label' => 'Tag',
             'label_plural' => 'Tagi',
+            'rewrite_base' => 'tag',
             'hierarchical' => false,
             'is_system' => true,
         ]);
