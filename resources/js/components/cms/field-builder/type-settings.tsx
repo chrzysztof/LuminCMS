@@ -57,6 +57,10 @@ const labels: Record<string, string> = {
     taxonomy: 'Taksonomia (klucz)',
     button_label: 'Etykieta przycisku dodawania',
     collapsed: 'Pole tytułu wiersza (nazwa)',
+    center_lat: 'Domyślna szerokość geograficzna',
+    center_lng: 'Domyślna długość geograficzna',
+    zoom: 'Domyślne powiększenie (1–20)',
+    height: 'Wysokość mapy (px)',
 };
 
 /** Dla tych typów "min"/"max" oznaczają liczbę pozycji, a nie wartość liczbową. */
@@ -123,6 +127,10 @@ const returnFormats: Record<string, [string, string][]> = {
     user: [
         ['object', 'Dane użytkownika (id, imię)'],
         ['id', 'Identyfikator'],
+    ],
+    map: [
+        ['array', 'Tablica (lat, lng, zoom, adres, linki)'],
+        ['embed', 'Gotowy iframe OpenStreetMap'],
     ],
 };
 

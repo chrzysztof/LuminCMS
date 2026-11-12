@@ -157,6 +157,16 @@ class SeoResolver
             'name' => $site['site_name'],
         ]];
 
+        $social = array_values(array_filter(
+            array_map(fn ($key) => (string) $this->settings->get('site', $key, ''), ['facebook', 'instagram', 'x', 'youtube', 'linkedin', 'tiktok']),
+            fn ($url) => $url !== '',
+        ));
+
+        if ($social !== []) {
+            $graph[] = ['@type' => 'Organization', '@id' => url('/').'#organization', 'name' => $site['site_name'], 'url' => url('/'), 'sameAs' => $social];
+            $graph[0]['publisher'] = ['@id' => url('/').'#organization'];
+        }
+
         if ($this->isHome($content)) {
             $graph[0]['description'] = $site['tagline'] ?: $site['description'];
         }

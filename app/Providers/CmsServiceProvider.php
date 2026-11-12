@@ -48,6 +48,7 @@ class CmsServiceProvider extends ServiceProvider
         Types\RelationshipField::class,
         Types\TaxonomyField::class,
         Types\UserField::class,
+        Types\MapField::class,
 
         Types\RepeaterField::class,
     ];
@@ -70,6 +71,12 @@ class CmsServiceProvider extends ServiceProvider
                 'noindex_site' => false,
             ],
             'pages' => ['not_found_content_id' => null],
+            'site' => [
+                'ga_id' => '', 'gtm_id' => '', 'pixel_id' => '',
+                'consent_required' => true, 'privacy_url' => '', 'track_logged_in' => false,
+                'facebook' => '', 'instagram' => '', 'x' => '', 'youtube' => '', 'linkedin' => '', 'tiktok' => '',
+                'custom_head' => '', 'custom_body_end' => '',
+            ],
         ]));
 
         $this->app->singleton(FieldRegistry::class, function () {

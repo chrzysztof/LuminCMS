@@ -7,12 +7,13 @@ Lumin is built on Laravel 13 with a React admin panel and server-rendered public
 ## Highlights
 
 - **Content types and taxonomies** — pages and posts out of the box, plus your own types and taxonomies.
-- **Custom fields** — a field-group builder with 36 planned field types (29 available today, including Repeater), conditional logic, location rules and JSON import/export.
+- **Custom fields** — a field-group builder with 36 planned field types (30 available today, including Repeater and OpenStreetMap maps), conditional logic, location rules and JSON import/export.
 - **Visual editor** — a drag-and-drop page builder (GrapesJS) that outputs clean, semantic HTML with no inline styles or generated IDs.
 - **Media library** — automatic WebP conversion, configurable image sizes, focal points, per-size crops and responsive `<picture>` output.
 - **SEO built in** — title templates, meta descriptions, canonical URLs, robots directives, Open Graph, Twitter cards, JSON-LD, `sitemap.xml`, `robots.txt` and a snippet preview with focus-keyword checks.
 - **Redirects and 404 handling** — 301/302/307/308/410 redirects, automatic redirects when a page URL changes, a 404 monitor and a customizable 404 page.
-- **Shortcodes, JSON importer and site settings** — analytics, tag manager and pixel integrations _(planned)_.
+- **Site settings** — Google Analytics 4, Tag Manager and Meta Pixel with a cookie-consent banner, social profiles, custom head and footer code.
+- **Shortcodes and JSON importer** _(planned)_.
 - **Fast by default** — server-rendered Blade templates on the public site, cached builder output, a lightweight front end.
 
 ## Status

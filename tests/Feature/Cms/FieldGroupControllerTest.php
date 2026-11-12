@@ -124,7 +124,7 @@ class FieldGroupControllerTest extends TestCase
     public function test_edit_page_exposes_all_field_types_with_default_settings(): void
     {
         $this->actingAs($this->user)->get('/cms/fields/create')->assertInertia(fn (Assert $p) => $p->component('fields/edit')
-            ->has('fieldTypes', 29)->where('group', null)->has('contentTypes', 2));
+            ->has('fieldTypes', 30)->where('group', null)->has('contentTypes', 2));
     }
 
     public function test_export_and_import_roundtrip(): void

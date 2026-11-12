@@ -2,6 +2,7 @@
 export const cmsUrl = {
     library: '/cms/library',
     seoSettings: '/cms/settings/seo',
+    siteSettings: '/cms/settings/site',
     redirectIndex: '/cms/redirects',
     redirectLogs: '/cms/redirects/logs',
     redirectPages: '/cms/redirects/pages',

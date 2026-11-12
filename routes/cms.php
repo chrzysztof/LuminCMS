@@ -8,6 +8,7 @@ use App\Http\Controllers\Cms\MediaSizeController;
 use App\Http\Controllers\Cms\RedirectController;
 use App\Http\Controllers\Cms\RelationController;
 use App\Http\Controllers\Cms\SeoSettingsController;
+use App\Http\Controllers\Cms\SiteSettingsController;
 use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,8 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
     Route::put('redirects/{redirect}', [RedirectController::class, 'update'])->name('redirects.update');
     Route::delete('redirects/{redirect}', [RedirectController::class, 'destroy'])->name('redirects.destroy');
     Route::post('redirects/{redirect}/toggle', [RedirectController::class, 'toggle'])->name('redirects.toggle');
+    Route::get('settings/site', [SiteSettingsController::class, 'edit'])->name('settings.site');
+    Route::put('settings/site', [SiteSettingsController::class, 'update'])->name('settings.site.update');
     Route::get('settings/seo', [SeoSettingsController::class, 'edit'])->name('settings.seo');
     Route::put('settings/seo', [SeoSettingsController::class, 'update'])->name('settings.seo.update');
     Route::get('relations/{group}', RelationController::class)->name('relations');

@@ -1,5 +1,6 @@
 import { File as FileIcon, ImagePlus, X } from 'lucide-react';
 import { useState } from 'react';
+import { MapControl } from '@/components/cms/map-control';
 import { MediaPicker } from '@/components/cms/media-picker';
 import { RelationControl } from '@/components/cms/relation-control';
 import { RepeaterControl } from '@/components/cms/repeater-control';
@@ -508,6 +509,10 @@ function Control(props: ControlProps) {
             );
         case 'repeater':
             return <RepeaterControl {...props} />;
+        case 'map':
+            return (
+                <MapControl field={field} value={value} onChange={onChange} />
+            );
         default:
             return (
                 <p className="text-sm text-muted-foreground">

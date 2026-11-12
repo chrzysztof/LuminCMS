@@ -285,4 +285,27 @@ class RichFieldsTest extends TestCase
         $this->actingAs($user)->post('/cms/fields', $ok)->assertRedirect();
         $this->assertArrayNotHasKey('_id', FieldGroup::firstOrFail()->fields[0]['sub_fields'][0]);
     }
+
+    public function test_map_field_validates_coordinates_normalizes_and_formats(): void
+    {
+        $fields = [['type' => 'map', 'name' => 'miejsce']];
+
+        $this->assertArrayHasKey('miejsce', $this->errors($fields, ['miejsce' => ['lat' => 91, 'lng' => 10]]));
+        $this->assertArrayHasKey('miejsce', $this->errors($fields, ['miejsce' => ['lat' => 'x', 'lng' => 10]]));
+        $this->assertArrayHasKey('miejsce', $this->errors($fields, ['miejsce' => ['lat' => 10, 'lng' => 10, 'zoom' => 99]]));
+        $this->assertArrayHasKey('miejsce', $this->errors([['type' => 'map', 'name' => 'miejsce', 'required' => true]], ['miejsce' => []]));
+        $this->assertNull($this->validator->validate($fields, ['miejsce' => []])['miejsce']);
+
+        $stored = $this->validator->validate($fields, ['miejsce' => ['lat' => '52.2297001', 'lng' => '21.0122', 'zoom' => '15', 'address' => ' Warszawa ']])['miejsce'];
+        $this->assertSame(['lat' => 52.2297, 'lng' => 21.0122, 'zoom' => 15, 'address' => 'Warszawa'], $stored);
+
+        $field = $this->registry->resolveField($fields[0]);
+        $out = $this->registry->get('map')->format($stored, $field);
+        $this->assertStringContainsString('openstreetmap.org/export/embed.html?bbox=', $out['embed_url']);
+        $this->assertStringContainsString('marker=52.2297,21.0122', $out['embed_url']);
+
+        $html = (string) $this->registry->get('map')->format($stored, [...$field, 'return_format' => 'embed']);
+        $this->assertStringContainsString('<iframe', $html);
+        $this->assertStringContainsString('title="Warszawa"', $html);
+    }
 }

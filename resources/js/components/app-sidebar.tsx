@@ -2,6 +2,7 @@ import { Link, usePage } from '@inertiajs/react';
 import {
     Boxes,
     ArrowRightLeft,
+    Globe,
     ListTree,
     Search,
     FileText,
@@ -50,6 +51,7 @@ export function AppSidebar() {
         { title: 'Pola własne', href: cmsUrl.fieldIndex, icon: ListTree },
     ];
     const settingsItems: NavItem[] = [
+        { title: 'Witryna', href: cmsUrl.siteSettings, icon: Globe },
         { title: 'SEO', href: cmsUrl.seoSettings, icon: Search },
         {
             title: 'Przekierowania',
