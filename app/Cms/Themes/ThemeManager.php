@@ -39,7 +39,48 @@ class ThemeManager
             }
         }
 
+        $this->link();
+
         return $this->themes;
+    }
+
+    /** Ustawia motywy nadrzędne (z ochroną przed cyklami) i motyw domyślny jako zapas. */
+    private function link(): void
+    {
+        $default = $this->themes[self::DEFAULT] ?? null;
+
+        foreach ($this->themes as $theme) {
+            $theme->fallback = $theme->slug === self::DEFAULT ? null : $default;
+            $parentSlug = $theme->parentSlug();
+
+            if ($parentSlug === null) {
+                continue;
+            }
+
+            $seen = [$theme->slug];
+            $parent = $this->themes[$parentSlug] ?? null;
+
+            for ($p = $parent; $p; $p = $this->themes[$p->parentSlug() ?? ''] ?? null) {
+                if (in_array($p->slug, $seen, true)) {
+                    $theme->error = 'cycle';
+                    $parent = null;
+                    break;
+                }
+                $seen[] = $p->slug;
+            }
+
+            if ($parent === null && $theme->error === null) {
+                $theme->error = 'missing_parent';
+            }
+
+            $theme->parent = $theme->error === null ? $parent : null;
+        }
+    }
+
+    /** Wymusza ponowne przeskanowanie folderu motywów (po instalacji lub usunięciu). */
+    public function refresh(): void
+    {
+        $this->themes = null;
     }
 
     public function has(string $slug): bool
@@ -65,6 +106,10 @@ class ThemeManager
             throw new \InvalidArgumentException("Nie ma motywu: {$slug}");
         }
 
+        if ($this->all()[$slug]->error !== null) {
+            throw new \InvalidArgumentException("Motyw {$slug} nie może być aktywny: brakuje motywu nadrzędnego albo dziedziczenie jest cykliczne.");
+        }
+
         $this->settings->save('theme', ['active' => $slug]);
         $this->register();
     }
@@ -83,12 +128,7 @@ class ThemeManager
             return;
         }
 
-        $paths = array_values(array_unique(array_filter([
-            $active->viewsPath(),
-            ($this->all()[self::DEFAULT] ?? null)?->viewsPath(),
-        ])));
-
-        View::replaceNamespace('theme', $paths);
+        View::replaceNamespace('theme', $active->viewPaths());
     }
 
     /** @return list<array{key: string, label: string}> szablony aktywnego motywu dla danego typu treści */

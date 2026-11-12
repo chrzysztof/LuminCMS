@@ -15,6 +15,7 @@ import {
     Code2,
     LayoutTemplate,
     Palette,
+    Paintbrush,
     Menu as MenuIcon,
     type LucideIcon,
 } from 'lucide-react';
@@ -75,6 +76,7 @@ export function AppSidebar() {
         : [];
     const appearanceItems: NavItem[] = can('manage_options')
         ? [
+              { title: t('Motywy'), href: cmsUrl.themes, icon: Paintbrush },
               { title: t('Menu'), href: cmsUrl.menus, icon: MenuIcon },
               { title: t('Części'), href: cmsUrl.parts, icon: LayoutTemplate },
               { title: t('Dostosuj'), href: cmsUrl.customize, icon: Palette },

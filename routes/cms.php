@@ -15,6 +15,7 @@ use App\Http\Controllers\Cms\SeoSettingsController;
 use App\Http\Controllers\Cms\ShortcodeController;
 use App\Http\Controllers\Cms\SiteSettingsController;
 use App\Http\Controllers\Cms\TaxonomyController;
+use App\Http\Controllers\Cms\ThemeController;
 use App\Http\Controllers\Cms\UserController;
 use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
@@ -70,6 +71,13 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
         Route::post('parts', [PartController::class, 'store'])->name('parts.store');
         Route::put('parts/slots/{slot}', [PartController::class, 'assign'])->name('parts.assign');
         Route::delete('parts/{content}', [PartController::class, 'destroy'])->name('parts.destroy');
+
+        Route::get('themes', [ThemeController::class, 'index'])->name('themes.index');
+        Route::post('themes', [ThemeController::class, 'upload'])->name('themes.upload');
+        Route::post('themes/{slug}/activate', [ThemeController::class, 'activate'])->name('themes.activate');
+        Route::get('themes/{slug}/export', [ThemeController::class, 'export'])->name('themes.export');
+        Route::get('themes/{slug}/screenshot', [ThemeController::class, 'screenshotImage'])->name('themes.screenshot');
+        Route::delete('themes/{slug}', [ThemeController::class, 'destroy'])->name('themes.destroy');
 
         Route::get('customize', [CustomizeController::class, 'edit'])->name('customize.edit');
         Route::put('customize', [CustomizeController::class, 'update'])->name('customize.update');

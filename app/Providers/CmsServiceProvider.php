@@ -15,6 +15,7 @@ use App\Cms\Shortcodes\BuiltInShortcodes;
 use App\Cms\Shortcodes\Shortcodes;
 use App\Cms\Themes\Customizer;
 use App\Cms\Themes\Parts;
+use App\Cms\Themes\ThemeInstaller;
 use App\Cms\Themes\ThemeManager;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
@@ -83,6 +84,7 @@ class CmsServiceProvider extends ServiceProvider
             return $shortcodes;
         });
         $this->app->singleton(ThemeManager::class, fn ($app) => new ThemeManager($app->make(Settings::class), base_path('themes')));
+        $this->app->singleton(ThemeInstaller::class, fn ($app) => new ThemeInstaller($app->make(ThemeManager::class), base_path('themes')));
         $this->app->singleton(BlockRegistry::class);
         $this->app->singleton(Parts::class);
         $this->app->singleton(Customizer::class);

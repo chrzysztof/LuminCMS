@@ -43,7 +43,16 @@ class BlockRegistry
         $this->forTheme = $theme->slug;
         $this->blocks = [];
 
-        foreach (glob($theme->path.'/blocks/*/block.json') ?: [] as $file) {
+        $files = [];
+
+        // Od motywu najdalszego do aktywnego: blok motywu potomnego nadpisuje blok rodzica o tej samej nazwie.
+        foreach (array_reverse($theme->lineage()) as $t) {
+            foreach (glob($t->path.'/blocks/*/block.json') ?: [] as $file) {
+                $files[basename(dirname($file))] = $file;
+            }
+        }
+
+        foreach ($files as $file) {
             $dir = dirname($file);
             $name = basename($dir);
             $manifest = json_decode((string) file_get_contents($file), true);
