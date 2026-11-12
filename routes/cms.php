@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Cms\BuilderController;
 use App\Http\Controllers\Cms\ContentController;
+use App\Http\Controllers\Cms\CustomizeController;
 use App\Http\Controllers\Cms\FieldGroupController;
 use App\Http\Controllers\Cms\MediaController;
 use App\Http\Controllers\Cms\MediaSizeController;
@@ -67,6 +68,10 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
         Route::post('parts', [PartController::class, 'store'])->name('parts.store');
         Route::put('parts/slots/{slot}', [PartController::class, 'assign'])->name('parts.assign');
         Route::delete('parts/{content}', [PartController::class, 'destroy'])->name('parts.destroy');
+
+        Route::get('customize', [CustomizeController::class, 'edit'])->name('customize.edit');
+        Route::put('customize', [CustomizeController::class, 'update'])->name('customize.update');
+        Route::delete('customize', [CustomizeController::class, 'reset'])->name('customize.reset');
 
         Route::get('menus', [MenuController::class, 'index'])->name('menus.index');
         Route::post('menus', [MenuController::class, 'store'])->name('menus.store');

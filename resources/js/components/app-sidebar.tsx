@@ -14,6 +14,7 @@ import {
     Tags,
     Code2,
     LayoutTemplate,
+    Palette,
     Menu as MenuIcon,
     type LucideIcon,
 } from 'lucide-react';
@@ -76,6 +77,7 @@ export function AppSidebar() {
         ? [
               { title: t('Menu'), href: cmsUrl.menus, icon: MenuIcon },
               { title: t('Części'), href: cmsUrl.parts, icon: LayoutTemplate },
+              { title: t('Dostosuj'), href: cmsUrl.customize, icon: Palette },
           ]
         : [];
     const settingsItems: NavItem[] = [

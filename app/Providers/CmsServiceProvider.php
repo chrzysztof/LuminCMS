@@ -12,6 +12,7 @@ use App\Cms\Roles\RoleRegistry;
 use App\Cms\Settings\Settings;
 use App\Cms\Shortcodes\BuiltInShortcodes;
 use App\Cms\Shortcodes\Shortcodes;
+use App\Cms\Themes\Customizer;
 use App\Cms\Themes\Parts;
 use App\Cms\Themes\ThemeManager;
 use App\Models\User;
@@ -82,6 +83,7 @@ class CmsServiceProvider extends ServiceProvider
         });
         $this->app->singleton(ThemeManager::class, fn ($app) => new ThemeManager($app->make(Settings::class), base_path('themes')));
         $this->app->singleton(Parts::class);
+        $this->app->singleton(Customizer::class);
         $this->app->singleton(MenuRenderer::class);
         $this->app->singleton(ConditionalLogic::class);
         $this->app->singleton(LocationMatcher::class);
@@ -101,6 +103,7 @@ class CmsServiceProvider extends ServiceProvider
             'pages' => ['not_found_content_id' => null],
             'theme' => ['active' => ThemeManager::DEFAULT],
             'theme_parts' => ['slots' => []],
+            'theme_customizer' => ['values' => []],
             'users' => ['default_role' => 'subscriber', 'registration_enabled' => false],
             'site' => [
                 'ga_id' => '', 'gtm_id' => '', 'pixel_id' => '',

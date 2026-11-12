@@ -50,6 +50,7 @@ A theme is a folder in `themes/{slug}/` with a `theme.json` manifest and Blade v
 - **Assets** live in `themes/{slug}/assets` and are served through `theme-assets/{slug}/...`.
 - **Global parts:** the theme declares slots (`parts` in `theme.json`, e.g. header and footer). Appearance → Parts assigns a part, edited in the visual editor, to each slot; an empty slot uses the theme's default markup. Parts are admin-only and never public.
 - **Menus:** Appearance → Menu builds multi-level menus (content, terms, custom links, headings) and assigns them to theme locations (`menus` in `theme.json`). A top-level item can be a **mega menu**: its children become columns, with an optional extra panel from a global part. Insert a menu with the editor's Menu block or `[menu name="slug"]` / `[menu location="primary"]`. Output is accessible (`aria-expanded`, keyboard, mobile accordion) and styled by the theme's `menu.css` / `menu.js`.
+- **Customizer:** Appearance → Customize edits the theme's design tokens (declared in `theme.json` as `tokens`: `color`, `select`, `size`) with a live preview in a device-sized frame. Values are validated, stored per theme and emitted as CSS variables in `:root` (also in the editor canvas via `/theme-vars.css`). Fonts are system stacks only, no external CDN.
 - `php artisan cms:theme` lists themes, `php artisan cms:theme {slug}` activates one.
 
 ## Requirements

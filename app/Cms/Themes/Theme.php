@@ -40,6 +40,50 @@ class Theme
             ->all();
     }
 
+    /**
+     * Tokeny ustawień wyglądu (Dostosuj): color (#rrggbb), select (wartość z options), size (liczba z jednostką).
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function tokens(): array
+    {
+        $tokens = [];
+
+        foreach ((array) ($this->manifest['tokens'] ?? []) as $t) {
+            if (! is_array($t) || ! preg_match('/^[a-z0-9_]+$/', (string) ($t['key'] ?? '')) || ! preg_match('/^--[a-z0-9-]+$/', (string) ($t['css'] ?? ''))) {
+                continue;
+            }
+
+            $base = [
+                'key' => $t['key'],
+                'group' => (string) ($t['group'] ?? 'Ogólne'),
+                'label' => (string) ($t['label'] ?? $t['key']),
+                'type' => $t['type'] ?? '',
+                'css' => $t['css'],
+            ];
+
+            if ($base['type'] === 'color' && preg_match('/^#[0-9a-fA-F]{6}$/', (string) ($t['default'] ?? ''))) {
+                $tokens[] = $base + ['default' => strtolower($t['default'])];
+            } elseif ($base['type'] === 'select') {
+                $options = collect($t['options'] ?? [])
+                    ->filter(fn ($o) => is_array($o) && is_string($o['value'] ?? null) && ! preg_match('/[<>{};]/', $o['value']))
+                    ->map(fn ($o) => ['value' => $o['value'], 'label' => (string) ($o['label'] ?? $o['value'])])
+                    ->values()->all();
+
+                if ($options !== [] && in_array($t['default'] ?? null, array_column($options, 'value'), true)) {
+                    $tokens[] = $base + ['default' => $t['default'], 'options' => $options];
+                }
+            } elseif ($base['type'] === 'size' && is_numeric($t['default'] ?? null) && is_numeric($t['min'] ?? null) && is_numeric($t['max'] ?? null)) {
+                $tokens[] = $base + [
+                    'default' => (float) $t['default'], 'min' => (float) $t['min'], 'max' => (float) $t['max'],
+                    'step' => max(0.01, (float) ($t['step'] ?? 1)), 'unit' => in_array($t['unit'] ?? 'rem', ['rem', 'px', 'em', '%'], true) ? ($t['unit'] ?? 'rem') : 'rem',
+                ];
+            }
+        }
+
+        return $tokens;
+    }
+
     /** @return list<array{slot: string, label: string}> sloty części globalnych (np. header, footer) */
     public function parts(): array
     {

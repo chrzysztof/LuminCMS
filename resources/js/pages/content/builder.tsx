@@ -127,7 +127,7 @@ export default function Builder({ type, content, project }: Props) {
             traitManager: { appendTo: traitsEl.current },
             styleManager: { sectors: [] },
             selectorManager: { componentFirst: true },
-            canvas: { styles: ['/css/lumin-blocks.css'] },
+            canvas: { styles: ['/css/lumin-blocks.css', '/theme-vars.css'] },
             deviceManager: {
                 devices: devices.map((d) => ({
                     id: d.id,

@@ -4,19 +4,163 @@
     "author": "Lumin CMS",
     "description": "Prosty, szybki motyw startowy.",
     "parts": [
-        { "slot": "header", "label": "Nagłówek" },
-        { "slot": "footer", "label": "Stopka" }
+        {
+            "slot": "header",
+            "label": "Nagłówek"
+        },
+        {
+            "slot": "footer",
+            "label": "Stopka"
+        }
     ],
     "menus": [
-        { "key": "primary", "label": "Menu główne" },
-        { "key": "footer", "label": "Menu w stopce" }
+        {
+            "key": "primary",
+            "label": "Menu główne"
+        },
+        {
+            "key": "footer",
+            "label": "Menu w stopce"
+        }
     ],
     "templates": [
-        { "key": "default", "label": "Domyślny", "types": [] },
+        {
+            "key": "default",
+            "label": "Domyślny",
+            "types": []
+        },
         {
             "key": "landing",
             "label": "Landing (bez nagłówka i stopki)",
             "types": ["page"]
+        }
+    ],
+    "tokens": [
+        {
+            "key": "primary",
+            "group": "Kolory",
+            "label": "Kolor główny",
+            "type": "color",
+            "default": "#6d5bd0",
+            "css": "--lm-primary"
+        },
+        {
+            "key": "primary_dark",
+            "group": "Kolory",
+            "label": "Kolor główny (ciemny, po najechaniu)",
+            "type": "color",
+            "default": "#4b3fb0",
+            "css": "--lm-primary-dark"
+        },
+        {
+            "key": "text",
+            "group": "Kolory",
+            "label": "Tekst",
+            "type": "color",
+            "default": "#111114",
+            "css": "--lm-text"
+        },
+        {
+            "key": "muted_text",
+            "group": "Kolory",
+            "label": "Tekst pomocniczy",
+            "type": "color",
+            "default": "#62626c",
+            "css": "--lm-muted-text"
+        },
+        {
+            "key": "bg",
+            "group": "Kolory",
+            "label": "Tło strony",
+            "type": "color",
+            "default": "#ffffff",
+            "css": "--lm-bg"
+        },
+        {
+            "key": "bg_muted",
+            "group": "Kolory",
+            "label": "Tło sekcji jasnych",
+            "type": "color",
+            "default": "#f5f5f7",
+            "css": "--lm-bg-muted"
+        },
+        {
+            "key": "bg_dark",
+            "group": "Kolory",
+            "label": "Tło sekcji ciemnych",
+            "type": "color",
+            "default": "#111114",
+            "css": "--lm-bg-dark"
+        },
+        {
+            "key": "border",
+            "group": "Kolory",
+            "label": "Obramowania",
+            "type": "color",
+            "default": "#e7e7ea",
+            "css": "--lm-border"
+        },
+        {
+            "key": "font",
+            "group": "Typografia",
+            "label": "Krój pisma",
+            "type": "select",
+            "default": "'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', sans-serif",
+            "css": "--lm-font",
+            "options": [
+                {
+                    "value": "'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', sans-serif",
+                    "label": "Inter / systemowy bezszeryfowy"
+                },
+                {
+                    "value": "Georgia, 'Times New Roman', serif",
+                    "label": "Szeryfowy (Georgia)"
+                },
+                {
+                    "value": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+                    "label": "Maszynowy"
+                },
+                {
+                    "value": "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+                    "label": "Systemowy"
+                }
+            ]
+        },
+        {
+            "key": "container",
+            "group": "Układ",
+            "label": "Szerokość treści",
+            "type": "size",
+            "default": 72,
+            "min": 48,
+            "max": 96,
+            "step": 1,
+            "unit": "rem",
+            "css": "--lm-container"
+        },
+        {
+            "key": "radius",
+            "group": "Układ",
+            "label": "Zaokrąglenie rogów",
+            "type": "size",
+            "default": 0.75,
+            "min": 0,
+            "max": 2,
+            "step": 0.125,
+            "unit": "rem",
+            "css": "--lm-radius"
+        },
+        {
+            "key": "space",
+            "group": "Układ",
+            "label": "Odstęp między sekcjami",
+            "type": "size",
+            "default": 4,
+            "min": 2,
+            "max": 8,
+            "step": 0.25,
+            "unit": "rem",
+            "css": "--lm-space"
         }
     ]
 }

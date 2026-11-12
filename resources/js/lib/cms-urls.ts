@@ -27,6 +27,7 @@ export const cmsUrl = {
     parts: '/cms/parts',
     partAssign: (slot: string) => `/cms/parts/slots/${slot}`,
     partDelete: (id: number) => `/cms/parts/${id}`,
+    customize: '/cms/customize',
     menus: '/cms/menus',
     menu: (id: number) => `/cms/menus/${id}`,
     menuShow: (id: number) => `/cms/menus?menu=${id}`,

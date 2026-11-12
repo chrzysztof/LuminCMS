@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="{{ asset('css/lumin-blocks.css') }}">
     <link rel="stylesheet" href="{{ $theme->asset('theme.css') }}">
     <link rel="stylesheet" href="{{ $theme->asset('menu.css') }}">
+    <style id="lm-theme-vars">{!! str_replace('</', '<\/', app(\App\Cms\Themes\Customizer::class)->css()) !!}</style>
     @stack('head')
 </head>
 <body>
