@@ -7,6 +7,8 @@ use App\Cms\Content\ContentType;
 use App\Cms\Fields\ContainerFieldType;
 use App\Cms\Fields\FieldGroup;
 use App\Cms\Fields\FieldRegistry;
+use App\Cms\Fields\Types\CloneField;
+use App\Cms\Fields\Types\FlexibleContentField;
 use App\Cms\Taxonomy\Term;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -24,6 +26,9 @@ class FieldGroupController extends Controller
 
     /** Ustawienia wspólne dla wszystkich typów pól (edytowane w części ogólnej formularza). */
     private const COMMON_SETTINGS = ['label', 'name', 'instructions', 'required', 'conditional_logic', 'wrapper', 'type'];
+
+    /** Klucz grupy walidowanej w tej chwili (do wykrycia klonu samej siebie). */
+    private ?string $currentGroupKey = null;
 
     public function __construct(private readonly FieldRegistry $registry) {}
 
@@ -166,6 +171,14 @@ class FieldGroupController extends Controller
                 'active' => $group->active,
             ] : null,
             'fieldTypes' => $types,
+            // Grupy, które można sklonować w polu Clone (bez edytowanej grupy), z nazwami ich pól.
+            'cloneSources' => FieldGroup::when($group, fn ($q) => $q->where('id', '!=', $group->id))->orderBy('menu_order')->orderBy('id')->get()
+                ->map(fn (FieldGroup $g) => [
+                    'key' => $g->key,
+                    'title' => $g->title,
+                    'fields' => collect($g->fields ?? [])->filter(fn ($f) => is_array($f) && ($f['name'] ?? '') !== '')
+                        ->map(fn ($f) => ['name' => $f['name'], 'label' => (string) ($f['label'] ?? '') ?: $f['name']])->values()->all(),
+                ])->values(),
             'contentTypes' => ContentType::orderBy('id')->get(['key', 'label_plural']),
             'terms' => Term::with('taxonomy:id,label')->orderBy('name')->get()->map(fn (Term $t) => ['id' => $t->id, 'name' => $t->name, 'taxonomy' => $t->taxonomy?->label]),
             'parents' => Content::whereHas('type', fn ($q) => $q->where('hierarchical', true))->orderBy('title')->get(['id', 'title']),
@@ -199,6 +212,8 @@ class FieldGroupController extends Controller
             'active' => ['boolean'],
         ], [], ['title' => __('tytuł'), 'fields.*.name' => __('nazwa pola'), 'fields.*.type' => __('typ pola')]);
 
+        $this->currentGroupKey = $group?->key ?? (is_string($input['key'] ?? null) && $input['key'] !== '' ? $input['key'] : null);
+
         $validator->after(function ($v) use ($input) {
             $names = [];
 
@@ -206,11 +221,11 @@ class FieldGroupController extends Controller
                 $type = $this->registry->has($field['type'] ?? '') ? $this->registry->get($field['type']) : null;
                 $name = $field['name'] ?? '';
 
-                if ($type?->storesData() && $name === '') {
+                if ($type && $this->needsName($type, (array) $field) && $name === '') {
                     $v->errors()->add("fields.{$i}.name", 'Podaj nazwę pola (małe litery, cyfry i podkreślenia).');
                 }
 
-                if ($name !== '') {
+                if ($name !== '' && ! $type instanceof CloneField) {
                     if (isset($names[$name])) {
                         $v->errors()->add("fields.{$i}.name", "Nazwa „{$name}” jest już użyta w tej grupie.");
                     }
@@ -254,26 +269,69 @@ class FieldGroupController extends Controller
         ];
     }
 
-    /** Sprawdza pola podrzędne kontenerów (Repeater): typ, nazwa, unikalność w obrębie wiersza, głębokość. */
+    /** Sprawdza pola podrzędne kontenerów (Repeater, Group, Flexible Content): typ, nazwa, unikalność, głębokość, klony. */
     private function checkSubFields($validator, mixed $field, string $path, int $depth): void
     {
-        if (! is_array($field) || ! $this->registry->has($field['type'] ?? '')
-            || ! ($this->registry->get($field['type']) instanceof ContainerFieldType)) {
+        if (! is_array($field) || ! $this->registry->has($field['type'] ?? '')) {
             return;
         }
 
-        $subs = $field['sub_fields'] ?? [];
+        $type = $this->registry->get($field['type']);
 
+        if ($type instanceof CloneField) {
+            $this->checkClone($validator, $field, $path);
+
+            return;
+        }
+
+        if (! $type instanceof ContainerFieldType) {
+            return;
+        }
+
+        if ($type instanceof FlexibleContentField) {
+            $layouts = $field['layouts'] ?? [];
+
+            if (! is_array($layouts) || count($layouts) > 30) {
+                $validator->errors()->add("{$path}.layouts", __('Zbyt wiele układów.'));
+
+                return;
+            }
+
+            $names = [];
+
+            foreach (array_values($layouts) as $j => $layout) {
+                $lp = "{$path}.layouts.{$j}";
+                $name = is_array($layout) ? (string) ($layout['name'] ?? '') : '';
+
+                if (! preg_match('/^[a-z][a-z0-9_]*$/', $name)) {
+                    $validator->errors()->add("{$lp}.name", __('Nazwa układu: małe litery, cyfry i podkreślenia.'));
+                } elseif (isset($names[$name])) {
+                    $validator->errors()->add("{$lp}.name", __('Nazwa układu jest już użyta.'));
+                }
+
+                $names[$name] = true;
+                $this->checkList($validator, is_array($layout) ? ($layout['sub_fields'] ?? []) : [], "{$lp}.sub_fields", $depth);
+            }
+
+            return;
+        }
+
+        $this->checkList($validator, $field['sub_fields'] ?? [], "{$path}.sub_fields", $depth);
+    }
+
+    /** Lista pól podrzędnych jednego wiersza lub układu. */
+    private function checkList($validator, mixed $subs, string $listPath, int $depth): void
+    {
         if (! is_array($subs) || $depth > 3 || count($subs) > 50) {
-            $validator->errors()->add("{$path}.sub_fields", __('Zbyt głębokie zagnieżdżenie lub zbyt wiele pól podrzędnych.'));
+            $validator->errors()->add($listPath, __('Zbyt głębokie zagnieżdżenie lub zbyt wiele pól podrzędnych.'));
 
             return;
         }
 
         $names = [];
 
-        foreach ($subs as $j => $sub) {
-            $sp = "{$path}.sub_fields.{$j}";
+        foreach (array_values($subs) as $j => $sub) {
+            $sp = "{$listPath}.{$j}";
             $type = is_array($sub) && $this->registry->has($sub['type'] ?? '') ? $this->registry->get($sub['type']) : null;
 
             if (! $type) {
@@ -288,11 +346,11 @@ class FieldGroupController extends Controller
                 $validator->errors()->add("{$sp}.name", __('Nazwa pola: małe litery, cyfry i podkreślenia.'));
             }
 
-            if ($type->storesData() && $name === '') {
+            if ($this->needsName($type, $sub) && $name === '') {
                 $validator->errors()->add("{$sp}.name", 'Podaj nazwę pola (małe litery, cyfry i podkreślenia).');
             }
 
-            if ($name !== '') {
+            if ($name !== '' && ! $type instanceof CloneField) {
                 if (isset($names[$name])) {
                     $validator->errors()->add("{$sp}.name", "Nazwa „{$name}” jest już użyta w tym wierszu.");
                 }
@@ -302,13 +360,49 @@ class FieldGroupController extends Controller
             $this->checkSubFields($validator, $sub, $sp, $depth + 1);
         }
 
-        foreach ($subs as $j => $sub) {
+        foreach (array_values($subs) as $j => $sub) {
             foreach ((array) ($sub['conditional_logic'] ?? []) as $andGroup) {
                 foreach ((array) $andGroup as $rule) {
                     if (isset($rule['field']) && ! isset($names[$rule['field']])) {
-                        $validator->errors()->add("{$path}.sub_fields.{$j}.conditional_logic", __('Warunek odwołuje się do nieistniejącego pola.'));
+                        $validator->errors()->add("{$listPath}.{$j}.conditional_logic", __('Warunek odwołuje się do nieistniejącego pola.'));
                     }
                 }
+            }
+        }
+    }
+
+    /** Klon wymaga nazwy tylko gdy zapisuje się jako grupa albo dodaje prefiks nazwy. */
+    private function needsName($type, array $field): bool
+    {
+        if ($type instanceof CloneField) {
+            return ($field['display'] ?? 'seamless') === 'group' || ! empty($field['prefix_name']);
+        }
+
+        return $type->storesData();
+    }
+
+    /** Odwołania klonu: format "klucz_grupy" lub "klucz_grupy.pole", bez klonowania samej siebie. */
+    private function checkClone($validator, array $field, string $path): void
+    {
+        $refs = $field['clone'] ?? [];
+
+        if (! is_array($refs) || count($refs) > 30) {
+            $validator->errors()->add("{$path}.clone", __('Nieprawidłowa lista klonowanych pól.'));
+
+            return;
+        }
+
+        foreach ($refs as $ref) {
+            if (! is_string($ref) || ! preg_match('/^[a-z0-9_]+(\.[a-z][a-z0-9_]*)?$/', $ref)) {
+                $validator->errors()->add("{$path}.clone", __('Nieprawidłowa lista klonowanych pól.'));
+
+                return;
+            }
+
+            if ($this->currentGroupKey !== null && explode('.', $ref)[0] === $this->currentGroupKey) {
+                $validator->errors()->add("{$path}.clone", __('Grupa nie może klonować samej siebie.'));
+
+                return;
             }
         }
     }
@@ -324,6 +418,15 @@ class FieldGroupController extends Controller
 
         if (isset($field['sub_fields']) && is_array($field['sub_fields'])) {
             $field['sub_fields'] = array_map(fn ($f) => $this->cleanField((array) $f), array_values($field['sub_fields']));
+        }
+
+        if (isset($field['layouts']) && is_array($field['layouts'])) {
+            $field['layouts'] = array_map(function ($layout) {
+                $layout = array_filter((array) $layout, fn ($key) => ! str_starts_with((string) $key, '_'), ARRAY_FILTER_USE_KEY);
+                $layout['sub_fields'] = array_map(fn ($f) => $this->cleanField((array) $f), array_values((array) ($layout['sub_fields'] ?? [])));
+
+                return $layout;
+            }, array_values($field['layouts']));
         }
 
         return $field;

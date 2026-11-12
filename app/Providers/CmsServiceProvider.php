@@ -63,6 +63,9 @@ class CmsServiceProvider extends ServiceProvider
         Types\MapField::class,
 
         Types\RepeaterField::class,
+        Types\GroupField::class,
+        Types\FlexibleContentField::class,
+        Types\CloneField::class,
     ];
 
     public function boot(): void

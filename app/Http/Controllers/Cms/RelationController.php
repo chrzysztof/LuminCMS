@@ -27,7 +27,7 @@ class RelationController extends Controller
             'ids' => ['nullable', 'string', 'max:2000'],
         ]);
 
-        $field = $this->find($group->fields ?? [], explode('.', $data['field']));
+        $field = $this->find($this->registry->expand($group->fields ?? []), explode('.', $data['field']));
         $type = $field ? $this->registry->get($field['type']) : null;
 
         abort_unless($type instanceof RelationFieldBase, 404);
@@ -63,7 +63,13 @@ class RelationController extends Controller
 
             $type = $this->registry->get($field['type']);
 
-            return $type instanceof ContainerFieldType ? $this->find($type->subFields($field), $path) : null;
+            if (! $type instanceof ContainerFieldType) {
+                return null;
+            }
+
+            [$subs, $rest] = $type->descend($field, $path);
+
+            return $this->find($this->registry->expand($subs), $rest);
         }
 
         return null;

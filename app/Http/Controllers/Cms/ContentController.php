@@ -149,7 +149,7 @@ class ContentController extends Controller
             'position' => $g->position ?: 'normal',
             'style' => $g->style ?: 'default',
             'label_placement' => $g->label_placement ?: 'top',
-            'fields' => collect($g->fields ?? [])->map(fn ($f) => $this->registry->resolveField($f))->values()->all(),
+            'fields' => collect($this->registry->expand($g->fields ?? []))->map(fn ($f) => $this->registry->resolveField($f))->values()->all(),
         ])->values();
 
         $values = $content?->fields ?? [];
@@ -416,11 +416,10 @@ class ContentController extends Controller
 
             if (in_array($field['type'], ['image', 'file', 'gallery'], true)) {
                 $ids = [...$ids, ...(is_array($value) ? $value : [$value])];
-            } elseif (($type = $this->registry->get($field['type'])) instanceof ContainerFieldType && is_array($value)) {
-                $sub = array_map(fn ($f) => $this->registry->resolveField($f), $type->subFields($field));
-
-                foreach ($value as $row) {
-                    $ids = [...$ids, ...$this->mediaIds($sub, is_array($row) ? $row : [])];
+            } elseif (($type = $this->registry->get($field['type'])) instanceof ContainerFieldType) {
+                foreach ($type->entries($field, $value) as $entry) {
+                    $sub = array_map(fn ($f) => $this->registry->resolveField($f), $entry['fields']);
+                    $ids = [...$ids, ...$this->mediaIds($sub, $entry['row'])];
                 }
             }
         }

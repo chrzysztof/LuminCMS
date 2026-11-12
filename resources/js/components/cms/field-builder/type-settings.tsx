@@ -1,3 +1,4 @@
+import { useCloneSources } from '@/components/cms/field-builder/clone-sources';
 import {
     Row,
     SelectSetting,
@@ -58,6 +59,10 @@ const labels: Record<string, string> = {
     taxonomy: t('Taksonomia (klucz)'),
     button_label: t('Etykieta przycisku dodawania'),
     collapsed: t('Pole tytułu wiersza (nazwa)'),
+    clone: t('Pola do sklonowania'),
+    display: t('Sposób wyświetlania'),
+    prefix_label: t('Dodaj etykietę klonu przed etykietami pól'),
+    prefix_name: t('Dodaj nazwę klonu przed nazwami pól'),
     center_lat: t('Domyślna szerokość geograficzna'),
     center_lng: t('Domyślna długość geograficzna'),
     zoom: t('Domyślne powiększenie (1–20)'),
@@ -65,9 +70,14 @@ const labels: Record<string, string> = {
 };
 
 /** Dla tych typów "min"/"max" oznaczają liczbę pozycji, a nie wartość liczbową. */
-const countTypes = new Set(['repeater', 'relationship', 'gallery']);
+const countTypes = new Set([
+    'repeater',
+    'flexible_content',
+    'relationship',
+    'gallery',
+]);
 
-const hidden = new Set(['ajax', 'sub_fields']);
+const hidden = new Set(['ajax', 'sub_fields', 'layouts']);
 
 const returnFormats: Record<string, [string, string][]> = {
     select: [
@@ -167,6 +177,10 @@ const enums: Record<string, [string, string][]> = {
         ['multi_select', t('Wiele terminów')],
         ['select', t('Jeden termin')],
     ],
+    display: [
+        ['seamless', t('Jak własne pola (bez ramki)')],
+        ['group', t('Jako grupa pod nazwą klonu')],
+    ],
     first_day: [
         ['1', t('Poniedziałek')],
         ['0', t('Niedziela')],
@@ -247,6 +261,19 @@ export function TypeSettings({ field, defaults, onChange }: Props) {
                     );
                 }
 
+                if (key === 'clone') {
+                    return (
+                        <CloneSetting
+                            key={key}
+                            label={label}
+                            value={
+                                Array.isArray(value) ? (value as string[]) : []
+                            }
+                            onChange={(v) => onChange(key, v)}
+                        />
+                    );
+                }
+
                 if (key === 'message') {
                     return (
                         <Row key={key} label={label} className="sm:col-span-2">
@@ -272,7 +299,10 @@ export function TypeSettings({ field, defaults, onChange }: Props) {
                     );
                 }
 
-                if (key === 'layout' && field.type === 'repeater') {
+                if (
+                    key === 'layout' &&
+                    ['repeater', 'group'].includes(field.type)
+                ) {
                     return (
                         <SelectSetting
                             key={key}
@@ -367,5 +397,74 @@ export function TypeSettings({ field, defaults, onChange }: Props) {
                 );
             })}
         </div>
+    );
+}
+
+/** Wybór klonowanych grup (cała grupa) albo pojedynczych pól. */
+function CloneSetting({
+    label,
+    value,
+    onChange,
+}: {
+    label: string;
+    value: string[];
+    onChange: (next: string[]) => void;
+}) {
+    const sources = useCloneSources();
+    const toggle = (ref: string) =>
+        onChange(
+            value.includes(ref)
+                ? value.filter((v) => v !== ref)
+                : [...value, ref],
+        );
+
+    return (
+        <Row
+            label={label}
+            hint={t('Zaznacz całą grupę albo wybrane pola.')}
+            className="sm:col-span-2"
+        >
+            {sources.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                    {t('Brak innych grup pól do sklonowania.')}
+                </p>
+            ) : (
+                <div className="space-y-2 rounded-md border p-3">
+                    {sources.map((g) => (
+                        <div key={g.key} className="space-y-1">
+                            <label className="flex items-center gap-2 text-sm font-medium">
+                                <input
+                                    type="checkbox"
+                                    checked={value.includes(g.key)}
+                                    onChange={() => toggle(g.key)}
+                                />
+                                {g.title}
+                            </label>
+                            {!value.includes(g.key) && (
+                                <div className="ml-6 flex flex-wrap gap-x-4 gap-y-1">
+                                    {g.fields.map((f) => (
+                                        <label
+                                            key={f.name}
+                                            className="flex items-center gap-1.5 text-xs text-muted-foreground"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={value.includes(
+                                                    `${g.key}.${f.name}`,
+                                                )}
+                                                onChange={() =>
+                                                    toggle(`${g.key}.${f.name}`)
+                                                }
+                                            />
+                                            {f.label}
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </Row>
     );
 }

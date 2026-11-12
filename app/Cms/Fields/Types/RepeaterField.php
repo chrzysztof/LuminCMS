@@ -4,10 +4,12 @@ namespace App\Cms\Fields\Types;
 
 use App\Cms\Fields\AbstractFieldType;
 use App\Cms\Fields\ContainerFieldType;
-use App\Cms\Fields\FieldRegistry;
+use App\Cms\Fields\FormatsSubFields;
 
 class RepeaterField extends AbstractFieldType implements ContainerFieldType
 {
+    use FormatsSubFields;
+
     /** Twardy limit wierszy, żeby jedno żądanie nie mogło zapisać nieograniczonej liczby danych. */
     public const MAX_ROWS = 200;
 
@@ -23,7 +25,7 @@ class RepeaterField extends AbstractFieldType implements ContainerFieldType
 
     public function category(): string
     {
-        return 'advanced';
+        return 'layout';
     }
 
     protected function defaults(): array
@@ -39,7 +41,30 @@ class RepeaterField extends AbstractFieldType implements ContainerFieldType
 
     public function subFields(array $field): array
     {
-        return array_values(array_filter((array) ($field['sub_fields'] ?? []), 'is_array'));
+        return $this->listOfArrays($field['sub_fields'] ?? []);
+    }
+
+    public function entries(array $field, mixed $value): array
+    {
+        $entries = [];
+
+        foreach (is_array($value) ? $value : [] as $index => $row) {
+            if (is_array($row)) {
+                $entries[] = ['path' => (string) $index, 'row' => $row, 'fields' => $this->subFields($field), 'extra' => []];
+            }
+        }
+
+        return $entries;
+    }
+
+    public function assemble(array $field, array $entries): mixed
+    {
+        return array_map(fn (array $e) => $e['values'], $entries) ?: null;
+    }
+
+    public function descend(array $field, array $path): array
+    {
+        return [$this->subFields($field), $path];
     }
 
     public function rules(array $field): array
@@ -75,26 +100,6 @@ class RepeaterField extends AbstractFieldType implements ContainerFieldType
             return [];
         }
 
-        $registry = app(FieldRegistry::class);
-        $definitions = [];
-
-        foreach ($this->subFields($field) as $definition) {
-            $resolved = $registry->resolveField($definition);
-
-            if ($resolved['name'] !== '' && $registry->get($resolved['type'])->storesData()) {
-                $definitions[] = $resolved;
-            }
-        }
-
-        return array_map(function ($row) use ($definitions, $registry) {
-            $out = [];
-
-            foreach ($definitions as $sub) {
-                $stored = $row[$sub['name']] ?? null;
-                $out[$sub['name']] = $stored === null ? null : $registry->get($sub['type'])->format($stored, $sub);
-            }
-
-            return $out;
-        }, array_values($value));
+        return array_map(fn ($row) => $this->formatRow(is_array($row) ? $row : [], $this->subFields($field)), array_values($value));
     }
 }

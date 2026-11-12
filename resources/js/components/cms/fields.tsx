@@ -1,5 +1,7 @@
 import { File as FileIcon, ImagePlus, X } from 'lucide-react';
 import { useState } from 'react';
+import { FlexibleControl } from '@/components/cms/flexible-control';
+import { GroupControl } from '@/components/cms/group-control';
 import { MapControl } from '@/components/cms/map-control';
 import { MediaPicker } from '@/components/cms/media-picker';
 import { RelationControl } from '@/components/cms/relation-control';
@@ -510,6 +512,10 @@ function Control(props: ControlProps) {
             );
         case 'repeater':
             return <RepeaterControl {...props} />;
+        case 'group':
+            return <GroupControl {...props} />;
+        case 'flexible_content':
+            return <FlexibleControl {...props} />;
         case 'map':
             return (
                 <MapControl field={field} value={value} onChange={onChange} />
@@ -583,13 +589,15 @@ export function FieldList({
                 }
 
                 const id = `field-${field.name}`;
-                const width = Number(field.wrapper.width);
+                const width = Number(field.wrapper?.width);
                 const fieldKey = `${errorKey}.${field.name}`;
                 const fieldPath = path ? `${path}.${field.name}` : field.name;
                 // Dla kontenerów błędy wierszy pokazują same wiersze; tutaj tylko błąd całego pola.
                 const error =
                     errors[fieldKey] ??
-                    (field.type === 'repeater'
+                    (['repeater', 'group', 'flexible_content'].includes(
+                        field.type,
+                    )
                         ? undefined
                         : Object.entries(errors).find(([k]) =>
                               k.startsWith(`${fieldKey}.`),
@@ -598,10 +606,10 @@ export function FieldList({
                 return (
                     <div
                         key={key}
-                        id={field.wrapper.id || undefined}
+                        id={field.wrapper?.id || undefined}
                         className={cn(
                             'min-w-0',
-                            field.wrapper.class,
+                            field.wrapper?.class,
                             labelPlacement === 'left' &&
                                 'sm:grid sm:grid-cols-[10rem_1fr] sm:gap-3',
                         )}

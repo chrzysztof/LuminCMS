@@ -2,6 +2,10 @@ import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft, Download, Loader2, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { toDraft } from '@/components/cms/field-builder/draft';
+import {
+    CloneSourcesContext,
+    type CloneSource,
+} from '@/components/cms/field-builder/clone-sources';
 import { FieldEditor } from '@/components/cms/field-builder/field-editor';
 import { LocationEditor } from '@/components/cms/field-builder/logic-editors';
 import {
@@ -31,6 +35,7 @@ type GroupData = GroupGeneral & {
 type Props = {
     group: GroupData | null;
     fieldTypes: FieldTypeInfo[];
+    cloneSources: CloneSource[];
     contentTypes: { key: string; label_plural: string }[];
     terms: { id: number; name: string; taxonomy: string | null }[];
     parents: { id: number; title: string }[];
@@ -39,6 +44,7 @@ type Props = {
 export default function FieldGroupEdit({
     group,
     fieldTypes,
+    cloneSources,
     contentTypes,
     terms,
     parents,
@@ -151,7 +157,7 @@ export default function FieldGroupEdit({
     );
 
     return (
-        <>
+        <CloneSourcesContext.Provider value={cloneSources}>
             <Head
                 title={
                     group
@@ -388,6 +394,6 @@ export default function FieldGroupEdit({
                     </Card>
                 </div>
             </form>
-        </>
+        </CloneSourcesContext.Provider>
     );
 }

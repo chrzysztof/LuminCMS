@@ -25,6 +25,7 @@ class FieldValidator
      */
     public function validate(array $fields, array $input): array
     {
+        $fields = $this->registry->expand($fields);
         $visible = $this->visible($fields, $input);
         $rules = [];
         $attributes = [];
@@ -56,7 +57,7 @@ class FieldValidator
         return $visible;
     }
 
-    /** Zbiera reguły walidacji; dla kontenerów (Repeater) schodzi do każdego wiersza z prefiksem "nazwa.indeks.". */
+    /** Zbiera reguły walidacji; dla kontenerów schodzi do każdego wpisu z prefiksem "nazwa.indeks." (Group: "nazwa."). */
     private function collect(array $visible, array $input, string $prefix, array &$rules, array &$attributes): void
     {
         foreach ($visible as $field) {
@@ -71,11 +72,10 @@ class FieldValidator
 
             $attributes[$key] = $field['label'] !== '' ? $field['label'] : $field['name'];
 
-            if ($type instanceof ContainerFieldType && is_array($input[$field['name']] ?? null)) {
-                foreach ($input[$field['name']] as $index => $row) {
-                    if (is_array($row)) {
-                        $this->collect($this->visible($type->subFields($field), $row), $row, "{$key}.{$index}.", $rules, $attributes);
-                    }
+            if ($type instanceof ContainerFieldType) {
+                foreach ($type->entries($field, $input[$field['name']] ?? null) as $entry) {
+                    $childPrefix = $entry['path'] === '' ? "{$key}." : "{$key}.{$entry['path']}.";
+                    $this->collect($this->visible($entry['fields'], $entry['row']), $entry['row'], $childPrefix, $rules, $attributes);
                 }
             }
         }
@@ -90,11 +90,11 @@ class FieldValidator
             $type = $this->registry->get($field['type']);
             $value = $type->normalize($input[$field['name']] ?? null, $field);
 
-            if ($type instanceof ContainerFieldType && is_array($value)) {
-                $value = array_map(
-                    fn (array $row) => $this->normalize($this->visible($type->subFields($field), $row), $row),
-                    array_values(array_filter((array) ($input[$field['name']] ?? []), 'is_array')),
-                ) ?: null;
+            if ($type instanceof ContainerFieldType) {
+                $value = $type->assemble($field, array_map(
+                    fn (array $e) => ['extra' => $e['extra'], 'values' => $this->normalize($this->visible($e['fields'], $e['row']), $e['row'])],
+                    $type->entries($field, $input[$field['name']] ?? null),
+                ));
             }
 
             $values[$field['name']] = $value;

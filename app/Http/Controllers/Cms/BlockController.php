@@ -45,11 +45,10 @@ class BlockController extends Controller
 
             if (in_array($field['type'], ['image', 'file', 'gallery'], true)) {
                 $ids = [...$ids, ...(is_array($value) ? $value : [$value])];
-            } elseif (($type = $this->registry->get($field['type'])) instanceof ContainerFieldType && is_array($value)) {
-                $sub = array_map(fn ($f) => $this->registry->resolveField($f), $type->subFields($field));
-
-                foreach ($value as $row) {
-                    $ids = [...$ids, ...$this->mediaIds($sub, is_array($row) ? $row : [])];
+            } elseif (($type = $this->registry->get($field['type'])) instanceof ContainerFieldType) {
+                foreach ($type->entries($field, $value) as $entry) {
+                    $sub = array_map(fn ($f) => $this->registry->resolveField($f), $entry['fields']);
+                    $ids = [...$ids, ...$this->mediaIds($sub, $entry['row'])];
                 }
             }
         }

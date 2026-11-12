@@ -27,5 +27,17 @@ export function toDraft(raw: Record<string, unknown>): FieldDraft {
         );
     }
 
+    if (Array.isArray(raw.layouts)) {
+        draft.layouts = (raw.layouts as Record<string, unknown>[]).map((l) => ({
+            min: '',
+            max: '',
+            ...l,
+            _id: uid(),
+            sub_fields: Array.isArray(l.sub_fields)
+                ? (l.sub_fields as Record<string, unknown>[]).map(toDraft)
+                : [],
+        }));
+    }
+
     return draft;
 }

@@ -7,7 +7,7 @@ import {
     Trash2,
 } from 'lucide-react';
 import { useState } from 'react';
-import { toDraft } from '@/components/cms/field-builder/draft';
+import { toDraft, uid } from '@/components/cms/field-builder/draft';
 import { ConditionalEditor } from '@/components/cms/field-builder/logic-editors';
 import { fieldNameFromLabel } from '@/components/cms/field-builder/slug';
 import {
@@ -73,16 +73,8 @@ export function FieldEditor({
         .filter((s) => s._id !== field._id && s.name)
         .map((s) => ({ name: s.name, label: s.label }));
     const categories = [...new Set(types.map((t) => t.category))];
-    const isContainer = field.type === 'repeater';
-    const subs = (
-        Array.isArray(field.sub_fields) ? field.sub_fields : []
-    ) as FieldDraft[];
-    const setSubs = (next: FieldDraft[]) => onChange({ sub_fields: next });
-    const moveSub = (i: number, dir: -1 | 1) => {
-        const next = [...subs];
-        [next[i], next[i + dir]] = [next[i + dir], next[i]];
-        setSubs(next);
-    };
+    const isContainer = field.type === 'repeater' || field.type === 'group';
+    const isFlexible = field.type === 'flexible_content';
 
     const changeType = (type: string) => {
         const next = types.find((t) => t.name === type);
@@ -301,104 +293,38 @@ export function FieldEditor({
                     </div>
 
                     {isContainer && (
-                        <div className="space-y-3 rounded-lg border border-dashed p-3">
-                            <p className="text-sm font-medium">
-                                {t('Pola w wierszu')}
-                            </p>
-                            {err('sub_fields') && (
-                                <p className="text-xs text-destructive">
-                                    {err('sub_fields')}
-                                </p>
-                            )}
-                            {subs.length === 0 && (
-                                <p className="text-sm text-muted-foreground">
-                                    {t(
-                                        'Dodaj pola, które będzie zawierał każdy wiersz.',
-                                    )}
-                                </p>
-                            )}
-                            {subs.map((sub, i) => (
-                                <FieldEditor
-                                    key={sub._id}
-                                    field={sub}
-                                    index={i}
-                                    total={subs.length}
-                                    types={
-                                        depth >= 2
-                                            ? types.filter(
-                                                  (t) => t.name !== 'repeater',
-                                              )
-                                            : types
-                                    }
-                                    siblings={subs}
-                                    errors={errors}
-                                    errorPrefix={`${errorPrefix}.sub_fields.${i}`}
-                                    depth={depth + 1}
-                                    onChange={(p) =>
-                                        setSubs(
-                                            subs.map((x) =>
-                                                x._id !== sub._id
-                                                    ? x
-                                                    : '__replace' in p
-                                                      ? {
-                                                            ...(p.__replace as FieldDraft),
-                                                        }
-                                                      : ({
-                                                            ...x,
-                                                            ...p,
-                                                        } as FieldDraft),
-                                            ),
-                                        )
-                                    }
-                                    onMove={(d) => moveSub(i, d)}
-                                    onDuplicate={() => {
-                                        const next = [...subs];
-                                        next.splice(
-                                            i + 1,
-                                            0,
-                                            toDraft({
-                                                ...sub,
-                                                name: sub.name
-                                                    ? `${sub.name}_kopia`
-                                                    : '',
-                                                label: sub.label
-                                                    ? t('{name} (kopia)', {
-                                                          name: sub.label,
-                                                      })
-                                                    : '',
-                                            }),
-                                        );
-                                        setSubs(next);
-                                    }}
-                                    onRemove={() =>
-                                        setSubs(
-                                            subs.filter(
-                                                (x) => x._id !== sub._id,
-                                            ),
-                                        )
-                                    }
-                                />
-                            ))}
-                            <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                    const base =
-                                        types.find((t) => t.name === 'text') ??
-                                        types[0];
-                                    setSubs([
-                                        ...subs,
-                                        toDraft({
-                                            type: base.name,
-                                            ...base.settings,
-                                        }),
-                                    ]);
-                                }}
-                            >
-                                <Plus /> {t('Dodaj pole podrzędne')}
-                            </Button>
-                        </div>
+                        <SubFieldList
+                            title={
+                                field.type === 'group'
+                                    ? t('Pola w grupie')
+                                    : t('Pola w wierszu')
+                            }
+                            subs={
+                                (Array.isArray(field.sub_fields)
+                                    ? field.sub_fields
+                                    : []) as FieldDraft[]
+                            }
+                            onChange={(next) => onChange({ sub_fields: next })}
+                            types={types}
+                            depth={depth}
+                            errors={errors}
+                            errorPrefix={`${errorPrefix}.sub_fields`}
+                        />
+                    )}
+
+                    {isFlexible && (
+                        <LayoutsEditor
+                            layouts={
+                                (Array.isArray(field.layouts)
+                                    ? field.layouts
+                                    : []) as LayoutDraft[]
+                            }
+                            onChange={(next) => onChange({ layouts: next })}
+                            types={types}
+                            depth={depth}
+                            errors={errors}
+                            errorPrefix={errorPrefix}
+                        />
                     )}
 
                     <div className="space-y-2">
@@ -423,6 +349,297 @@ export function FieldEditor({
                     </div>
                 </div>
             )}
+        </div>
+    );
+}
+
+const NESTED = ['repeater', 'group', 'flexible_content'];
+
+type SubFieldListProps = {
+    title: string;
+    subs: FieldDraft[];
+    onChange: (next: FieldDraft[]) => void;
+    types: FieldTypeInfo[];
+    depth: number;
+    errors: Record<string, string | undefined>;
+    /** Prefiks kluczy błędów listy, np. "fields.1.sub_fields". */
+    errorPrefix: string;
+};
+
+/** Lista pól podrzędnych kontenera (wiersza Repeatera, Group albo układu Flexible Content). */
+function SubFieldList({
+    title,
+    subs,
+    onChange: setSubs,
+    types,
+    depth,
+    errors,
+    errorPrefix,
+}: SubFieldListProps) {
+    const moveSub = (i: number, dir: -1 | 1) => {
+        const next = [...subs];
+        [next[i], next[i + dir]] = [next[i + dir], next[i]];
+        setSubs(next);
+    };
+
+    return (
+        <div className="space-y-3 rounded-lg border border-dashed p-3">
+            <p className="text-sm font-medium">{title}</p>
+            {errors[errorPrefix] && (
+                <p className="text-xs text-destructive">
+                    {errors[errorPrefix]}
+                </p>
+            )}
+            {subs.length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                    {t('Dodaj pola, które będzie zawierał każdy wiersz.')}
+                </p>
+            )}
+            {subs.map((sub, i) => (
+                <FieldEditor
+                    key={sub._id}
+                    field={sub}
+                    index={i}
+                    total={subs.length}
+                    types={
+                        depth >= 2
+                            ? types.filter((ft) => !NESTED.includes(ft.name))
+                            : types
+                    }
+                    siblings={subs}
+                    errors={errors}
+                    errorPrefix={`${errorPrefix}.${i}`}
+                    depth={depth + 1}
+                    onChange={(p) =>
+                        setSubs(
+                            subs.map((x) =>
+                                x._id !== sub._id
+                                    ? x
+                                    : '__replace' in p
+                                      ? { ...(p.__replace as FieldDraft) }
+                                      : ({ ...x, ...p } as FieldDraft),
+                            ),
+                        )
+                    }
+                    onMove={(d) => moveSub(i, d)}
+                    onDuplicate={() => {
+                        const next = [...subs];
+                        next.splice(
+                            i + 1,
+                            0,
+                            toDraft({
+                                ...sub,
+                                name: sub.name ? `${sub.name}_kopia` : '',
+                                label: sub.label
+                                    ? t('{name} (kopia)', { name: sub.label })
+                                    : '',
+                            }),
+                        );
+                        setSubs(next);
+                    }}
+                    onRemove={() =>
+                        setSubs(subs.filter((x) => x._id !== sub._id))
+                    }
+                />
+            ))}
+            <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                    const base =
+                        types.find((ft) => ft.name === 'text') ?? types[0];
+                    setSubs([
+                        ...subs,
+                        toDraft({ type: base.name, ...base.settings }),
+                    ]);
+                }}
+            >
+                <Plus /> {t('Dodaj pole podrzędne')}
+            </Button>
+        </div>
+    );
+}
+
+type LayoutDraft = {
+    _id: string;
+    name: string;
+    label: string;
+    min: number | string;
+    max: number | string;
+    sub_fields: FieldDraft[];
+};
+
+type LayoutsEditorProps = {
+    layouts: LayoutDraft[];
+    onChange: (next: LayoutDraft[]) => void;
+    types: FieldTypeInfo[];
+    depth: number;
+    errors: Record<string, string | undefined>;
+    errorPrefix: string;
+};
+
+/** Układy pola Flexible Content: nazwa, etykieta, limity i własne pola każdego układu. */
+function LayoutsEditor({
+    layouts,
+    onChange,
+    types,
+    depth,
+    errors,
+    errorPrefix,
+}: LayoutsEditorProps) {
+    const patch = (id: string, p: Partial<LayoutDraft>) =>
+        onChange(layouts.map((l) => (l._id === id ? { ...l, ...p } : l)));
+    const move = (i: number, dir: -1 | 1) => {
+        const next = [...layouts];
+        [next[i], next[i + dir]] = [next[i + dir], next[i]];
+        onChange(next);
+    };
+
+    return (
+        <div className="space-y-3 rounded-lg border border-dashed p-3">
+            <p className="text-sm font-medium">{t('Układy')}</p>
+            {errors[`${errorPrefix}.layouts`] && (
+                <p className="text-xs text-destructive">
+                    {errors[`${errorPrefix}.layouts`]}
+                </p>
+            )}
+            {layouts.length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                    {t(
+                        'Dodaj układy, spośród których redaktor wybiera wiersze.',
+                    )}
+                </p>
+            )}
+            {layouts.map((layout, i) => {
+                const lp = `${errorPrefix}.layouts.${i}`;
+
+                return (
+                    <div
+                        key={layout._id}
+                        className="space-y-3 rounded-lg border bg-card p-3"
+                    >
+                        <div className="flex flex-wrap items-end gap-3">
+                            <Row label={t('Etykieta układu')}>
+                                <Input
+                                    value={layout.label}
+                                    onChange={(e) =>
+                                        patch(layout._id, {
+                                            label: e.target.value,
+                                            ...(layout.name === '' ||
+                                            layout.name ===
+                                                fieldNameFromLabel(layout.label)
+                                                ? {
+                                                      name: fieldNameFromLabel(
+                                                          e.target.value,
+                                                      ),
+                                                  }
+                                                : {}),
+                                        })
+                                    }
+                                />
+                            </Row>
+                            <Row label={t('Nazwa układu')}>
+                                <Input
+                                    value={layout.name}
+                                    className="font-mono"
+                                    onChange={(e) =>
+                                        patch(layout._id, {
+                                            name: e.target.value,
+                                        })
+                                    }
+                                />
+                                {errors[`${lp}.name`] && (
+                                    <p className="text-xs text-destructive">
+                                        {errors[`${lp}.name`]}
+                                    </p>
+                                )}
+                            </Row>
+                            <TextSetting
+                                label={t('Minimum')}
+                                type="number"
+                                value={layout.min}
+                                onChange={(v) => patch(layout._id, { min: v })}
+                            />
+                            <TextSetting
+                                label={t('Maksimum')}
+                                type="number"
+                                value={layout.max}
+                                onChange={(v) => patch(layout._id, { max: v })}
+                            />
+                            <div className="ml-auto flex gap-1">
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    aria-label={t('W górę')}
+                                    disabled={i === 0}
+                                    onClick={() => move(i, -1)}
+                                >
+                                    <ChevronUp />
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    aria-label={t('W dół')}
+                                    disabled={i === layouts.length - 1}
+                                    onClick={() => move(i, 1)}
+                                >
+                                    <ChevronDown />
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    aria-label={t('Usuń układ')}
+                                    className="text-destructive"
+                                    onClick={() =>
+                                        onChange(
+                                            layouts.filter(
+                                                (l) => l._id !== layout._id,
+                                            ),
+                                        )
+                                    }
+                                >
+                                    <Trash2 />
+                                </Button>
+                            </div>
+                        </div>
+                        <SubFieldList
+                            title={t('Pola układu')}
+                            subs={layout.sub_fields}
+                            onChange={(next) =>
+                                patch(layout._id, { sub_fields: next })
+                            }
+                            types={types}
+                            depth={depth}
+                            errors={errors}
+                            errorPrefix={`${lp}.sub_fields`}
+                        />
+                    </div>
+                );
+            })}
+            <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                    onChange([
+                        ...layouts,
+                        {
+                            _id: uid(),
+                            name: '',
+                            label: '',
+                            min: '',
+                            max: '',
+                            sub_fields: [],
+                        },
+                    ])
+                }
+            >
+                <Plus /> {t('Dodaj układ')}
+            </Button>
         </div>
     );
 }

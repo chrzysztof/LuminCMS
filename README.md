@@ -56,6 +56,15 @@ A theme is a folder in `themes/{slug}/` with a `theme.json` manifest and Blade v
 - **Theme management:** Appearance → Themes lists installed themes (screenshot, version, author, parent), activates, exports a theme as ZIP and deletes it (not the default, the active theme or a parent of another theme). Install from a ZIP validates the archive before extracting: safe paths only (no `..`, absolute paths or symlinks), an extension whitelist (PHP allowed only as `*.blade.php`), no hidden files, file-count and size limits, a `theme.json` with a `name`, and either `views/layout.blade.php` or an installed parent. A theme is trusted code (Blade runs on the server), so set `CMS_THEME_UPLOADS=false` to disable uploads on hosts where only deploys should add themes.
 - `php artisan cms:theme` lists themes, `php artisan cms:theme {slug}` activates one.
 
+## Container fields
+
+Besides Repeater, custom fields include **Group**, **Flexible Content** and **Clone**, all free and in the core.
+
+- **Group** stores its sub-fields as one object (`address.street`, `address.city`); nested required fields are validated even when the group is untouched.
+- **Flexible Content** is a list of rows, each with one of the declared layouts and that layout's own fields. Layouts have optional min/max counts; rows are stored as `{"_layout": "text", ...}` and returned in templates with formatted values.
+- **Clone** reuses other field groups (a whole group or single fields) without copying definitions. `seamless` inserts the fields as if they were your own (optionally prefixing names and labels, conditions are rewritten); `group` nests them under the clone's name. Clones expand on the server before validation, forms and template reads, work inside other containers, and cycles are cut off.
+- Containers nest (up to the builder's depth limit) and relation fields inside them work, including inside Flexible Content layouts.
+
 ## Import and export
 
 Structure → Import and export moves content types, taxonomies with terms, field groups and (optionally) content between installations as one JSON file (schema `"lumin": 1`, objects `content_types`, `taxonomies`, `field_groups`, `contents`). Content references parents, terms and types by key or slug, never by database id.
