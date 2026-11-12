@@ -5,5 +5,7 @@ export const cmsUrl = {
     contentCreate: (type: string) => `/cms/content/${type}/create`,
     contentEdit: (type: string, id: number) =>
         `/cms/content/${type}/${id}/edit`,
+    contentBuilder: (type: string, id: number) =>
+        `/cms/content/${type}/${id}/builder`,
     contentUpdate: (type: string, id: number) => `/cms/content/${type}/${id}`,
 };

@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Cms\BuilderController;
 use App\Http\Controllers\Cms\ContentController;
 use App\Http\Controllers\Cms\MediaController;
 use App\Http\Controllers\Cms\MediaSizeController;
+use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
 
 // API panelu administracyjnego (sesja + uwierzytelnienie).
@@ -15,6 +17,10 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
     Route::get('content/{type:key}/{content}/edit', [ContentController::class, 'edit'])->name('content.edit');
     Route::put('content/{type:key}/{content}', [ContentController::class, 'update'])->name('content.update');
     Route::delete('content/{type:key}/{content}', [ContentController::class, 'destroy'])->name('content.destroy');
+
+    Route::get('content/{type:key}/{content}/builder', [BuilderController::class, 'edit'])->name('content.builder');
+    Route::put('content/{type:key}/{content}/builder', [BuilderController::class, 'save'])->name('content.builder.save');
+    Route::get('content/{type:key}/{content}/preview', [SiteController::class, 'preview'])->name('content.preview');
 
     Route::get('media', [MediaController::class, 'index'])->name('media.index');
     Route::post('media', [MediaController::class, 'store'])->name('media.store');

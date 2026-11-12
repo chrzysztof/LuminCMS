@@ -1,5 +1,12 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { ArrowLeft, ImagePlus, Loader2, Trash2, X } from 'lucide-react';
+import {
+    ArrowLeft,
+    ImagePlus,
+    Loader2,
+    PenTool,
+    Trash2,
+    X,
+} from 'lucide-react';
 import { useState } from 'react';
 import { FieldList } from '@/components/cms/fields';
 import { MediaPicker } from '@/components/cms/media-picker';
@@ -163,16 +170,30 @@ export default function ContentEdit({
                         </h1>
                         {content && <StatusBadge status={content.status} />}
                     </div>
-                    <Button type="submit" disabled={form.processing}>
-                        {form.processing && (
-                            <Loader2 className="animate-spin" />
+                    <div className="flex items-center gap-2">
+                        {content && supports('builder') && (
+                            <Button asChild variant="outline">
+                                <Link
+                                    href={cmsUrl.contentBuilder(
+                                        type.key,
+                                        content.id,
+                                    )}
+                                >
+                                    <PenTool /> Edytor wizualny
+                                </Link>
+                            </Button>
                         )}
-                        {form.data.status === 'published'
-                            ? content
-                                ? 'Zaktualizuj'
-                                : 'Opublikuj'
-                            : 'Zapisz'}
-                    </Button>
+                        <Button type="submit" disabled={form.processing}>
+                            {form.processing && (
+                                <Loader2 className="animate-spin" />
+                            )}
+                            {form.data.status === 'published'
+                                ? content
+                                    ? 'Zaktualizuj'
+                                    : 'Opublikuj'
+                                : 'Zapisz'}
+                        </Button>
+                    </div>
                 </div>
 
                 <div className="grid items-start gap-5 xl:grid-cols-[1fr_20rem]">

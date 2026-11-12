@@ -1,0 +1,245 @@
+/*
+ * Lumin CMS: style bloków edytora wizualnego i strony publicznej.
+ * Tylko klasy z prefiksem lm-, oparte na tokenach CSS (zmienne --lm-*).
+ * Motyw może nadpisać tokeny w :root, bez kompilacji i bez Node na serwerze.
+ */
+:root {
+    --lm-primary: #6d5bd0;
+    --lm-primary-dark: #4b3fb0;
+    --lm-text: #111114;
+    --lm-muted-text: #62626c;
+    --lm-bg: #ffffff;
+    --lm-bg-muted: #f5f5f7;
+    --lm-bg-dark: #111114;
+    --lm-border: #e7e7ea;
+    --lm-radius: 0.75rem;
+    --lm-container: 72rem;
+    --lm-space-sm: 2rem;
+    --lm-space: 4rem;
+    --lm-space-lg: 6.5rem;
+    --lm-font:
+        'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI',
+        sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: var(--lm-font);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    color: var(--lm-text);
+    background: var(--lm-bg);
+    -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    line-height: 1.2;
+    margin: 0 0 0.6em;
+    letter-spacing: -0.02em;
+}
+h1 {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+}
+h2 {
+    font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+}
+h3 {
+    font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+}
+p {
+    margin: 0 0 1em;
+}
+a {
+    color: var(--lm-primary-dark);
+}
+
+/* Układ */
+.lm-section {
+    padding-block: var(--lm-space);
+}
+.lm-section.lm-pad-sm {
+    padding-block: var(--lm-space-sm);
+}
+.lm-section.lm-pad-lg {
+    padding-block: var(--lm-space-lg);
+}
+.lm-section.lm-bg-muted {
+    background: var(--lm-bg-muted);
+}
+.lm-section.lm-bg-brand {
+    background: var(--lm-primary);
+    color: #fff;
+}
+.lm-section.lm-bg-brand a:not(.lm-btn) {
+    color: #fff;
+}
+.lm-section.lm-bg-dark {
+    background: var(--lm-bg-dark);
+    color: #fff;
+}
+.lm-section.lm-bg-dark a:not(.lm-btn) {
+    color: #fff;
+}
+
+.lm-container {
+    width: min(100% - 3rem, var(--lm-container));
+    margin-inline: auto;
+}
+.lm-center {
+    text-align: center;
+}
+.lm-right {
+    text-align: right;
+}
+
+.lm-grid {
+    display: grid;
+    gap: 2rem;
+}
+.lm-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.lm-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.lm-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.lm-items-center {
+    align-items: center;
+}
+
+@media (max-width: 900px) {
+    .lm-cols-3,
+    .lm-cols-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (max-width: 640px) {
+    .lm-cols-2,
+    .lm-cols-3,
+    .lm-cols-4 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .lm-section {
+        padding-block: calc(var(--lm-space) * 0.7);
+    }
+}
+
+/* Hero */
+.lm-hero {
+    padding-block: var(--lm-space-lg);
+}
+.lm-hero h1 {
+    max-width: 20ch;
+}
+.lm-hero.lm-center h1,
+.lm-hero.lm-center p {
+    margin-inline: auto;
+}
+.lm-hero p {
+    max-width: 60ch;
+    font-size: 1.2rem;
+    color: var(--lm-muted-text);
+}
+.lm-bg-dark.lm-hero p,
+.lm-bg-brand.lm-hero p {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Elementy */
+.lm-card {
+    background: var(--lm-bg);
+    border: 1px solid var(--lm-border);
+    border-radius: var(--lm-radius);
+    padding: 1.75rem;
+}
+.lm-card > :last-child {
+    margin-bottom: 0;
+}
+
+.lm-btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    border-radius: 999px;
+    background: var(--lm-primary);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+}
+.lm-btn:hover {
+    background: var(--lm-primary-dark);
+}
+.lm-btn.lm-btn-secondary {
+    background: transparent;
+    color: inherit;
+    box-shadow: inset 0 0 0 2px currentColor;
+}
+.lm-btn.lm-btn-secondary:hover {
+    background: rgba(127, 127, 127, 0.15);
+}
+
+.lm-quote {
+    margin: 0;
+    padding: 0.5rem 0 0.5rem 1.5rem;
+    border-left: 4px solid var(--lm-primary);
+    font-size: 1.25rem;
+    font-style: italic;
+}
+.lm-list {
+    padding-left: 1.25rem;
+}
+.lm-list li {
+    margin-bottom: 0.4em;
+}
+.lm-divider {
+    border: 0;
+    border-top: 1px solid var(--lm-border);
+    margin-block: 2rem;
+}
+.lm-image {
+    border-radius: var(--lm-radius);
+    width: 100%;
+}
+.lm-spacer {
+    height: var(--lm-space-sm);
+}
+
+/* Strona publiczna */
+.lm-site-header {
+    border-bottom: 1px solid var(--lm-border);
+    padding-block: 1rem;
+}
+.lm-site-header a {
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--lm-text);
+}
+.lm-site-footer {
+    padding-block: 2rem;
+    color: var(--lm-muted-text);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--lm-border);
+}
+.lm-prose {
+    width: min(100% - 3rem, 46rem);
+    margin: 3rem auto;
+}

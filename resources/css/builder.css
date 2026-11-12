@@ -1,0 +1,140 @@
+/* Motyw GrapesJS dopasowany do panelu Lumin: jasne, kompaktowe nakładki na pełnoekranowy canvas. */
+.lumin-builder {
+    --gjs-primary-color: #ffffff;
+    --gjs-secondary-color: #111114;
+    --gjs-tertiary-color: #6d5bd0;
+    --gjs-quaternary-color: #6d5bd0;
+    --gjs-main-font: 'Inter Variable', system-ui, sans-serif;
+    --gjs-font-size: 13px;
+    --gjs-main-dark-color: rgba(0, 0, 0, 0.06);
+    --gjs-secondary-dark-color: rgba(0, 0, 0, 0.1);
+    --gjs-soft-light-color: rgba(0, 0, 0, 0.04);
+    --gjs-main-light-color: rgba(0, 0, 0, 0.55);
+    --gjs-secondary-light-color: rgba(0, 0, 0, 0.6);
+    --gjs-color-blue: #6d5bd0;
+}
+
+/* Canvas zajmuje cały ekran; narzędzia to pływające nakładki. */
+.lumin-builder .gjs-editor,
+.lumin-builder .gjs-cv-canvas {
+    width: 100% !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+}
+
+.lumin-builder .gjs-cv-canvas {
+    background: #e9e9ee;
+}
+
+.lumin-builder .gjs-frame-wrapper {
+    background: #e9e9ee;
+}
+
+.lumin-builder .gjs-blocks-c {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 4px 8px 12px;
+}
+
+.lumin-builder .gjs-block {
+    width: auto;
+    min-height: 0;
+    padding: 12px 6px;
+    margin: 0;
+    border: 1px solid #e7e7ea;
+    border-radius: 10px;
+    box-shadow: none;
+    background: #fff;
+    color: #111114;
+    transition:
+        border-color 0.15s,
+        box-shadow 0.15s;
+}
+
+.lumin-builder .gjs-block:hover {
+    border-color: #6d5bd0;
+    box-shadow: 0 2px 10px rgba(109, 91, 208, 0.18);
+}
+
+.lumin-builder .gjs-block__media {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 4px;
+    color: #4b3fb0;
+}
+
+.lumin-builder .gjs-block-label {
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.lumin-builder .gjs-block-category .gjs-title {
+    background: transparent;
+    border: 0;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #62626c;
+}
+
+.lumin-builder .gjs-trt-trait {
+    padding: 6px 4px;
+}
+
+.lumin-builder .gjs-trt-trait .gjs-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #111114;
+}
+
+.lumin-builder .gjs-field {
+    border: 1px solid #e7e7ea;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.lumin-builder .gjs-field input,
+.lumin-builder .gjs-field select {
+    color: #111114;
+}
+
+.lumin-builder .gjs-layer {
+    font-size: 12px;
+}
+
+/* Pasek narzędzi i znaczniki w canvasie */
+.lumin-builder .gjs-toolbar {
+    border-radius: 8px;
+    background: #111114;
+}
+
+.lumin-builder .gjs-badge {
+    background: #6d5bd0;
+    border-radius: 4px;
+    padding: 2px 6px;
+}
+
+.lumin-builder .gjs-rte-toolbar {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.lumin-builder .gjs-block svg {
+    fill: none;
+}
+
+.lumin-builder .gjs-field select,
+.lumin-builder .gjs-field input {
+    color: #111114 !important;
+    background: transparent !important;
+}
+
+.lumin-builder .gjs-trt-trait .gjs-field,
+.lumin-builder .gjs-trt-trait .gjs-field * {
+    color: #111114 !important;
+    opacity: 1 !important;
+}

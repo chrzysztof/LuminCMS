@@ -60,8 +60,11 @@ class Content extends Model
 
     public function scopePublished(Builder $query): Builder
     {
-        return $query->where('status', self::STATUS_PUBLISHED)
-            ->where(fn (Builder $q) => $q->whereNull('published_at')->orWhere('published_at', '<=', now()));
+        // Opublikowane oraz zaplanowane, którym minął termin publikacji.
+        return $query->where(fn (Builder $q) => $q
+            ->where(fn (Builder $p) => $p->where('status', self::STATUS_PUBLISHED)
+                ->where(fn (Builder $d) => $d->whereNull('published_at')->orWhere('published_at', '<=', now())))
+            ->orWhere(fn (Builder $s) => $s->where('status', self::STATUS_SCHEDULED)->where('published_at', '<=', now())));
     }
 
     /**
