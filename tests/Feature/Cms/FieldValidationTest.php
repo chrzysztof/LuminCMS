@@ -35,7 +35,7 @@ class FieldValidationTest extends TestCase
 
     public function test_registry_has_all_built_in_types(): void
     {
-        $this->assertCount(19, $this->registry->all());
+        $this->assertCount(22, $this->registry->all());
     }
 
     public function test_unknown_type_throws(): void

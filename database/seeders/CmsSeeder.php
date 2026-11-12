@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Cms\Content\ContentType;
+use App\Cms\Media\MediaSize;
 use App\Cms\Taxonomy\Taxonomy;
 use Illuminate\Database\Seeder;
 
@@ -47,5 +48,17 @@ class CmsSeeder extends Seeder
 
         $category->contentTypes()->syncWithoutDetaching([$post->id]);
         $tag->contentTypes()->syncWithoutDetaching([$post->id]);
+
+        // Domyślne rozmiary obrazów (wariant "full" powstaje zawsze).
+        foreach ([
+            ['thumbnail', 'Miniatura', 150, 150, true],
+            ['medium', 'Średni', 768, 0, false],
+            ['large', 'Duży', 1536, 0, false],
+        ] as [$name, $label, $width, $height, $crop]) {
+            MediaSize::updateOrCreate(['name' => $name], [
+                'label' => $label, 'width' => $width, 'height' => $height,
+                'crop' => $crop, 'active' => true, 'is_system' => true,
+            ]);
+        }
     }
 }

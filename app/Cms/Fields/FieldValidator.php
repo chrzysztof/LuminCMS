@@ -3,6 +3,7 @@
 namespace App\Cms\Fields;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Waliduje wartości pól według definicji grupy i zwraca je w postaci do zapisu.
@@ -20,7 +21,7 @@ class FieldValidator
      * @param  array<string, mixed>  $input  wartości z formularza po nazwie pola
      * @return array<string, mixed> znormalizowane wartości po nazwie pola
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function validate(array $fields, array $input): array
     {

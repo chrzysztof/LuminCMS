@@ -36,6 +36,10 @@ class CmsServiceProvider extends ServiceProvider
         Types\MessageField::class,
         Types\AccordionField::class,
         Types\TabField::class,
+        // Treść (media)
+        Types\ImageField::class,
+        Types\FileField::class,
+        Types\GalleryField::class,
     ];
 
     public function register(): void
