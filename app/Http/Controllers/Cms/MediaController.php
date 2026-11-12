@@ -18,6 +18,11 @@ class MediaController extends Controller
     {
         $query = Media::query()->latest('id');
 
+        // Autor widzi w bibliotece tylko własne pliki; redaktor i administrator wszystkie (jak w WordPressie).
+        if (! $request->user()->can('edit_others_posts')) {
+            $query->where('uploaded_by', $request->user()->id);
+        }
+
         if ($search = $request->string('search')->trim()->toString()) {
             $query->where(fn ($q) => $q->where('filename', 'like', "%{$search}%")
                 ->orWhere('title', 'like', "%{$search}%")->orWhere('alt', 'like', "%{$search}%"));
@@ -55,6 +60,8 @@ class MediaController extends Controller
 
     public function update(Request $request, Media $media): JsonResponse
     {
+        $this->authorizeMedia($request, $media);
+
         $data = $request->validate([
             'alt' => ['sometimes', 'nullable', 'string', 'max:255'],
             'title' => ['sometimes', 'nullable', 'string', 'max:255'],
@@ -76,6 +83,8 @@ class MediaController extends Controller
 
     public function crop(Request $request, Media $media, string $size): JsonResponse
     {
+        $this->authorizeMedia($request, $media);
+
         $rect = $request->validate([
             'x' => ['required', 'integer', 'min:0'],
             'y' => ['required', 'integer', 'min:0'],
@@ -92,17 +101,30 @@ class MediaController extends Controller
         return response()->json($media->refresh()->asArray());
     }
 
-    public function destroyCrop(Media $media, string $size): JsonResponse
+    public function destroyCrop(Request $request, Media $media, string $size): JsonResponse
     {
+        $this->authorizeMedia($request, $media);
+
         $this->manager->clearCrop($media, $size);
 
         return response()->json($media->refresh()->asArray());
     }
 
-    public function destroy(Media $media): JsonResponse
+    public function destroy(Request $request, Media $media): JsonResponse
     {
+        $this->authorizeMedia($request, $media);
+
         $this->manager->delete($media);
 
         return response()->json(null, 204);
+    }
+
+    /** Cudze pliki mogą zmieniać tylko osoby z uprawnieniem edit_others_posts. */
+    private function authorizeMedia(Request $request, Media $media): void
+    {
+        abort_unless(
+            $media->uploaded_by === $request->user()->id || $request->user()->can('edit_others_posts'),
+            403,
+        );
     }
 }

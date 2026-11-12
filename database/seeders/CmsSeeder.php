@@ -19,6 +19,7 @@ class CmsSeeder extends Seeder
             'hierarchical' => true,
             'supports' => ['title', 'editor', 'builder', 'thumbnail', 'seo', 'page_attributes'],
             'url_prefix' => null,
+            'capability_type' => 'page',
             'is_system' => true,
         ]);
 
@@ -29,6 +30,7 @@ class CmsSeeder extends Seeder
             'hierarchical' => false,
             'supports' => ['title', 'editor', 'builder', 'excerpt', 'thumbnail', 'seo', 'author'],
             'url_prefix' => 'blog',
+            'capability_type' => 'post',
             'is_system' => true,
         ]);
 

@@ -7,7 +7,10 @@ use App\Cms\Fields\FieldRegistry;
 use App\Cms\Fields\FieldValidator;
 use App\Cms\Fields\LocationMatcher;
 use App\Cms\Fields\Types;
+use App\Cms\Roles\RoleRegistry;
 use App\Cms\Settings\Settings;
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class CmsServiceProvider extends ServiceProvider
@@ -53,6 +56,12 @@ class CmsServiceProvider extends ServiceProvider
         Types\RepeaterField::class,
     ];
 
+    public function boot(): void
+    {
+        // Uprawnienia ról działają jak zwykłe zdolności: $user->can('edit_posts'), middleware can:manage_options.
+        Gate::before(fn (User $user, string $ability) => RoleRegistry::grants($user->role, $ability) ? true : null);
+    }
+
     public function register(): void
     {
         $this->app->singleton(ConditionalLogic::class);
@@ -71,6 +80,7 @@ class CmsServiceProvider extends ServiceProvider
                 'noindex_site' => false,
             ],
             'pages' => ['not_found_content_id' => null],
+            'users' => ['default_role' => 'subscriber', 'registration_enabled' => false],
             'site' => [
                 'ga_id' => '', 'gtm_id' => '', 'pixel_id' => '',
                 'consent_required' => true, 'privacy_url' => '', 'track_logged_in' => false,

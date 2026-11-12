@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Cms;
 use App\Cms\Builder\BuilderRenderer;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentType;
+use App\Cms\Roles\ContentAccess;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,11 +17,11 @@ class BuilderController extends Controller
 {
     private const MAX_PROJECT_BYTES = 2_000_000;
 
-    public function __construct(private readonly BuilderRenderer $renderer) {}
+    public function __construct(private readonly BuilderRenderer $renderer, private readonly ContentAccess $access) {}
 
-    public function edit(ContentType $type, Content $content): Response
+    public function edit(Request $request, ContentType $type, Content $content): Response
     {
-        $this->authorizeBuilder($type, $content);
+        $this->authorizeBuilder($request, $type, $content);
 
         return Inertia::render('content/builder', [
             'type' => ['key' => $type->key, 'label' => $type->label, 'label_plural' => $type->label_plural],
@@ -36,7 +37,7 @@ class BuilderController extends Controller
 
     public function save(Request $request, ContentType $type, Content $content): JsonResponse
     {
-        $this->authorizeBuilder($type, $content);
+        $this->authorizeBuilder($request, $type, $content);
 
         $data = $request->validate([
             'project' => ['required', 'array'],
@@ -47,6 +48,11 @@ class BuilderController extends Controller
 
         $content->builder_data = $data['project'];
         $content->html_cache = $this->renderer->render($data['project']);
+
+        // Bez uprawnienia publish_* builder zapisuje tylko wersję roboczą / do recenzji.
+        if (isset($data['status']) && $data['status'] === Content::STATUS_PUBLISHED && ! $this->access->canPublish($request->user(), $type)) {
+            $data['status'] = Content::STATUS_PENDING;
+        }
 
         if (isset($data['status'])) {
             $content->status = $data['status'];
@@ -65,9 +71,10 @@ class BuilderController extends Controller
         ]);
     }
 
-    private function authorizeBuilder(ContentType $type, Content $content): void
+    private function authorizeBuilder(Request $request, ContentType $type, Content $content): void
     {
         abort_unless($content->content_type_id === $type->id, 404);
         abort_unless($type->supports('builder'), 404);
+        abort_unless($this->access->canEdit($request->user(), $content->setRelation('type', $type)), 403);
     }
 }

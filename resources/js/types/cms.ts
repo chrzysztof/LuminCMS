@@ -8,7 +8,7 @@ export type ContentTypeInfo = {
     url_prefix?: string | null;
 };
 
-export type ContentStatus = 'draft' | 'published' | 'scheduled';
+export type ContentStatus = 'draft' | 'pending' | 'published' | 'scheduled';
 
 export type MediaItem = {
     id: number;

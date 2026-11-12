@@ -1,6 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { Plus, Search } from 'lucide-react';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { StatusBadge } from '@/components/cms/status-badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -15,6 +15,8 @@ type Item = {
     title: string;
     slug: string;
     status: ContentStatus;
+    can_edit: boolean;
+    can_delete: boolean;
     author: string | null;
     updated_at: string;
 };
@@ -39,8 +41,27 @@ const tabs: {
     { key: '', label: 'Wszystkie', count: 'all' },
     { key: 'published', label: 'Opublikowane', count: 'published' },
     { key: 'draft', label: 'Szkice', count: 'draft' },
+    { key: 'pending', label: 'Do przeglądu', count: 'pending' },
     { key: 'scheduled', label: 'Zaplanowane', count: 'scheduled' },
 ];
+
+function Row({
+    href,
+    className,
+    children,
+}: {
+    href: string | null;
+    className: string;
+    children: ReactNode;
+}) {
+    return href ? (
+        <Link href={href} className={className}>
+            {children}
+        </Link>
+    ) : (
+        <div className={cn(className, 'opacity-70')}>{children}</div>
+    );
+}
 
 export default function ContentIndex({ type, items, counts, filters }: Props) {
     const [search, setSearch] = useState(filters.search);
@@ -124,9 +145,13 @@ export default function ContentIndex({ type, items, counts, filters }: Props) {
                         </p>
                     ) : (
                         items.data.map((item) => (
-                            <Link
+                            <Row
                                 key={item.id}
-                                href={cmsUrl.contentEdit(type.key, item.id)}
+                                href={
+                                    item.can_edit
+                                        ? cmsUrl.contentEdit(type.key, item.id)
+                                        : null
+                                }
                                 className="grid gap-1 border-b px-4 py-3 text-sm last:border-b-0 hover:bg-muted/40 md:grid-cols-[1fr_9rem_9rem_11rem] md:items-center md:gap-4"
                             >
                                 <span className="min-w-0">
@@ -150,7 +175,7 @@ export default function ContentIndex({ type, items, counts, filters }: Props) {
                                 <span className="text-muted-foreground">
                                     {formatDate(item.updated_at)}
                                 </span>
-                            </Link>
+                            </Row>
                         ))
                     )}
                 </Card>

@@ -18,6 +18,9 @@ class Content extends Model
 
     public const STATUS_DRAFT = 'draft';
 
+    /** Oczekuje na przegląd (jak w WordPressie: współpracownik nie może publikować). */
+    public const STATUS_PENDING = 'pending';
+
     public const STATUS_PUBLISHED = 'published';
 
     public const STATUS_SCHEDULED = 'scheduled';

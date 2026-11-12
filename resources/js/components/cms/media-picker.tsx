@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useCan } from '@/lib/can';
 import { MediaLibrary } from '@/components/cms/media-library';
 import { Button } from '@/components/ui/button';
 import {
@@ -27,6 +28,7 @@ export function MediaPicker({
     onPick,
 }: Props) {
     const [selected, setSelected] = useState<MediaItem[]>([]);
+    const can = useCan();
 
     return (
         <Dialog
@@ -42,14 +44,21 @@ export function MediaPicker({
                         {multiple ? 'Wybierz pliki' : 'Wybierz plik'}
                     </DialogTitle>
                 </DialogHeader>
-                <MediaLibrary
-                    mode="select"
-                    multiple={multiple}
-                    imagesOnly={imagesOnly}
-                    selected={selected}
-                    onSelectionChange={setSelected}
-                    className="min-h-0 flex-1"
-                />
+                {!can('upload_files') ? (
+                    <p className="py-12 text-center text-sm text-muted-foreground">
+                        Twoja rola (np. Współpracownik) nie ma dostępu do
+                        biblioteki mediów.
+                    </p>
+                ) : (
+                    <MediaLibrary
+                        mode="select"
+                        multiple={multiple}
+                        imagesOnly={imagesOnly}
+                        selected={selected}
+                        onSelectionChange={setSelected}
+                        className="min-h-0 flex-1"
+                    />
+                )}
                 <DialogFooter>
                     <span className="mr-auto self-center text-sm text-muted-foreground">
                         Wybrano: {selected.length}

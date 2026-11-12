@@ -6,6 +6,7 @@ use App\Cms\Content\Content;
 use App\Cms\Content\ContentResolver;
 use App\Cms\Content\ContentType;
 use App\Cms\Redirects\RedirectManager;
+use App\Cms\Roles\ContentAccess;
 use App\Cms\Seo\SeoResolver;
 use App\Cms\Settings\Settings;
 use Illuminate\Contracts\View\View;
@@ -62,9 +63,10 @@ class SiteController extends Controller
     }
 
     /** Podgląd dla zalogowanych, także szkiców. */
-    public function preview(ContentType $type, Content $content): View
+    public function preview(Request $request, ContentType $type, Content $content): View
     {
         abort_unless($content->content_type_id === $type->id, 404);
+        abort_unless(app(ContentAccess::class)->canEdit($request->user(), $content->setRelation('type', $type)), 403);
 
         return $this->view($content, preview: true);
     }

@@ -2,6 +2,8 @@
 
 namespace App\Actions\Fortify;
 
+use App\Cms\Roles\RoleRegistry;
+use App\Cms\Settings\Settings;
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
 use App\Models\User;
@@ -24,10 +26,19 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        return User::create([
+        // Pierwsze konto w instalacji to administrator; kolejne dostają domyślną rolę z ustawień.
+        $role = User::query()->exists()
+            ? app(Settings::class)->get('users', 'default_role', RoleRegistry::SUBSCRIBER)
+            : RoleRegistry::ADMINISTRATOR;
+
+        $user = new User([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
         ]);
+        $user->role = RoleRegistry::exists($role) ? $role : RoleRegistry::SUBSCRIBER;
+        $user->save();
+
+        return $user;
     }
 }

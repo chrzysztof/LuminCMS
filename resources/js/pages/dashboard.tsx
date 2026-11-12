@@ -17,7 +17,7 @@ type Props = {
         published: number;
         drafts: number;
         scheduled: number;
-        media: number;
+        media: number | null;
     };
     recent: {
         id: number;
@@ -35,7 +35,7 @@ export default function Dashboard({ stats, recent }: Props) {
         { label: 'Szkice', value: stats.drafts, icon: FilePen },
         { label: 'Zaplanowane', value: stats.scheduled, icon: CalendarClock },
         { label: 'Pliki w mediach', value: stats.media, icon: ImageIcon },
-    ];
+    ].filter((t) => t.value !== null);
 
     return (
         <>

@@ -28,6 +28,8 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
+            // W testach domyślnie administrator (jak właściciel instalacji); inne role przez ->role('author').
+            'role' => 'administrator',
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
             /* @chisel-2fa */
@@ -36,6 +38,11 @@ class UserFactory extends Factory
             'two_factor_confirmed_at' => null,
             /* @end-chisel-2fa */
         ];
+    }
+
+    public function role(string $role): static
+    {
+        return $this->state(fn () => ['role' => $role]);
     }
 
     /**

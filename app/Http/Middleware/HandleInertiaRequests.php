@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\Cms\Content\ContentType;
+use App\Cms\Roles\ContentAccess;
+use App\Cms\Roles\RoleRegistry;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,9 +43,16 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
+                'role' => $request->user()?->role,
+                'role_label' => $request->user() ? RoleRegistry::label($request->user()->role) : null,
+                'capabilities' => $request->user() ? RoleRegistry::capabilities($request->user()->role) : [],
             ],
+            // Menu pokazuje tylko typy treści, które użytkownik może edytować.
             'contentTypes' => fn () => $request->user()
-                ? ContentType::orderBy('id')->get(['key', 'label', 'label_plural', 'icon'])
+                ? ContentType::orderBy('id')->get(['key', 'label', 'label_plural', 'icon', 'capability_type'])
+                    ->filter(fn (ContentType $t) => app(ContentAccess::class)->canCreate($request->user(), $t))
+                    ->map(fn (ContentType $t) => $t->only(['key', 'label', 'label_plural', 'icon']))
+                    ->values()
                 : [],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

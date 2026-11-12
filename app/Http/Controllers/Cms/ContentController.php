@@ -10,6 +10,7 @@ use App\Cms\Fields\FieldRegistry;
 use App\Cms\Fields\FieldValidator;
 use App\Cms\Media\Media;
 use App\Cms\Redirects\RedirectManager;
+use App\Cms\Roles\ContentAccess;
 use App\Cms\Settings\Settings;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -22,19 +23,26 @@ use Inertia\Response;
 
 class ContentController extends Controller
 {
-    private const STATUSES = [Content::STATUS_DRAFT, Content::STATUS_PUBLISHED, Content::STATUS_SCHEDULED];
+    private const STATUSES = [Content::STATUS_DRAFT, Content::STATUS_PENDING, Content::STATUS_PUBLISHED, Content::STATUS_SCHEDULED];
 
     public function __construct(
         private readonly FieldRegistry $registry,
         private readonly FieldValidator $validator,
+        private readonly ContentAccess $access,
     ) {}
 
     public function index(Request $request, ContentType $type): Response
     {
+        $user = $request->user();
+        abort_unless($this->access->canCreate($user, $type), 403);
+
+        // Bez edit_others_* użytkownik widzi tylko własne treści (jak w WordPressie).
+        $onlyOwn = ! $this->access->canEditOthers($user, $type);
         $status = $request->string('status')->toString();
         $search = $request->string('search')->trim()->toString();
 
-        $query = Content::query()->where('content_type_id', $type->id)->with('author:id,name')->latest('updated_at');
+        $query = Content::query()->where('content_type_id', $type->id)->with('author:id,name')->latest('updated_at')
+            ->when($onlyOwn, fn ($q) => $q->where('author_id', $user->id));
 
         if (in_array($status, self::STATUSES, true)) {
             $query->where('status', $status);
@@ -44,11 +52,13 @@ class ContentController extends Controller
             $query->where('title', 'like', "%{$search}%");
         }
 
-        $counts = Content::where('content_type_id', $type->id)->selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status');
+        $counts = Content::where('content_type_id', $type->id)->when($onlyOwn, fn ($q) => $q->where('author_id', $user->id))->selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status');
 
         return Inertia::render('content/index', [
             'type' => $this->typeData($type),
             'items' => $query->paginate(20)->withQueryString()->through(fn (Content $c) => [
+                'can_edit' => $this->access->canEdit($user, $c->setRelation('type', $type)),
+                'can_delete' => $this->access->canDelete($user, $c),
                 'id' => $c->id,
                 'title' => $c->title,
                 'slug' => $c->slug,
@@ -61,26 +71,32 @@ class ContentController extends Controller
                 'all' => $counts->sum(),
                 Content::STATUS_PUBLISHED => $counts[Content::STATUS_PUBLISHED] ?? 0,
                 Content::STATUS_DRAFT => $counts[Content::STATUS_DRAFT] ?? 0,
+                Content::STATUS_PENDING => $counts[Content::STATUS_PENDING] ?? 0,
                 Content::STATUS_SCHEDULED => $counts[Content::STATUS_SCHEDULED] ?? 0,
             ],
             'filters' => ['status' => $status, 'search' => $search],
         ]);
     }
 
-    public function create(ContentType $type): Response
+    public function create(Request $request, ContentType $type): Response
     {
-        return $this->form($type, null);
+        abort_unless($this->access->canCreate($request->user(), $type), 403);
+
+        return $this->form($request, $type, null);
     }
 
-    public function edit(ContentType $type, Content $content): Response
+    public function edit(Request $request, ContentType $type, Content $content): Response
     {
         abort_unless($content->content_type_id === $type->id, 404);
+        abort_unless($this->access->canEdit($request->user(), $content->setRelation('type', $type)), 403);
 
-        return $this->form($type, $content);
+        return $this->form($request, $type, $content);
     }
 
     public function store(Request $request, ContentType $type): RedirectResponse
     {
+        abort_unless($this->access->canCreate($request->user(), $type), 403);
+
         $content = new Content(['content_type_id' => $type->id, 'author_id' => $request->user()->id]);
 
         $this->save($request, $type, $content);
@@ -93,6 +109,7 @@ class ContentController extends Controller
     public function update(Request $request, ContentType $type, Content $content): RedirectResponse
     {
         abort_unless($content->content_type_id === $type->id, 404);
+        abort_unless($this->access->canEdit($request->user(), $content->setRelation('type', $type)), 403);
 
         $this->save($request, $type, $content);
 
@@ -101,9 +118,10 @@ class ContentController extends Controller
         return back();
     }
 
-    public function destroy(ContentType $type, Content $content): RedirectResponse
+    public function destroy(Request $request, ContentType $type, Content $content): RedirectResponse
     {
         abort_unless($content->content_type_id === $type->id, 404);
+        abort_unless($this->access->canDelete($request->user(), $content->setRelation('type', $type)), 403);
 
         $content->delete();
 
@@ -112,7 +130,7 @@ class ContentController extends Controller
         return to_route('cms.content.index', $type->key);
     }
 
-    private function form(ContentType $type, ?Content $content): Response
+    private function form(Request $request, ContentType $type, ?Content $content): Response
     {
         $context = [
             'content_type' => $type->key,
@@ -157,6 +175,8 @@ class ContentController extends Controller
 
         return Inertia::render('content/edit', [
             'type' => $this->typeData($type),
+            'canPublish' => $this->access->canPublish($request->user(), $type),
+            'canDelete' => $content ? $this->access->canDelete($request->user(), $content) : false,
             'content' => $content ? [
                 'id' => $content->id,
                 'title' => $content->title,
@@ -202,6 +222,12 @@ class ContentController extends Controller
             'seo.og_image_id' => ['nullable', 'integer', Rule::exists('media', 'id')],
             'seo.focus_keyword' => ['nullable', 'string', 'max:100'],
         ]);
+
+        // Bez uprawnienia publish_* treść trafia do recenzji zamiast zostać opublikowana (jak w WordPressie).
+        if (! $this->access->canPublish($request->user(), $type)
+            && in_array($data['status'], [Content::STATUS_PUBLISHED, Content::STATUS_SCHEDULED], true)) {
+            $data['status'] = Content::STATUS_PENDING;
+        }
 
         if ($content->exists && ! empty($data['parent_id']) && $data['parent_id'] === $content->id) {
             throw ValidationException::withMessages(['parent_id' => 'Treść nie może być własnym rodzicem.']);

@@ -12,6 +12,10 @@ const styles: Record<ContentStatus, { label: string; className: string }> = {
         className:
             'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300',
     },
+    pending: {
+        label: 'Oczekuje na przegląd',
+        className: 'bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300',
+    },
     scheduled: {
         label: 'Zaplanowana',
         className: 'bg-brand-soft text-brand-foreground',

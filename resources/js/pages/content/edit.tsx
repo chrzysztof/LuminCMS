@@ -49,6 +49,8 @@ type Props = {
     groups: FieldGroupData[];
     media: Record<number, MediaItem>;
     parents: { id: number; title: string }[];
+    canPublish: boolean;
+    canDelete: boolean;
 };
 
 const nativeClass =
@@ -63,6 +65,8 @@ export default function ContentEdit({
     groups,
     media: initialMedia,
     parents,
+    canPublish,
+    canDelete,
 }: Props) {
     const [media, setMedia] = useState<Record<number, MediaItem>>(initialMedia);
     const [pickingFeatured, setPickingFeatured] = useState(false);
@@ -328,12 +332,20 @@ export default function ContentEdit({
                                         }
                                     >
                                         <option value="draft">Szkic</option>
-                                        <option value="published">
-                                            Opublikowana
-                                        </option>
-                                        <option value="scheduled">
-                                            Zaplanowana
-                                        </option>
+                                        {canPublish ? (
+                                            <>
+                                                <option value="published">
+                                                    Opublikowana
+                                                </option>
+                                                <option value="scheduled">
+                                                    Zaplanowana
+                                                </option>
+                                            </>
+                                        ) : (
+                                            <option value="pending">
+                                                Oczekuje na przegląd
+                                            </option>
+                                        )}
                                     </select>
                                 </div>
                                 {form.data.status === 'scheduled' && (
@@ -386,7 +398,7 @@ export default function ContentEdit({
                                         </select>
                                     </div>
                                 )}
-                                {content && (
+                                {content && canDelete && (
                                     <Button
                                         type="button"
                                         variant="ghost"

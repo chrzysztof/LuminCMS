@@ -1,6 +1,8 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
     Boxes,
+    ShieldCheck,
+    Users,
     ArrowRightLeft,
     Globe,
     ListTree,
@@ -25,6 +27,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { cmsUrl } from '@/lib/cms-urls';
+import { useCan } from '@/lib/can';
 import type { NavItem } from '@/types';
 import type { ContentTypeInfo } from '@/types/cms';
 
@@ -44,6 +47,8 @@ export function AppSidebar() {
         icon: typeIcons[type.icon ?? ''] ?? Boxes,
     }));
 
+    const can = useCan();
+
     const mainItems: NavItem[] = [
         { title: 'Pulpit', href: dashboard(), icon: LayoutGrid },
     ];
@@ -59,8 +64,22 @@ export function AppSidebar() {
             icon: ArrowRightLeft,
         },
     ];
-    const libraryItems: NavItem[] = [
-        { title: 'Media', href: cmsUrl.library, icon: ImageIcon },
+    const libraryItems: NavItem[] = can('upload_files')
+        ? [{ title: 'Media', href: cmsUrl.library, icon: ImageIcon }]
+        : [];
+    const userItems: NavItem[] = [
+        ...(can('list_users')
+            ? [{ title: 'Użytkownicy', href: cmsUrl.userIndex, icon: Users }]
+            : []),
+        ...(can('manage_options')
+            ? [
+                  {
+                      title: 'Role i ustawienia',
+                      href: cmsUrl.userRoles,
+                      icon: ShieldCheck,
+                  },
+              ]
+            : []),
     ];
 
     return (
@@ -82,9 +101,18 @@ export function AppSidebar() {
                 {contentItems.length > 0 && (
                     <NavMain label="Treści" items={contentItems} />
                 )}
-                <NavMain label="Biblioteka" items={libraryItems} />
-                <NavMain label="Struktura" items={structureItems} />
-                <NavMain label="Ustawienia" items={settingsItems} />
+                {libraryItems.length > 0 && (
+                    <NavMain label="Biblioteka" items={libraryItems} />
+                )}
+                {can('manage_options') && (
+                    <NavMain label="Struktura" items={structureItems} />
+                )}
+                {userItems.length > 0 && (
+                    <NavMain label="Użytkownicy" items={userItems} />
+                )}
+                {can('manage_options') && (
+                    <NavMain label="Ustawienia" items={settingsItems} />
+                )}
             </SidebarContent>
 
             <SidebarFooter>
