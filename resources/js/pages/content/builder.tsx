@@ -70,15 +70,6 @@ export default function Builder({
     const [device, setDevice] = useState('Desktop');
     const [leftOpen, setLeftOpen] = useState(true);
     const [rightOpen, setRightOpen] = useState(true);
-
-    useEffect(() => {
-        const id = window.setTimeout(() => {
-            editorRef.current?.refresh();
-            window.dispatchEvent(new Event('resize'));
-        }, 220);
-
-        return () => window.clearTimeout(id);
-    }, [leftOpen, rightOpen]);
     const [tab, setTab] = useState<'props' | 'layers'>('props');
     const [saving, setSaving] = useState(false);
     const [dirty, setDirty] = useState(false);
@@ -309,16 +300,7 @@ export default function Builder({
         <>
             <Head title={t('Edytor: {name}', { name: content.title })} />
             <div className="lumin-builder fixed inset-0 overflow-hidden bg-neutral-200">
-                <div
-                    ref={canvas}
-                    className="absolute overflow-hidden rounded-2xl border bg-neutral-200 transition-[left,right] duration-200"
-                    style={{
-                        top: 76,
-                        bottom: 12,
-                        left: leftOpen ? 276 : 68,
-                        right: rightOpen ? 312 : 68,
-                    }}
-                />
+                <div ref={canvas} className="absolute inset-0" />
 
                 {empty && (
                     <div className="pointer-events-none absolute inset-0 z-[55] flex items-center justify-center">
