@@ -255,8 +255,8 @@ export default function ContentEdit({
                                     <Label htmlFor="slug">
                                         {t('Adres (slug)')}
                                     </Label>
-                                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                        <span>
+                                    <div className="flex items-center overflow-hidden rounded-md border bg-background text-sm text-muted-foreground focus-within:ring-2 focus-within:ring-ring/30">
+                                        <span className="self-stretch border-r bg-muted/50 px-3 py-2">
                                             /
                                             {type.url_prefix
                                                 ? `${type.url_prefix}/`
@@ -264,6 +264,7 @@ export default function ContentEdit({
                                         </span>
                                         <Input
                                             id="slug"
+                                            className="rounded-none border-0 shadow-none focus-visible:ring-0"
                                             value={form.data.slug}
                                             placeholder={t(
                                                 'generowany z tytułu',
