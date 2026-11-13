@@ -52,7 +52,7 @@ class ContentControllerTest extends TestCase
         $type = ContentType::where('key', 'page')->firstOrFail();
 
         $this->post('/cms/content/page', [
-            'title' => 'Z treścią', 'status' => 'draft', 'body' => '<p>Cześć</p><script>alert(1)</script>',
+            'title' => 'Z treścią', 'status' => 'draft', 'body' => '<p>Cześć</p><script>alert(1)</script>', 'content_mode' => 'text',
             'fields' => ['podtytul' => 'x'],
         ])->assertSessionHasNoErrors();
 
@@ -62,11 +62,19 @@ class ContentControllerTest extends TestCase
 
         $c->update(['builder_data' => ['pages' => []], 'html_cache' => '<section>Builder</section>']);
         $this->put("/cms/content/page/{$c->id}", [
-            'title' => 'Z treścią', 'status' => 'draft', 'body' => '<p>Nadpisane</p>',
+            'title' => 'Z treścią', 'status' => 'draft', 'body' => '<p>Nadpisane</p>', 'content_mode' => 'visual',
             'fields' => ['podtytul' => 'x'],
         ])->assertSessionHasNoErrors();
 
         $this->assertSame('<section>Builder</section>', $c->fresh()->html_cache);
+
+        $this->put("/cms/content/page/{$c->id}", [
+            'title' => 'Z treścią', 'status' => 'draft', 'body' => '<p>Tekst</p>', 'content_mode' => 'text',
+            'fields' => ['podtytul' => 'x'],
+        ])->assertSessionHasNoErrors();
+
+        $this->assertSame('<p>Tekst</p>', $c->fresh()->html_cache);
+        $this->assertEmpty($c->fresh()->builder_data);
     }
 
     public function test_guests_are_redirected(): void

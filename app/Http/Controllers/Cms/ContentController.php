@@ -259,7 +259,7 @@ class ContentController extends Controller
                 'slug' => $content->slug,
                 'status' => $content->status,
                 'excerpt' => $content->excerpt,
-                'body' => empty($content->builder_data) ? (string) $content->html_cache : '',
+                'body' => (string) $content->html_cache,
                 'has_builder' => ! empty($content->builder_data),
                 'parent_id' => $content->parent_id,
                 'template' => $content->template ?: 'default',
@@ -296,6 +296,7 @@ class ContentController extends Controller
             'status' => ['required', Rule::in(self::STATUSES)],
             'excerpt' => ['nullable', 'string', 'max:5000'],
             'body' => ['nullable', 'string', 'max:1000000'],
+            'content_mode' => ['nullable', Rule::in(['text', 'visual'])],
             'parent_id' => ['nullable', 'integer', Rule::exists('contents', 'id')->where('content_type_id', $type->id)],
             'featured_media_id' => ['nullable', 'integer', Rule::exists('media', 'id')],
             'published_at' => ['nullable', 'date', Rule::requiredIf($request->input('status') === Content::STATUS_SCHEDULED),
@@ -373,9 +374,11 @@ class ContentController extends Controller
 
         $before = app(RedirectManager::class)->snapshot($content);
 
-        // Treść z edytora tekstowego (TipTap) – tylko gdy strona nie ma projektu z edytora wizualnego.
-        if ($type->supports('editor') && array_key_exists('body', $data) && empty($content->builder_data)) {
+        // Treść: albo edytor tekstowy (TipTap), albo projekt z edytora wizualnego. Wybór trybu „text"
+        // zastępuje istniejący projekt wizualny treścią z TipTapa.
+        if ($type->supports('editor') && ($data['content_mode'] ?? null) === 'text' && array_key_exists('body', $data)) {
             $content->html_cache = app(HtmlSanitizer::class)->clean($data['body'] ?? '');
+            $content->builder_data = null;
         }
 
         $content->fill([

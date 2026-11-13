@@ -85,6 +85,7 @@ export default function ContentEdit({
         status: content?.status ?? ('draft' as ContentStatus),
         excerpt: content?.excerpt ?? '',
         body: content?.body ?? '',
+        content_mode: content?.has_builder ? 'visual' : 'text',
         parent_id: content?.parent_id ?? (null as number | null),
         featured_media_id:
             content?.featured_media_id ?? (null as number | null),
@@ -333,22 +334,103 @@ export default function ContentEdit({
                         {supports('editor') && (
                             <Card className="gap-4">
                                 <CardHeader>
-                                    <CardTitle className="text-base">
-                                        {t('Treść strony')}
-                                    </CardTitle>
-                                    <p className="text-[13px] text-muted-foreground">
-                                        {t(
-                                            'Pisz tutaj albo otwórz edytor wizualny, aby zbudować układ bez kodu.',
+                                    <div className="flex flex-wrap items-center justify-between gap-3">
+                                        <CardTitle className="text-base">
+                                            {t('Treść strony')}
+                                        </CardTitle>
+                                        {supports('builder') && content && (
+                                            <div
+                                                role="tablist"
+                                                className="inline-flex rounded-[10px] bg-muted p-1 text-sm"
+                                            >
+                                                {(
+                                                    [
+                                                        [
+                                                            'text',
+                                                            t(
+                                                                'Edytor tekstowy',
+                                                            ),
+                                                        ],
+                                                        [
+                                                            'visual',
+                                                            t(
+                                                                'Edytor wizualny',
+                                                            ),
+                                                        ],
+                                                    ] as const
+                                                ).map(([mode, label]) => (
+                                                    <button
+                                                        key={mode}
+                                                        type="button"
+                                                        role="tab"
+                                                        aria-selected={
+                                                            form.data
+                                                                .content_mode ===
+                                                            mode
+                                                        }
+                                                        onClick={() => {
+                                                            if (
+                                                                mode ===
+                                                                    'text' &&
+                                                                content.has_builder &&
+                                                                form.data
+                                                                    .content_mode !==
+                                                                    'text' &&
+                                                                !confirm(
+                                                                    t(
+                                                                        'Po zapisaniu układ z edytora wizualnego zostanie zastąpiony treścią z edytora tekstowego. Kontynuować?',
+                                                                    ),
+                                                                )
+                                                            )
+                                                                return;
+                                                            form.setData(
+                                                                'content_mode',
+                                                                mode,
+                                                            );
+                                                        }}
+                                                        className={cn(
+                                                            'rounded-lg px-3 py-1 font-medium',
+                                                            form.data
+                                                                .content_mode ===
+                                                                mode
+                                                                ? 'bg-background shadow-sm'
+                                                                : 'text-muted-foreground',
+                                                        )}
+                                                    >
+                                                        {label}
+                                                    </button>
+                                                ))}
+                                            </div>
                                         )}
-                                    </p>
+                                    </div>
                                 </CardHeader>
                                 <CardContent>
-                                    {content?.has_builder ? (
-                                        <p className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
-                                            {t(
-                                                'Treść tej strony jest edytowana w edytorze wizualnym.',
-                                            )}
-                                        </p>
+                                    {form.data.content_mode === 'visual' &&
+                                    content ? (
+                                        <div className="flex flex-col items-start gap-3 rounded-xl border border-dashed p-5">
+                                            <p className="text-sm text-muted-foreground">
+                                                {content.has_builder
+                                                    ? t(
+                                                          'Treść tej strony jest edytowana w edytorze wizualnym.',
+                                                      )
+                                                    : t(
+                                                          'Ta strona nie ma jeszcze układu. Otwórz edytor wizualny, aby go zbudować.',
+                                                      )}
+                                            </p>
+                                            <Button asChild>
+                                                <Link
+                                                    href={cmsUrl.contentBuilder(
+                                                        type.key,
+                                                        content.id,
+                                                    )}
+                                                >
+                                                    <PenTool />{' '}
+                                                    {t(
+                                                        'Otwórz edytor wizualny',
+                                                    )}
+                                                </Link>
+                                            </Button>
+                                        </div>
                                     ) : (
                                         <WysiwygEditor
                                             id="body"
