@@ -1,12 +1,5 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import {
-    ArrowLeft,
-    ImagePlus,
-    Loader2,
-    PenTool,
-    Trash2,
-    X,
-} from 'lucide-react';
+import { ImagePlus, Loader2, PenTool, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
 import { FieldList } from '@/components/cms/fields';
 import { MediaPicker } from '@/components/cms/media-picker';
@@ -37,6 +30,7 @@ type ContentData = {
     excerpt: string | null;
     body: string;
     has_builder: boolean;
+    updated_at?: string | null;
     parent_id: number | null;
     template: string;
     featured_media_id: number | null;
@@ -150,6 +144,11 @@ export default function ContentEdit({
                             <CardTitle className="text-base">
                                 {g.title}
                             </CardTitle>
+                            <p className="text-[13px] text-muted-foreground">
+                                {t(
+                                    'Pola własne przypisane do tego typu treści',
+                                )}
+                            </p>
                         </CardHeader>
                     )}
                     <CardContent
@@ -182,30 +181,49 @@ export default function ContentEdit({
             />
             <form
                 onSubmit={submit}
-                className="flex flex-1 flex-col gap-5 p-4 md:p-6"
+                className="flex flex-1 flex-col gap-5 p-4 md:p-6 lg:px-8 [&_[data-slot=card-content]]:px-5 [&_[data-slot=card-header]]:px-5 [&_[data-slot=card-title]]:text-base [&_[data-slot=card]]:gap-4 [&_[data-slot=card]]:rounded-[14px] [&_[data-slot=card]]:border-[#E7E7EA] [&_[data-slot=card]]:py-5 [&_[data-slot=card]]:shadow-none [&_input:not([type=checkbox]):not([type=radio]):not([type=color])]:h-10 [&_input:not([type=checkbox]):not([type=radio]):not([type=color])]:rounded-[10px] [&_select]:h-10 [&_select]:rounded-[10px] [&_select]:border-[#D9D9DE] [&_textarea]:rounded-[10px]"
             >
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                        <Button asChild variant="ghost" size="icon">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <div className="text-[13px] text-muted-foreground">
                             <Link
                                 href={cmsUrl.contentIndex(type.key)}
-                                aria-label={t('Wróć do listy')}
+                                className="hover:text-foreground"
                             >
-                                <ArrowLeft />
+                                {type.label_plural}
                             </Link>
-                        </Button>
-                        <h1 className="text-2xl font-semibold tracking-tight">
-                            {content
-                                ? t('Edytuj: {type}', {
-                                      type: type.label.toLowerCase(),
-                                  })
-                                : t('Dodaj: {type}', {
-                                      type: type.label.toLowerCase(),
-                                  })}
-                        </h1>
-                        {content && <StatusBadge status={content.status} />}
+                            {' / '}
+                            {content ? t('Edycja') : t('Nowa pozycja')}
+                        </div>
+                        <div className="mt-1 flex items-center gap-3">
+                            <h1 className="text-[26px] leading-tight font-bold tracking-tight">
+                                {form.data.title ||
+                                    (content
+                                        ? t('Edytuj: {type}', {
+                                              type: type.label.toLowerCase(),
+                                          })
+                                        : t('Dodaj: {type}', {
+                                              type: type.label.toLowerCase(),
+                                          }))}
+                            </h1>
+                            {content && <StatusBadge status={content.status} />}
+                        </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2.5">
+                        {content?.updated_at && (
+                            <span className="text-[13px] text-muted-foreground">
+                                {t('Ostatni zapis')}:{' '}
+                                {new Date(content.updated_at).toLocaleString(
+                                    undefined,
+                                    {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                    },
+                                )}
+                            </span>
+                        )}
                         {content && supports('builder') && (
                             <Button asChild variant="outline">
                                 <Link
@@ -259,8 +277,8 @@ export default function ContentEdit({
                                     <Label htmlFor="slug">
                                         {t('Adres (slug)')}
                                     </Label>
-                                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                        <span>
+                                    <div className="flex h-10 items-center overflow-hidden rounded-[10px] border border-[#D9D9DE] text-sm text-muted-foreground focus-within:ring-[3px] focus-within:ring-ring/30">
+                                        <span className="flex h-full items-center border-r border-[#D9D9DE] bg-muted/60 px-3 text-[13px]">
                                             /
                                             {type.url_prefix
                                                 ? `${type.url_prefix}/`
@@ -268,6 +286,7 @@ export default function ContentEdit({
                                         </span>
                                         <Input
                                             id="slug"
+                                            className="h-full flex-1 rounded-none border-0 shadow-none focus-visible:ring-0"
                                             value={form.data.slug}
                                             placeholder={t(
                                                 'generowany z tytułu',
@@ -315,8 +334,13 @@ export default function ContentEdit({
                             <Card className="gap-4">
                                 <CardHeader>
                                     <CardTitle className="text-base">
-                                        {t('Treść')}
+                                        {t('Treść strony')}
                                     </CardTitle>
+                                    <p className="text-[13px] text-muted-foreground">
+                                        {t(
+                                            'Pisz tutaj albo otwórz edytor wizualny, aby zbudować układ bez kodu.',
+                                        )}
+                                    </p>
                                 </CardHeader>
                                 <CardContent>
                                     {content?.has_builder ? (
@@ -552,17 +576,29 @@ export default function ContentEdit({
                                             </button>
                                         </div>
                                     )}
-                                    <Button
+                                    <button
                                         type="button"
-                                        variant="outline"
-                                        size="sm"
                                         onClick={() => setPickingFeatured(true)}
+                                        className={cn(
+                                            'flex w-full flex-col items-center justify-center gap-2 rounded-xl border-[1.5px] border-dashed border-[#C9C9D0] bg-[#FAFAFB] text-[13px] text-muted-foreground hover:bg-muted/60',
+                                            featured ? 'h-10 flex-row' : 'h-36',
+                                        )}
                                     >
-                                        <ImagePlus />{' '}
+                                        <ImagePlus
+                                            className={
+                                                featured ? 'size-4' : 'size-7'
+                                            }
+                                            strokeWidth={1.5}
+                                        />
                                         {featured
                                             ? t('Zmień obraz')
-                                            : t('Wybierz obraz')}
-                                    </Button>
+                                            : t('Wybierz z biblioteki mediów')}
+                                    </button>
+                                    <p className="text-xs leading-relaxed text-muted-foreground">
+                                        {t(
+                                            'Obraz zostanie automatycznie skompresowany i zapisany jako WebP w rozmiarach zdefiniowanych w ustawieniach mediów.',
+                                        )}
+                                    </p>
                                     <MediaPicker
                                         open={pickingFeatured}
                                         onOpenChange={setPickingFeatured}
