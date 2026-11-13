@@ -41,7 +41,7 @@
             "group": "Kolory",
             "label": "Kolor główny",
             "type": "color",
-            "default": "#6d5bd0",
+            "default": "#111114",
             "css": "--lm-primary"
         },
         {
@@ -49,7 +49,7 @@
             "group": "Kolory",
             "label": "Kolor główny (ciemny, po najechaniu)",
             "type": "color",
-            "default": "#4b3fb0",
+            "default": "#000000",
             "css": "--lm-primary-dark"
         },
         {

@@ -4,8 +4,8 @@
  * Motyw może nadpisać tokeny w :root, bez kompilacji i bez Node na serwerze.
  */
 :root {
-    --lm-primary: #6d5bd0;
-    --lm-primary-dark: #4b3fb0;
+    --lm-primary: #111114;
+    --lm-primary-dark: #000000;
     --lm-text: #111114;
     --lm-muted-text: #62626c;
     --lm-bg: #ffffff;
@@ -187,6 +187,15 @@ a {
 }
 .lm-btn:hover {
     background: var(--lm-primary-dark);
+}
+.lm-bg-dark .lm-btn:not(.lm-btn-secondary),
+.lm-bg-brand .lm-btn:not(.lm-btn-secondary) {
+    background: #fff;
+    color: #111114;
+}
+.lm-bg-dark .lm-btn:not(.lm-btn-secondary):hover,
+.lm-bg-brand .lm-btn:not(.lm-btn-secondary):hover {
+    background: rgba(255, 255, 255, 0.85);
 }
 .lm-btn.lm-btn-secondary {
     background: transparent;

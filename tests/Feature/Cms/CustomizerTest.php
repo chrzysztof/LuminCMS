@@ -136,6 +136,6 @@ class CustomizerTest extends TestCase
         $this->actingAs($this->admin());
         $this->get('/cms/customize')->assertOk()->assertInertia(fn ($p) => $p
             ->component('customize/index')
-            ->has('tokens', 12)->where('previewUrl', url('/blog'))->where('values.primary', '#6d5bd0')->where('tokens.0.group', 'Kolory'));
+            ->has('tokens', 12)->where('previewUrl', url('/blog'))->where('values.primary', '#111114')->where('tokens.0.group', 'Kolory'));
     }
 }
