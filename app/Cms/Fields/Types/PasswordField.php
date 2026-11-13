@@ -7,8 +7,8 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
 
 /**
- * W odróżnieniu od ACF, które zapisuje hasło jawnym tekstem, Lumin szyfruje
- * wartość w bazie (Crypt) i odszyfrowuje ją przy odczycie w kodzie.
+ * Wartość jest szyfrowana w bazie (Crypt) i odszyfrowywana przy odczycie w kodzie,
+ * a nie zapisywana jawnym tekstem.
  */
 class PasswordField extends AbstractFieldType
 {

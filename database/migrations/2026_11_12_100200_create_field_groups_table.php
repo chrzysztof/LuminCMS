@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         // Grupy pól własnych. Definicje pól (także zagnieżdżone: repeater, flexible content)
-        // trzymane jako drzewo JSON, tak jak w eksporcie ACF, co ułatwia import i eksport.
+        // trzymane jako drzewo JSON, co ułatwia import i eksport.
         Schema::create('field_groups', function (Blueprint $table) {
             $table->id();
             $table->string('key', 80)->unique(); // np. group_oferta
