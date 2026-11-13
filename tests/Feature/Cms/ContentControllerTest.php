@@ -46,6 +46,29 @@ class ContentControllerTest extends TestCase
         ]);
     }
 
+    public function test_body_is_saved_sanitized_and_skipped_when_builder_project_exists(): void
+    {
+        $this->actingAs($this->user);
+        $type = ContentType::where('key', 'page')->firstOrFail();
+
+        $this->post('/cms/content/page', [
+            'title' => 'Z treścią', 'status' => 'draft', 'body' => '<p>Cześć</p><script>alert(1)</script>',
+            'fields' => ['podtytul' => 'x'],
+        ])->assertSessionHasNoErrors();
+
+        $c = Content::where('title', 'Z treścią')->firstOrFail();
+        $this->assertStringContainsString('<p>Cześć</p>', $c->html_cache);
+        $this->assertStringNotContainsString('script', $c->html_cache);
+
+        $c->update(['builder_data' => ['pages' => []], 'html_cache' => '<section>Builder</section>']);
+        $this->put("/cms/content/page/{$c->id}", [
+            'title' => 'Z treścią', 'status' => 'draft', 'body' => '<p>Nadpisane</p>',
+            'fields' => ['podtytul' => 'x'],
+        ])->assertSessionHasNoErrors();
+
+        $this->assertSame('<section>Builder</section>', $c->fresh()->html_cache);
+    }
+
     public function test_guests_are_redirected(): void
     {
         $this->get('/cms/content/page')->assertRedirect('/login');

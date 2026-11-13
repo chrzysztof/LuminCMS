@@ -10,6 +10,7 @@ import {
 import { useState } from 'react';
 import { FieldList } from '@/components/cms/fields';
 import { MediaPicker } from '@/components/cms/media-picker';
+import { WysiwygEditor } from '@/components/cms/wysiwyg-editor';
 import { SeoPanel, type SeoValues } from '@/components/cms/seo-panel';
 import { TermsPanel, type TaxonomyOption } from '@/components/cms/terms-panel';
 import { StatusBadge } from '@/components/cms/status-badge';
@@ -34,6 +35,8 @@ type ContentData = {
     slug: string;
     status: ContentStatus;
     excerpt: string | null;
+    body: string;
+    has_builder: boolean;
     parent_id: number | null;
     template: string;
     featured_media_id: number | null;
@@ -87,6 +90,7 @@ export default function ContentEdit({
         slug: content?.slug ?? '',
         status: content?.status ?? ('draft' as ContentStatus),
         excerpt: content?.excerpt ?? '',
+        body: content?.body ?? '',
         parent_id: content?.parent_id ?? (null as number | null),
         featured_media_id:
             content?.featured_media_id ?? (null as number | null),
@@ -306,6 +310,34 @@ export default function ContentEdit({
                                 )}
                             </CardContent>
                         </Card>
+
+                        {supports('editor') && (
+                            <Card className="gap-4">
+                                <CardHeader>
+                                    <CardTitle className="text-base">
+                                        {t('Treść')}
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    {content?.has_builder ? (
+                                        <p className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
+                                            {t(
+                                                'Treść tej strony jest edytowana w edytorze wizualnym.',
+                                            )}
+                                        </p>
+                                    ) : (
+                                        <WysiwygEditor
+                                            id="body"
+                                            value={form.data.body}
+                                            onChange={(html) =>
+                                                form.setData('body', html)
+                                            }
+                                            minHeight={320}
+                                        />
+                                    )}
+                                </CardContent>
+                            </Card>
+                        )}
 
                         {renderGroups('after_title')}
                         {renderGroups('normal')}
