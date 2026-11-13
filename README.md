@@ -7,7 +7,7 @@ Lumin is built on Laravel 13 with a React admin panel and server-rendered public
 ## Highlights
 
 - **Content types and taxonomies** — pages and posts out of the box, plus your own types and taxonomies.
-- **Custom fields** — a field-group builder with 36 planned field types (35 available today, including Link and Page Link, including Repeater and OpenStreetMap maps), conditional logic, location rules and JSON import/export.
+- **Custom fields** — a field-group builder with 35 field types (including Repeater, Group, Flexible Content, Clone, Gallery, Relationship, Link and OpenStreetMap maps), conditional logic, location rules and JSON import/export. Everything is in the core.
 - **Visual editor** — a drag-and-drop page builder (GrapesJS) that outputs clean, semantic HTML with no inline styles or generated IDs.
 - **Media library** — automatic WebP conversion, configurable image sizes, focal points, per-size crops and responsive `<picture>` output.
 - **SEO built in** — title templates, meta descriptions, canonical URLs, robots directives, Open Graph, Twitter cards, JSON-LD, `sitemap.xml`, `robots.txt` and a snippet preview with focus-keyword checks.
@@ -15,14 +15,15 @@ Lumin is built on Laravel 13 with a React admin panel and server-rendered public
 - **Menus** — nested menus with drag-and-drop reordering (drop before, after or inside an item; subtrees move together), mega menus and theme locations.
 - **Redirects and 404 handling** — 301/302/307/308/410 redirects, automatic redirects when a page URL changes, a 404 monitor and a customizable 404 page.
 - **Site settings** — Google Analytics 4, Tag Manager and Meta Pixel with a cookie-consent banner, social profiles, custom head and footer code.
+- **Analytics dashboard widget** _(optional)_ — visits, sessions and top pages from Google Analytics 4 on the admin dashboard. It needs a Google service account with Viewer access to your GA4 property (Settings → Site); the key is stored encrypted and never sent back to the browser.
 - **Users and roles** — the familiar five roles (Administrator, Editor, Author, Contributor, Subscriber) plus two roles for external SEO agencies (SEO Manager, SEO Specialist) with the same capability model: contributors submit posts for review, authors publish their own, editors manage all content, administrators manage settings and users. Includes a user manager, last-administrator protection, content reassignment on delete and configurable public registration.
 - **Scheduled publishing** — pick a future date and the content goes live automatically (a per-minute scheduler command; one cron entry: `* * * * * php artisan schedule:run`).
-- **Shortcodes and JSON importer** _(planned)_.
+- **Shortcodes and JSON import/export** — built-in shortcodes plus your own, and a transactional importer with dry run (see below).
 - **Fast by default** — server-rendered Blade templates on the public site, cached builder output, a lightweight front end.
 
 ## Status
 
-Early development. The foundation, admin panel, media library, visual editor and field-group builder are working; the SEO module, redirects, site settings and user roles are working; the remaining field types are on the roadmap.
+**v0.1.0 — first public release.** The core is feature-complete for building a brochure or blog site: content types and taxonomies, the visual editor, custom fields, media, SEO, menus, redirects, themes, users and roles, the installer and the JSON importer. Expect rough edges and API changes before 1.0. See [`CHANGELOG.md`](CHANGELOG.md) for what is in the release.
 
 ## Admin languages
 
