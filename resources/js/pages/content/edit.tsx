@@ -306,28 +306,6 @@ export default function ContentEdit({
                                         </p>
                                     )}
                                 </div>
-                                {supports('excerpt') && (
-                                    <div className="grid gap-1.5">
-                                        <Label htmlFor="excerpt">
-                                            {t('Zajawka')}
-                                        </Label>
-                                        <textarea
-                                            id="excerpt"
-                                            rows={3}
-                                            value={form.data.excerpt}
-                                            onChange={(e) =>
-                                                form.setData(
-                                                    'excerpt',
-                                                    e.target.value,
-                                                )
-                                            }
-                                            className={cn(
-                                                nativeClass,
-                                                'h-auto py-2',
-                                            )}
-                                        />
-                                    </div>
-                                )}
                             </CardContent>
                         </Card>
 
@@ -336,7 +314,9 @@ export default function ContentEdit({
                                 <CardHeader>
                                     <div className="flex flex-wrap items-center justify-between gap-3">
                                         <CardTitle className="text-base">
-                                            {t('Treść strony')}
+                                            {type.hierarchical
+                                                ? t('Treść strony')
+                                                : t('Treść')}
                                         </CardTitle>
                                         {supports('builder') && content && (
                                             <div
@@ -441,6 +421,38 @@ export default function ContentEdit({
                                             minHeight={320}
                                         />
                                     )}
+                                </CardContent>
+                            </Card>
+                        )}
+
+                        {supports('excerpt') && (
+                            <Card className="gap-4">
+                                <CardHeader>
+                                    <CardTitle className="text-base">
+                                        {t('Zajawka')}
+                                    </CardTitle>
+                                    <p className="text-[13px] text-muted-foreground">
+                                        {t(
+                                            'Krótki opis na listach wpisów i w wynikach wyszukiwania.',
+                                        )}
+                                    </p>
+                                </CardHeader>
+                                <CardContent>
+                                    <textarea
+                                        id="excerpt"
+                                        rows={4}
+                                        value={form.data.excerpt}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                'excerpt',
+                                                e.target.value,
+                                            )
+                                        }
+                                        className={cn(
+                                            nativeClass,
+                                            'h-auto py-2',
+                                        )}
+                                    />
                                 </CardContent>
                             </Card>
                         )}

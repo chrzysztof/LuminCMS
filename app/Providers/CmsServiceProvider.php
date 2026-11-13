@@ -117,7 +117,7 @@ class CmsServiceProvider extends ServiceProvider
             'theme_customizer' => ['values' => []],
             'users' => ['default_role' => 'subscriber', 'registration_enabled' => false],
             'site' => [
-                'ga_id' => '', 'gtm_id' => '', 'pixel_id' => '',
+                'ga_id' => '', 'gtm_id' => '', 'pixel_id' => '', 'ga_property_id' => '', 'ga_service_account' => '',
                 'consent_required' => true, 'privacy_url' => '', 'track_logged_in' => false,
                 'facebook' => '', 'instagram' => '', 'x' => '', 'youtube' => '', 'linkedin' => '', 'tiktok' => '',
                 'custom_head' => '', 'custom_body_end' => '',

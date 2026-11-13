@@ -12,6 +12,7 @@ type Site = {
     ga_id: string;
     gtm_id: string;
     pixel_id: string;
+    ga_property_id: string;
     consent_required: boolean;
     privacy_url: string;
     track_logged_in: boolean;
@@ -37,8 +38,16 @@ const social: [keyof Site, string, string][] = [
     ['tiktok', 'TikTok', 'https://tiktok.com/@…'],
 ];
 
-export default function SiteSettings({ site }: { site: Site }) {
+export default function SiteSettings({
+    site,
+    ga,
+}: {
+    site: Site;
+    ga: { connected: boolean; email: string | null };
+}) {
     const [data, setData] = useState<Site>(site);
+    const [secret, setSecret] = useState('');
+    const [disconnect, setDisconnect] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [processing, setProcessing] = useState(false);
     const set = <K extends keyof Site>(key: K, value: Site[K]) =>
@@ -48,13 +57,21 @@ export default function SiteSettings({ site }: { site: Site }) {
         e.preventDefault();
         router.put(
             cmsUrl.siteSettings,
-            data as unknown as Record<string, never>,
+            {
+                ...data,
+                ga_service_account: secret,
+                ga_disconnect: disconnect,
+            } as unknown as Record<string, never>,
             {
                 preserveScroll: true,
                 onStart: () => setProcessing(true),
                 onFinish: () => setProcessing(false),
                 onError: (errs) => setErrors(errs),
-                onSuccess: () => setErrors({}),
+                onSuccess: () => {
+                    setErrors({});
+                    setSecret('');
+                    setDisconnect(false);
+                },
             },
         );
     };
@@ -170,6 +187,79 @@ export default function SiteSettings({ site }: { site: Site }) {
                                     'Domyślnie wyłączone, żeby Twoja praca w panelu nie zaburzała statystyk.',
                                 ),
                             )}
+                        </CardContent>
+                    </Card>
+
+                    <Card className="gap-4">
+                        <CardHeader>
+                            <CardTitle className="text-base">
+                                {t('Statystyki odwiedzin w pulpicie')}
+                            </CardTitle>
+                            <p className="text-[13px] text-muted-foreground">
+                                {t(
+                                    'Opcjonalne. Pokazuje odwiedziny z Google Analytics 4 na pulpicie. Wymaga konta usługi Google z dostępem „Wyświetlający” do właściwości.',
+                                )}
+                            </p>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            {text(
+                                'ga_property_id',
+                                t('ID właściwości GA4'),
+                                '123456789',
+                                t(
+                                    'Same cyfry: Administracja → Ustawienia właściwości.',
+                                ),
+                            )}
+                            <div className="grid gap-1.5">
+                                <Label htmlFor="ga-secret">
+                                    {t('Klucz konta usługi (JSON)')}
+                                </Label>
+                                {ga.connected && !disconnect && (
+                                    <p className="text-xs text-muted-foreground">
+                                        {t('Połączono jako {email}.', {
+                                            email: ga.email ?? '',
+                                        })}{' '}
+                                        <button
+                                            type="button"
+                                            className="text-destructive underline"
+                                            onClick={() => setDisconnect(true)}
+                                        >
+                                            {t('Rozłącz')}
+                                        </button>
+                                    </p>
+                                )}
+                                {disconnect && (
+                                    <p className="text-xs text-destructive">
+                                        {t(
+                                            'Klucz zostanie usunięty po zapisaniu.',
+                                        )}
+                                    </p>
+                                )}
+                                <textarea
+                                    id="ga-secret"
+                                    rows={4}
+                                    value={secret}
+                                    onChange={(e) => setSecret(e.target.value)}
+                                    placeholder={
+                                        ga.connected
+                                            ? t(
+                                                  'Wklej nowy klucz, aby go zastąpić',
+                                              )
+                                            : '{ "type": "service_account", … }'
+                                    }
+                                    className={nativeClass}
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    {t(
+                                        'Klucz jest szyfrowany w bazie i nie jest nigdy wyświetlany ponownie.',
+                                    )}
+                                </p>
+                                {errors.ga_service_account && (
+                                    <p className="text-xs text-destructive">
+                                        {errors.ga_service_account}
+                                    </p>
+                                )}
+                            </div>
                         </CardContent>
                     </Card>
 

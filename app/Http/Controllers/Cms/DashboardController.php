@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cms;
 
+use App\Cms\Analytics\GoogleAnalyticsReport;
 use App\Cms\Content\Content;
 use App\Cms\Media\Media;
 use App\Http\Controllers\Controller;
@@ -12,7 +13,7 @@ use Inertia\Response;
 
 class DashboardController extends Controller
 {
-    public function __invoke(Request $request): Response
+    public function __invoke(Request $request, GoogleAnalyticsReport $analytics): Response
     {
         $user = $request->user();
 
@@ -37,6 +38,7 @@ class DashboardController extends Controller
                 'created' => $count($rows, 'created_at', $m),
                 'published' => $rows->where('status', Content::STATUS_PUBLISHED)->filter(fn ($c) => $c->published_at?->isSameMonth($m))->count(),
             ])->values(),
+            'analytics' => $user->can('manage_options') && $analytics->isConfigured(),
             'new_30d' => $contents()->where('created_at', '>=', now()->subDays(30))->count(),
             'quick' => [
                 'pages' => $user->can('edit_pages'),

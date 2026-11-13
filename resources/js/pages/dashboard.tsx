@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { StatusBadge } from '@/components/cms/status-badge';
+import { AnalyticsWidget } from '@/components/cms/analytics-widget';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cmsUrl } from '@/lib/cms-urls';
 import { formatDate } from '@/lib/format';
@@ -26,6 +27,7 @@ type Props = {
     };
     activity: { month: string; created: number; published: number }[];
     new_30d: number;
+    analytics: boolean;
     quick: {
         pages: boolean;
         posts: boolean;
@@ -155,6 +157,7 @@ export default function Dashboard({
     stats,
     activity,
     new_30d,
+    analytics,
     quick,
     recent,
 }: Props) {
@@ -319,6 +322,8 @@ export default function Dashboard({
                         </CardContent>
                     </Card>
                 </div>
+
+                {analytics && <AnalyticsWidget />}
 
                 <Card>
                     <CardHeader>

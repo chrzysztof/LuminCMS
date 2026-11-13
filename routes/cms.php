@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Cms\AnalyticsController;
 use App\Http\Controllers\Cms\BlockController;
 use App\Http\Controllers\Cms\BuilderController;
 use App\Http\Controllers\Cms\ContentController;
@@ -49,6 +50,7 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
         Route::get('settings/seo', [SeoSettingsController::class, 'edit'])->name('settings.seo');
         Route::put('settings/seo', [SeoSettingsController::class, 'update'])->name('settings.seo.update');
     });
+    Route::get('analytics', AnalyticsController::class)->name('analytics')->middleware('can:manage_options');
     Route::middleware('can:manage_options')->group(function () {
         Route::get('settings/site', [SiteSettingsController::class, 'edit'])->name('settings.site');
         Route::put('settings/site', [SiteSettingsController::class, 'update'])->name('settings.site.update');
