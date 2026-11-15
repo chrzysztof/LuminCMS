@@ -1,14 +1,17 @@
 @extends('theme::layout')
 
 @section('content')
-    @if ($html !== '')
+    @if ($content->builder_data)
         {!! $html !!}
     @else
-        <article class="lm-prose">
-            <h1>{{ $content->title }}</h1>
-            @if ($content->excerpt)
-                <p>{{ $content->excerpt }}</p>
-            @endif
+        <article class="lm-article">
+            <header class="lm-article__header">
+                <h1>{{ $content->title }}</h1>
+                @if ($content->excerpt)
+                    <p class="lm-article__lead">{{ $content->excerpt }}</p>
+                @endif
+            </header>
+            <div class="lm-article__body">{!! $html !!}</div>
         </article>
     @endif
 @endsection
