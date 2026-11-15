@@ -1,3 +1,4 @@
+import { ColorSwatch } from '@/components/cms/color-swatch';
 import { File as FileIcon, ImagePlus, X } from 'lucide-react';
 import { useState } from 'react';
 import { FlexibleControl } from '@/components/cms/flexible-control';
@@ -429,13 +430,7 @@ function Control(props: ControlProps) {
         case 'color_picker':
             return (
                 <div className="flex items-center gap-2">
-                    <input
-                        id={id}
-                        type="color"
-                        className="h-9 w-12 cursor-pointer rounded border bg-transparent p-1"
-                        value={/^#[0-9a-f]{6}$/i.test(text) ? text : '#000000'}
-                        onChange={(e) => onChange(e.target.value)}
-                    />
+                    <ColorSwatch id={id} value={text} onChange={onChange} />
                     <Input
                         value={text}
                         placeholder="#000000"

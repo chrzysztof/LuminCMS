@@ -6,9 +6,9 @@ export default function Library() {
     return (
         <>
             <Head title={t('Media')} />
-            <div className="flex h-[calc(100svh-4rem)] flex-1 flex-col gap-4 p-4 md:p-6">
+            <div className="flex h-[calc(100svh-4rem)] flex-1 flex-col gap-4 p-4 md:px-6 md:pt-3 md:pb-6">
                 <div>
-                    <h1 className="text-2xl font-semibold tracking-tight">
+                    <h1 className="text-[26px] leading-tight font-bold tracking-tight">
                         {t('Media')}
                     </h1>
                     <p className="text-sm text-muted-foreground">

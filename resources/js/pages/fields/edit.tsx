@@ -167,7 +167,7 @@ export default function FieldGroupEdit({
             />
             <form
                 onSubmit={submit}
-                className="flex flex-1 flex-col gap-5 p-4 md:p-6"
+                className="flex flex-1 flex-col gap-5 p-4 md:px-6 md:pt-3 md:pb-6"
             >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
@@ -179,7 +179,7 @@ export default function FieldGroupEdit({
                                 <ArrowLeft />
                             </Link>
                         </Button>
-                        <h1 className="text-2xl font-semibold tracking-tight">
+                        <h1 className="text-[26px] leading-tight font-bold tracking-tight">
                             {group
                                 ? t('Edytuj grupę pól')
                                 : t('Nowa grupa pól')}

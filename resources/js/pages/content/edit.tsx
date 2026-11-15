@@ -182,7 +182,7 @@ export default function ContentEdit({
             />
             <form
                 onSubmit={submit}
-                className="flex flex-1 flex-col gap-5 p-4 md:p-6 lg:px-8 [&_[data-slot=card-content]]:px-5 [&_[data-slot=card-header]]:px-5 [&_[data-slot=card-title]]:text-base [&_[data-slot=card]]:gap-4 [&_[data-slot=card]]:rounded-[14px] [&_[data-slot=card]]:border-[#E7E7EA] [&_[data-slot=card]]:py-5 [&_[data-slot=card]]:shadow-none [&_input:not([type=checkbox]):not([type=radio]):not([type=color])]:h-10 [&_input:not([type=checkbox]):not([type=radio]):not([type=color])]:rounded-[10px] [&_select]:h-10 [&_select]:rounded-[10px] [&_select]:border-[#D9D9DE] [&_textarea]:rounded-[10px]"
+                className="flex flex-1 flex-col gap-5 p-4 md:px-6 md:pt-3 md:pb-6 lg:px-8 [&_[data-slot=card-content]]:px-5 [&_[data-slot=card-header]]:px-5 [&_[data-slot=card-title]]:text-base [&_[data-slot=card]]:gap-4 [&_[data-slot=card]]:rounded-[14px] [&_[data-slot=card]]:border-[#E7E7EA] [&_[data-slot=card]]:py-5 [&_[data-slot=card]]:shadow-none [&_input:not([type=checkbox]):not([type=radio]):not([type=color])]:h-10 [&_input:not([type=checkbox]):not([type=radio]):not([type=color])]:rounded-[10px] [&_select]:h-10 [&_select]:rounded-[10px] [&_select]:border-[#D9D9DE] [&_textarea]:rounded-[10px]"
             >
                 <div className="flex flex-wrap items-center justify-between gap-4">
                     <div>

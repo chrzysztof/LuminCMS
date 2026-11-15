@@ -91,9 +91,9 @@ export default function ImportPage({
     return (
         <>
             <Head title={t('Import i eksport')} />
-            <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
+            <div className="flex flex-1 flex-col gap-5 p-4 md:px-6 md:pt-3 md:pb-6">
                 <div>
-                    <h1 className="text-2xl font-semibold tracking-tight">
+                    <h1 className="text-[26px] leading-tight font-bold tracking-tight">
                         {t('Import i eksport')}
                     </h1>
                     <p className="max-w-3xl text-sm text-muted-foreground">

@@ -188,10 +188,10 @@ export default function TaxonomiesIndex({
     return (
         <>
             <Head title={t('Kategorie i tagi')} />
-            <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
+            <div className="flex flex-1 flex-col gap-5 p-4 md:px-6 md:pt-3 md:pb-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                        <h1 className="text-2xl font-semibold tracking-tight">
+                        <h1 className="text-[26px] leading-tight font-bold tracking-tight">
                             {t('Kategorie i tagi')}
                         </h1>
                         <p className="text-sm text-muted-foreground">

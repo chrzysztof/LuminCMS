@@ -1,3 +1,4 @@
+import { ColorSwatch } from '@/components/cms/color-swatch';
 import { Head, router } from '@inertiajs/react';
 import { Loader2, Monitor, RotateCcw, Smartphone, Tablet } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -156,18 +157,14 @@ export default function CustomizeIndex({
 
                                         {tk.type === 'color' && (
                                             <div className="flex gap-2">
-                                                <input
+                                                <ColorSwatch
                                                     id={`tk-${tk.key}`}
-                                                    type="color"
-                                                    className="h-9 w-12 shrink-0 cursor-pointer rounded-md border bg-transparent p-1"
+                                                    label={t(tk.label)}
                                                     value={String(
                                                         values[tk.key],
                                                     )}
-                                                    onChange={(e) =>
-                                                        set(
-                                                            tk.key,
-                                                            e.target.value,
-                                                        )
+                                                    onChange={(hex) =>
+                                                        set(tk.key, hex)
                                                     }
                                                 />
                                                 <Input
