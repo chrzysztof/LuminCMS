@@ -82,7 +82,7 @@ export default function SeoSettings({
             <Head title={t('Ustawienia SEO')} />
             <form
                 onSubmit={submit}
-                className="flex flex-1 flex-col gap-5 p-4 md:px-6 md:pt-3 md:pb-6"
+                className="flex flex-1 flex-col gap-5 p-4 md:px-6 md:pt-5 md:pb-6"
             >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>

@@ -28,6 +28,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { cmsUrl } from '@/lib/cms-urls';
@@ -127,12 +128,17 @@ export function AppSidebar() {
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
                 <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
+                    <SidebarMenuItem className="flex items-center gap-1">
+                        <SidebarMenuButton
+                            size="lg"
+                            asChild
+                            className="flex-1 group-data-[collapsible=icon]:hidden"
+                        >
                             <Link href={dashboard()} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
+                        <SidebarTrigger className="hidden shrink-0 md:inline-flex" />
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>

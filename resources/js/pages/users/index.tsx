@@ -54,7 +54,7 @@ export default function UsersIndex({
     return (
         <>
             <Head title={t('Użytkownicy')} />
-            <div className="flex flex-1 flex-col gap-5 p-4 md:px-6 md:pt-3 md:pb-6">
+            <div className="flex flex-1 flex-col gap-5 p-4 md:px-6 md:pt-5 md:pb-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                         <h1 className="text-[26px] leading-tight font-bold tracking-tight">
