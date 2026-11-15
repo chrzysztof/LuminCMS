@@ -1,5 +1,5 @@
-import { Link, router, usePage } from '@inertiajs/react';
-import { Check, LogOut, Settings } from 'lucide-react';
+import { Link, router } from '@inertiajs/react';
+import { LogOut, Settings } from 'lucide-react';
 import {
     DropdownMenuGroup,
     DropdownMenuItem,
@@ -19,10 +19,6 @@ type Props = {
 
 export function UserMenuContent({ user }: Props) {
     const cleanup = useMobileNavigation();
-    const { locale, locales } = usePage<{
-        locale: string;
-        locales: Record<string, string>;
-    }>().props;
 
     const handleLogout = () => {
         cleanup();
@@ -49,28 +45,6 @@ export function UserMenuContent({ user }: Props) {
                         {t('Settings')}
                     </Link>
                 </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-                <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
-                    {t('Language')}
-                </DropdownMenuLabel>
-                {Object.entries(locales).map(([code, name]) => (
-                    <DropdownMenuItem
-                        key={code}
-                        className="cursor-pointer"
-                        onSelect={() =>
-                            router.post(
-                                '/locale',
-                                { locale: code },
-                                { onSuccess: () => window.location.reload() },
-                            )
-                        }
-                    >
-                        <span className="flex-1">{name}</span>
-                        {code === locale && <Check className="size-4" />}
-                    </DropdownMenuItem>
-                ))}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>

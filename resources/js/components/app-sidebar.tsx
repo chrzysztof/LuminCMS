@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
     Boxes,
+    ExternalLink,
     ShieldCheck,
     Users,
     ArrowRightLeft,
@@ -53,6 +54,12 @@ export function AppSidebar() {
 
     const mainItems: NavItem[] = [
         { title: t('Pulpit'), href: dashboard(), icon: LayoutGrid },
+        {
+            title: t('Podgląd strony'),
+            href: '/',
+            icon: ExternalLink,
+            external: true,
+        },
     ];
     const structureItems: NavItem[] = [
         ...(can('manage_options')
@@ -176,22 +183,6 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
-                <div className="rounded-xl bg-primary p-3 text-primary-foreground group-data-[collapsible=icon]:hidden">
-                    <p className="text-sm font-semibold">
-                        {t('Twoja witryna')}
-                    </p>
-                    <p className="mt-0.5 text-xs opacity-70">
-                        {t('Zobacz, jak wygląda dla odwiedzających.')}
-                    </p>
-                    <a
-                        href="/"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-3 flex h-8 items-center justify-center rounded-md bg-primary-foreground/15 text-xs font-medium transition-colors hover:bg-primary-foreground/25"
-                    >
-                        {t('Zobacz witrynę')}
-                    </a>
-                </div>
                 <NavUser />
             </SidebarFooter>
         </Sidebar>
