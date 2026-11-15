@@ -1,9 +1,11 @@
+import { currentLocale } from '@/lib/i18n';
+
 export function formatDate(iso: string | null | undefined): string {
     if (!iso) {
         return '';
     }
 
-    return new Intl.DateTimeFormat('pl-PL', {
+    return new Intl.DateTimeFormat(currentLocale(), {
         day: 'numeric',
         month: 'short',
         year: 'numeric',

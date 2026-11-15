@@ -4,6 +4,17 @@
 
 Lumin is built on Laravel 13 with a React admin panel and server-rendered public pages. It aims to give you everything a typical production site needs out of the box — structured content, flexible custom fields, a visual page editor, a media library and SEO tooling — without assembling a stack of third-party plugins first.
 
+## Screenshots
+
+![The default theme: a starter home page built in the visual editor](docs/screenshots/site-home.png)
+
+|                                                                        |                                                                        |
+| ---------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| ![Dashboard](docs/screenshots/dashboard.png)                           | ![Content editor with a rich-text field](docs/screenshots/editor.png)  |
+| **Dashboard** — stats, activity, quick actions and optional GA4 report | **Content editor** — text or visual mode, SEO, custom fields, excerpt  |
+| ![Visual page builder](docs/screenshots/builder.png)                   | ![Theme customizer with live preview](docs/screenshots/customizer.png) |
+| **Visual builder** — drag-and-drop blocks that output clean HTML       | **Customizer** — design tokens with a live, device-sized preview       |
+
 ## Highlights
 
 - **Content types and taxonomies** — pages and posts out of the box, plus your own types and taxonomies.
