@@ -8,17 +8,14 @@ import {
     Globe,
     ListTree,
     Search,
-    FileText,
     Image as ImageIcon,
     LayoutGrid,
-    Newspaper,
     Tags,
     Code2,
     LayoutTemplate,
     Palette,
     Paintbrush,
     Menu as MenuIcon,
-    type LucideIcon,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
@@ -38,11 +35,7 @@ import { useCan } from '@/lib/can';
 import type { NavItem } from '@/types';
 import type { ContentTypeInfo } from '@/types/cms';
 import { t } from '@/lib/i18n';
-
-const typeIcons: Record<string, LucideIcon> = {
-    'file-text': FileText,
-    newspaper: Newspaper,
-};
+import { typeIcons } from '@/lib/type-icons';
 
 export function AppSidebar() {
     const { contentTypes = [] } = usePage<{
@@ -61,6 +54,15 @@ export function AppSidebar() {
         { title: t('Pulpit'), href: dashboard(), icon: LayoutGrid },
     ];
     const structureItems: NavItem[] = [
+        ...(can('manage_options')
+            ? [
+                  {
+                      title: t('Typy treści'),
+                      href: cmsUrl.contentTypes,
+                      icon: Boxes,
+                  },
+              ]
+            : []),
         { title: t('Pola własne'), href: cmsUrl.fieldIndex, icon: ListTree },
         {
             title: t('Import i eksport'),

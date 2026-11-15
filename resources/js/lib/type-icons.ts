@@ -1,0 +1,41 @@
+import {
+    BookOpen,
+    Boxes,
+    Briefcase,
+    CalendarDays,
+    FileText,
+    GraduationCap,
+    House,
+    Image as ImageIcon,
+    Mail,
+    MapPin,
+    Megaphone,
+    Newspaper,
+    Package,
+    ShoppingBag,
+    Star,
+    Users,
+    Utensils,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
+/** Ikony dostępne dla typów treści (klucz zapisywany w bazie). */
+export const typeIcons: Record<string, LucideIcon> = {
+    'file-text': FileText,
+    newspaper: Newspaper,
+    briefcase: Briefcase,
+    calendar: CalendarDays,
+    'shopping-bag': ShoppingBag,
+    users: Users,
+    image: ImageIcon,
+    'book-open': BookOpen,
+    star: Star,
+    home: House,
+    mail: Mail,
+    'map-pin': MapPin,
+    megaphone: Megaphone,
+    'graduation-cap': GraduationCap,
+    utensils: Utensils,
+    package: Package,
+    boxes: Boxes,
+};

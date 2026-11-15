@@ -150,6 +150,7 @@ class Importer
                 'supports' => ['nullable', 'array'],
                 'supports.*' => ['string', Rule::in(self::SUPPORTS)],
                 'url_prefix' => ['nullable', 'string', 'max:50', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/'],
+                'capability_type' => ['nullable', Rule::in(['post', 'page'])],
             ]);
 
             if (! $this->passes($v, $where)) {
@@ -167,7 +168,8 @@ class Importer
                 continue;
             }
 
-            $prefix = $d['url_prefix'] ?? null;
+            // Nowy typ bez przedrostka dostaje domyślny (klucz), żeby jego adresy nie wchodziły w drogę stronom.
+            $prefix = $d['url_prefix'] ?? ($type ? null : str_replace('_', '-', $d['key']));
 
             if ($prefix !== null && ($this->prefixTaken($prefix, $type?->id))) {
                 $this->report->error($where, __('Ten przedrostek adresu jest zajęty.'));
@@ -182,6 +184,7 @@ class Importer
                 'hierarchical' => (bool) ($d['hierarchical'] ?? false),
                 'supports' => array_values($d['supports'] ?? ['title', 'editor', 'seo']),
                 'url_prefix' => $prefix,
+                'capability_type' => $d['capability_type'] ?? (($d['hierarchical'] ?? false) ? 'page' : 'post'),
             ];
 
             if (! $type) {

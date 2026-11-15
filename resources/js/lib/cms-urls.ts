@@ -40,6 +40,8 @@ export const cmsUrl = {
     menus: '/cms/menus',
     menu: (id: number) => `/cms/menus/${id}`,
     menuShow: (id: number) => `/cms/menus?menu=${id}`,
+    contentTypes: '/cms/content-types',
+    contentType: (key: string) => `/cms/content-types/${key}`,
     taxonomies: '/cms/taxonomies',
     taxonomy: (key: string) => `/cms/taxonomies/${key}`,
     termStore: (key: string) => `/cms/taxonomies/${key}/terms`,

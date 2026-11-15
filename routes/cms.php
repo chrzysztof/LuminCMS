@@ -4,6 +4,7 @@ use App\Http\Controllers\Cms\AnalyticsController;
 use App\Http\Controllers\Cms\BlockController;
 use App\Http\Controllers\Cms\BuilderController;
 use App\Http\Controllers\Cms\ContentController;
+use App\Http\Controllers\Cms\ContentTypeController;
 use App\Http\Controllers\Cms\CustomizeController;
 use App\Http\Controllers\Cms\FieldGroupController;
 use App\Http\Controllers\Cms\ImportExportController;
@@ -105,6 +106,10 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
         Route::delete('taxonomies/{taxonomy:key}/terms/{term}', [TaxonomyController::class, 'destroyTerm'])->name('taxonomies.terms.destroy');
     });
     Route::middleware('can:manage_options')->group(function () {
+        Route::get('content-types', [ContentTypeController::class, 'index'])->name('content-types.index');
+        Route::post('content-types', [ContentTypeController::class, 'store'])->name('content-types.store');
+        Route::put('content-types/{contentType:key}', [ContentTypeController::class, 'update'])->name('content-types.update');
+        Route::delete('content-types/{contentType:key}', [ContentTypeController::class, 'destroy'])->name('content-types.destroy');
         Route::post('taxonomies', [TaxonomyController::class, 'store'])->name('taxonomies.store');
         Route::put('taxonomies/{taxonomy:key}', [TaxonomyController::class, 'update'])->name('taxonomies.update');
         Route::delete('taxonomies/{taxonomy:key}', [TaxonomyController::class, 'destroy'])->name('taxonomies.destroy');

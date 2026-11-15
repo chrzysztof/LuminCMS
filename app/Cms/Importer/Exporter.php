@@ -23,6 +23,7 @@ class Exporter
             $out['content_types'] = ContentType::where('is_system', false)->orderBy('id')->get()->map(fn (ContentType $t) => array_filter([
                 'key' => $t->key, 'label' => $t->label, 'label_plural' => $t->label_plural, 'icon' => $t->icon,
                 'hierarchical' => $t->hierarchical, 'supports' => $t->supports ?? [], 'url_prefix' => $t->url_prefix,
+                'capability_type' => $t->capability_type,
             ], fn ($v) => $v !== null))->all();
         }
 
