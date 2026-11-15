@@ -2,6 +2,28 @@
 
 All notable changes to Lumin CMS are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/) (while below 1.0, minor releases may include breaking changes).
 
+## [0.2.0] - 2026-11-16
+
+### Added
+
+- Content types can be created, edited and deleted in the admin (Structure → Content types) and are imported and exported with their URL prefix and capability type.
+- Optional Google Analytics 4 widget on the dashboard (service account, key stored encrypted).
+- Hexadecimal colour picker for colour fields and the theme customizer.
+- Passkey sign-in button below the login form.
+- Screenshots in the README.
+
+### Changed
+
+- New default theme look: sticky header, footer, hero, cards, article and archive styles. Posts and text pages now show their title, date, categories and excerpt.
+- The starter home page is built in the visual editor (hero, three cards, call to action) and translated into every admin language.
+- Page editor reworked: text (TipTap) or visual editing per entry, excerpt under the content, headings moved up.
+- Admin sidebar: collapse button next to the logo, "View site" link under Dashboard instead of the banner; the language picker lives in Settings → Appearance only.
+- The login form sits on a white card.
+
+### Fixed
+
+- 404 and 410 pages are translated; dates in the panel follow the panel language.
+
 ## [0.1.0] - 2026-11-13
 
 First public release. Download `lumin-cms-0.1.0.zip` from the GitHub release: it ships with `vendor/` and the built front end, so Composer and Node.js are not needed on the server.
