@@ -6,7 +6,7 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ### Added
 
-- Ready-made headers and footers: four headers (classic with button, with contact bar, centered, dark) and four footers (four columns, with call to action, simple, dark centered) in Appearance → Parts, with live previews. A chosen design opens in the visual editor, so everything in it can be changed. New theme blocks: site logo, navigation menu, social links and copyright. Themes declare designs in `part_presets` and `parts/{slot}-{key}.html`.
+- Ready-made headers and footers: five headers (logo left and menu right, classic with button, with contact bar, centered, dark) and four footers (four columns, with call to action, simple, dark centered) in Appearance → Parts, with live previews. A chosen design opens in the visual editor, so everything in it can be changed. New theme blocks: site logo, navigation menu, social links and copyright. Themes declare designs in `part_presets` and `parts/{slot}-{key}.html`.
 - The visual editor canvas now loads the active theme's stylesheets, so pages look the same as on the public site.
 - Site identity: choose a logo and a favicon in SEO settings. The logo replaces the site name in the theme header, the favicon (also used as Apple touch icon) is added to every page, the logo is included in structured data and a new `[site_logo]` shortcode places it in header parts and content.
 - Visual editor: save any selected element as a reusable block ("Save as block"). Saved blocks appear in a "My blocks" category on every page and can be managed (deleted) from the block panel.

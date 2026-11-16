@@ -166,6 +166,12 @@
     "part_presets": [
         {
             "slot": "header",
+            "key": "simple",
+            "label": "Logo po lewej, menu po prawej",
+            "description": "Najprostszy, klasyczny układ: logo z lewej strony, menu z prawej."
+        },
+        {
+            "slot": "header",
             "key": "classic",
             "label": "Klasyczny z przyciskiem",
             "description": "Logo, menu pośrodku i przycisk kontaktowy po prawej."

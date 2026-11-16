@@ -27,11 +27,11 @@ class PartPresetsTest extends TestCase
         ]);
     }
 
-    public function test_theme_offers_four_headers_and_four_footers(): void
+    public function test_theme_offers_five_headers_and_four_footers(): void
     {
         $presets = app(Parts::class)->presets();
 
-        $this->assertCount(4, array_filter($presets, fn ($p) => $p['slot'] === 'header'));
+        $this->assertCount(5, array_filter($presets, fn ($p) => $p['slot'] === 'header'));
         $this->assertCount(4, array_filter($presets, fn ($p) => $p['slot'] === 'footer'));
         $this->assertNotNull(app(Parts::class)->presetHtml('header', 'classic'));
         $this->assertNull(app(Parts::class)->presetHtml('header', '../x'));
@@ -42,7 +42,7 @@ class PartPresetsTest extends TestCase
     {
         $this->actingAs(User::factory()->create());
 
-        $this->get('/cms/parts')->assertInertia(fn (Assert $p) => $p->component('parts/index')->has('presets', 8));
+        $this->get('/cms/parts')->assertInertia(fn (Assert $p) => $p->component('parts/index')->has('presets', 9));
 
         $response = $this->post('/cms/parts/presets', ['slot' => 'header', 'key' => 'dark']);
         $part = Content::where('title', 'Ciemny')->firstOrFail();
