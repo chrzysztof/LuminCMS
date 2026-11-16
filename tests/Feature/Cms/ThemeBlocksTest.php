@@ -47,7 +47,7 @@ class ThemeBlocksTest extends TestCase
         app()->forgetInstance(BlockRegistry::class);
         $registry = app(BlockRegistry::class);
 
-        $this->assertSame(['hero-banner', 'testimonials'], array_keys($registry->all()));
+        $this->assertSame(['hero-banner', 'nav-menu', 'site-copyright', 'site-logo', 'social-links', 'testimonials'], array_keys($registry->all()));
 
         $hero = collect($registry->definitions())->firstWhere('name', 'hero-banner');
         $this->assertSame('Baner z przyciskiem', $hero['label']);
@@ -117,7 +117,7 @@ class ThemeBlocksTest extends TestCase
         $this->get('/theme-blocks.css')->assertOk()->assertHeader('Content-Type', 'text/css; charset=UTF-8')->assertSee('.lm-hero-banner', false)->assertSee('.lm-testimonials', false);
 
         $this->get("/cms/content/page/{$page->id}/builder")->assertOk()->assertInertia(fn ($p) => $p
-            ->component('content/builder')->has('themeBlocks', 2)->where('themeBlocks.0.name', 'hero-banner'));
+            ->component('content/builder')->has('themeBlocks', 6)->where('themeBlocks.0.name', 'hero-banner'));
     }
 
     public function test_preview_endpoint_renders_normalized_block_and_checks_access(): void

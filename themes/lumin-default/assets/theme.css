@@ -67,11 +67,13 @@ main {
 /* Stopka */
 .lm-site-footer {
     margin-top: auto;
+}
+.lm-site-footer--default {
     padding-block: 2.5rem;
     background: var(--lm-bg-muted);
     border-top: 1px solid var(--lm-border);
 }
-.lm-site-footer .lm-container {
+.lm-site-footer--default .lm-container {
     display: flex;
     flex-wrap: wrap;
     align-items: center;

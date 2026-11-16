@@ -85,6 +85,8 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
     Route::middleware('can:manage_options')->group(function () {
         Route::get('parts', [PartController::class, 'index'])->name('parts.index');
         Route::post('parts', [PartController::class, 'store'])->name('parts.store');
+        Route::post('parts/presets', [PartController::class, 'storeFromPreset'])->name('parts.presets.store');
+        Route::get('parts/presets/{slot}/{key}/preview', [PartController::class, 'presetPreview'])->name('parts.presets.preview');
         Route::put('parts/slots/{slot}', [PartController::class, 'assign'])->name('parts.assign');
         Route::delete('parts/{content}', [PartController::class, 'destroy'])->name('parts.destroy');
 

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Cms;
 
 use App\Cms\Content\Content;
+use App\Cms\Themes\Customizer;
 use App\Cms\Themes\Parts;
+use App\Cms\Themes\ThemeManager;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -14,7 +17,7 @@ use Inertia\Response;
 /** Wygląd → Części: przypisywanie części globalnych do slotów motywu i tworzenie nowych (edycja w edytorze wizualnym). */
 class PartController extends Controller
 {
-    public function __construct(private readonly Parts $parts) {}
+    public function __construct(private readonly Parts $parts, private readonly ThemeManager $themes, private readonly Customizer $customizer) {}
 
     public function index(): Response
     {
@@ -33,6 +36,7 @@ class PartController extends Controller
                 'slots' => $usage->filter(fn ($id) => $id === $c->id)->keys()->values(),
             ])->values(),
             'partType' => $type->key,
+            'presets' => $this->parts->presets(),
         ]);
     }
 
@@ -47,6 +51,36 @@ class PartController extends Controller
         $part = $this->parts->create($data['title'], $data['slot'] ?? null);
 
         return redirect()->route('cms.content.builder', [$this->parts->type()->key, $part]);
+    }
+
+    /** Tworzy część z gotowego projektu motywu, przypisuje ją do slotu i otwiera w edytorze. */
+    public function storeFromPreset(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'slot' => ['required', 'string'],
+            'key' => ['required', 'string'],
+        ]);
+
+        $part = $this->parts->createFromPreset($data['slot'], $data['key']);
+        abort_unless($part, 404);
+
+        return redirect()->route('cms.content.builder', [$this->parts->type()->key, $part, 'preset' => $data['slot'].'-'.$data['key']]);
+    }
+
+    /** Podgląd projektu części: strona z arkuszami motywu, osadzana w ramce na liście projektów. */
+    public function presetPreview(string $slot, string $key): HttpResponse
+    {
+        $html = $this->parts->presetPreview($slot, $key);
+        abort_unless($html !== null, 404);
+
+        $theme = $this->themes->active();
+        $styles = collect([asset('css/lumin-blocks.css'), url('theme-blocks.css'), $theme->asset('theme.css'), $theme->asset('menu.css'), $theme->asset('parts.css')])
+            ->map(fn ($href) => '<link rel="stylesheet" href="'.e($href).'">')->implode('');
+        $vars = '<style>'.str_replace('</', '<\/', $this->customizer->css()).'body{min-height:0!important;pointer-events:none;overflow:hidden}</style>';
+
+        return response('<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=1200">'.$styles.$vars.'</head><body>'.$html.'</body></html>')
+            ->header('Content-Type', 'text/html; charset=UTF-8')
+            ->header('Content-Security-Policy', "default-src 'self' data:; style-src 'self' 'unsafe-inline'; img-src * data:; script-src 'none'");
     }
 
     public function assign(Request $request, string $slot): RedirectResponse

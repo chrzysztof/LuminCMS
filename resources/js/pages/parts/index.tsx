@@ -1,6 +1,10 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { Pencil, Plus, Trash2 } from 'lucide-react';
+import { LayoutTemplate, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import {
+    PartPresetsDialog,
+    type PartPreset,
+} from '@/components/cms/part-presets-dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -17,12 +21,15 @@ export default function PartsIndex({
     slots,
     parts,
     partType,
+    presets,
 }: {
     slots: Slot[];
     parts: Part[];
     partType: string;
+    presets: PartPreset[];
 }) {
     const [title, setTitle] = useState('');
+    const [picking, setPicking] = useState<string | null>(null);
 
     const assign = (slot: string, value: string) =>
         router.put(
@@ -83,6 +90,16 @@ export default function PartsIndex({
                                     ))}
                                 </select>
                                 <div className="flex flex-wrap gap-2">
+                                    {presets.some((p) => p.slot === s.slot) && (
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => setPicking(s.slot)}
+                                        >
+                                            <LayoutTemplate />
+                                            {t('Wybierz gotowy projekt')}
+                                        </Button>
+                                    )}
                                     {s.content_id ? (
                                         <Button asChild size="sm">
                                             <Link
@@ -198,6 +215,15 @@ export default function PartsIndex({
                     </CardContent>
                 </Card>
             </div>
+            {picking && (
+                <PartPresetsDialog
+                    slotLabel={t(
+                        slots.find((s) => s.slot === picking)?.label ?? picking,
+                    )}
+                    presets={presets.filter((p) => p.slot === picking)}
+                    onClose={() => setPicking(null)}
+                />
+            )}
         </>
     );
 }

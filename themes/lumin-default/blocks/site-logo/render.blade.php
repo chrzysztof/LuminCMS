@@ -1,0 +1,1 @@
+<a class="lm-site-header__brand" href="{{ url('/') }}">{!! app(\App\Cms\Settings\SiteIdentity::class)->logoHtml() ?? e(app(\App\Cms\Settings\Settings::class)->get('seo', 'site_name', config('app.name'))) !!}</a>

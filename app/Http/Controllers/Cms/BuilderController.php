@@ -10,6 +10,8 @@ use App\Cms\Builder\SavedBlock;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentType;
 use App\Cms\Roles\ContentAccess;
+use App\Cms\Themes\Parts;
+use App\Cms\Themes\ThemeManager;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -21,11 +23,13 @@ class BuilderController extends Controller
 {
     private const MAX_PROJECT_BYTES = 2_000_000;
 
-    public function __construct(private readonly BuilderRenderer $renderer, private readonly ContentAccess $access, private readonly BlockRegistry $blocks, private readonly RevisionRecorder $revisions) {}
+    public function __construct(private readonly BuilderRenderer $renderer, private readonly ContentAccess $access, private readonly BlockRegistry $blocks, private readonly RevisionRecorder $revisions, private readonly Parts $parts, private readonly ThemeManager $themes) {}
 
     public function edit(Request $request, ContentType $type, Content $content): Response
     {
         $this->authorizeBuilder($request, $type, $content);
+
+        $theme = $this->themes->active();
 
         return Inertia::render('content/builder', [
             'type' => ['key' => $type->key, 'label' => $type->label, 'label_plural' => $type->label_plural],
@@ -39,6 +43,9 @@ class BuilderController extends Controller
             'themeBlocks' => $this->blocks->definitions(),
             'savedBlocks' => SavedBlock::orderBy('name')->get(['id', 'name', 'html', 'user_id'])->all(),
             'recovery' => $this->recovery($content),
+            'seedHtml' => $this->presetSeed($request, $type, $content),
+            // Arkusze motywu w kanwie, żeby edytor pokazywał stronę tak jak publiczna witryna (nagłówek, menu, hero).
+            'themeStyles' => [$theme->asset('theme.css'), $theme->asset('menu.css'), $theme->asset('parts.css')],
         ]);
     }
 
@@ -83,6 +90,18 @@ class BuilderController extends Controller
             'status' => $content->status,
             'html_bytes' => strlen($content->html_cache),
         ]);
+    }
+
+    /** HTML gotowego projektu części dla pustej, świeżo utworzonej części (?preset=slot-klucz). */
+    private function presetSeed(Request $request, ContentType $type, Content $content): ?string
+    {
+        if ($type->key !== Parts::TYPE || $content->builder_data !== null || ! is_string($request->query('preset'))) {
+            return null;
+        }
+
+        [$slot, $key] = array_pad(explode('-', $request->query('preset'), 2), 2, '');
+
+        return $this->parts->presetHtml($slot, $key);
     }
 
     /** Jeśli ostatnia wersja w historii to autozapis, po ostatnim zapisie zostały niezapisane zmiany do odzyskania. */

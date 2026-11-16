@@ -61,6 +61,10 @@ type Props = {
     savedBlocks: SavedBlock[];
     /** Autozapis nowszy niż ostatni zapis: niezapisane zmiany do odzyskania. */
     recovery: { id: number; created_at: string } | null;
+    /** Gotowy projekt części (HTML), wczytywany do pustej części przy pierwszym otwarciu. */
+    seedHtml: string | null;
+    /** Arkusze motywu dodawane do kanwy. */
+    themeStyles: string[];
 };
 
 /** Co ile ms edytor odkłada autozapis, jeśli są niezapisane zmiany. */
@@ -94,6 +98,8 @@ export default function Builder({
     themeBlocks,
     savedBlocks,
     recovery,
+    seedHtml,
+    themeStyles,
 }: Props) {
     const canvas = useRef<HTMLDivElement>(null);
     const blocksEl = useRef<HTMLDivElement>(null);
@@ -340,6 +346,7 @@ export default function Builder({
                     '/css/lumin-blocks.css',
                     '/theme-vars.css',
                     '/theme-blocks.css',
+                    ...themeStyles,
                 ],
             },
             deviceManager: {
@@ -355,7 +362,13 @@ export default function Builder({
         registerBlocks(editor);
         registerThemeBlocks(editor, themeBlocks);
 
-        if (project) editor.loadProjectData(project);
+        if (project) {
+            editor.loadProjectData(project);
+        } else if (seedHtml) {
+            editor.setComponents(seedHtml);
+            // Gotowy projekt zapisujemy od razu, żeby publiczna witryna zaczęła go używać.
+            window.setTimeout(() => void saveRef.current(false), 600);
+        }
 
         const refresh = () => {
             setEmpty(editor.getComponents().length === 0);

@@ -162,5 +162,55 @@
             "unit": "rem",
             "css": "--lm-space"
         }
+    ],
+    "part_presets": [
+        {
+            "slot": "header",
+            "key": "classic",
+            "label": "Klasyczny z przyciskiem",
+            "description": "Logo, menu pośrodku i przycisk kontaktowy po prawej."
+        },
+        {
+            "slot": "header",
+            "key": "topbar",
+            "label": "Z paskiem kontaktowym",
+            "description": "Ciemny pasek z telefonem i mediami społecznościowymi nad głównym nagłówkiem."
+        },
+        {
+            "slot": "header",
+            "key": "centered",
+            "label": "Wyśrodkowany",
+            "description": "Logo na środku, menu pod spodem. Elegancki, minimalistyczny układ."
+        },
+        {
+            "slot": "header",
+            "key": "dark",
+            "label": "Ciemny",
+            "description": "Pełny, ciemny pasek z logo, menu i przyciskiem w kontrastowym kolorze."
+        },
+        {
+            "slot": "footer",
+            "key": "columns",
+            "label": "Cztery kolumny",
+            "description": "Opis firmy, menu, oferta i dane kontaktowe, a pod spodem prawa autorskie."
+        },
+        {
+            "slot": "footer",
+            "key": "cta",
+            "label": "Z wezwaniem do działania",
+            "description": "Pasek z wezwaniem do kontaktu nad trzema kolumnami."
+        },
+        {
+            "slot": "footer",
+            "key": "simple",
+            "label": "Prosta",
+            "description": "Jedna linia: prawa autorskie i menu. Dla prostych stron."
+        },
+        {
+            "slot": "footer",
+            "key": "centered",
+            "label": "Ciemna wyśrodkowana",
+            "description": "Ciemne tło, logo, menu i media społecznościowe na środku."
+        }
     ]
 }

@@ -1,0 +1,14 @@
+{
+    "label": "Menu nawigacji",
+    "category": "Nagłówek i stopka",
+    "icon": "<path d=\"M4 7h16M4 12h16M4 17h16\"/>",
+    "fields": [
+        {
+            "type": "select",
+            "name": "location",
+            "label": "Menu",
+            "choices": { "primary": "Menu główne", "footer": "Menu w stopce" },
+            "default_value": "primary"
+        }
+    ]
+}

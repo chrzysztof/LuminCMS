@@ -2,6 +2,7 @@
 
 namespace App\Cms\Themes;
 
+use App\Cms\Builder\BlockRegistry;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentType;
 use App\Cms\Settings\Settings;
@@ -75,6 +76,48 @@ class Parts
         }
 
         return $this->shortcodes->render($part->html_cache, $part);
+    }
+
+    /** Gotowe projekty części aktywnego motywu (opcjonalnie tylko dla jednego slotu). @return list<array{slot: string, key: string, label: string, description: string}> */
+    public function presets(?string $slot = null): array
+    {
+        return collect($this->themes->active()->partPresets())
+            ->filter(fn ($p) => ($slot === null || $p['slot'] === $slot) && $this->themes->active()->partPresetHtml($p['slot'], $p['key']) !== null)
+            ->map(fn ($p) => ['label' => __($p['label']), 'description' => __($p['description'])] + $p)
+            ->values()->all();
+    }
+
+    public function presetHtml(string $slot, string $key): ?string
+    {
+        $known = collect($this->presets($slot))->contains(fn ($p) => $p['key'] === $key);
+
+        return $known ? $this->themes->active()->partPresetHtml($slot, $key) : null;
+    }
+
+    /** Projekt części z blokami motywu zamienionymi na gotowy markup (podgląd w panelu). */
+    public function presetPreview(string $slot, string $key): ?string
+    {
+        $html = $this->presetHtml($slot, $key);
+
+        if ($html === null) {
+            return null;
+        }
+
+        $blocks = app(BlockRegistry::class);
+
+        return preg_replace_callback(
+            '/<div\s+data-gjs-type="lm-block"\s+data-gjs-block="([a-z0-9-]+)"(?:\s+data-gjs-attrs=\'([^\']*)\')?\s*>\s*<\/div>/',
+            fn ($m) => $blocks->render($m[1], $blocks->normalize($m[1], (array) json_decode($m[2] ?? '[]', true))),
+            $html,
+        );
+    }
+
+    /** Tworzy część z gotowego projektu i przypisuje ją do slotu; treść trafia do edytora przy pierwszym otwarciu. */
+    public function createFromPreset(string $slot, string $key): ?Content
+    {
+        $preset = collect($this->presets($slot))->firstWhere('key', $key);
+
+        return $preset ? $this->create($preset['label'], $slot) : null;
     }
 
     /** Czy część została zapisana w edytorze (ma treść), żeby w panelu odróżnić ją od pustej. */

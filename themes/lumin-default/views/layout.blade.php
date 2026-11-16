@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="{{ asset('css/lumin-blocks.css') }}">
     <link rel="stylesheet" href="{{ $theme->asset('theme.css') }}">
     <link rel="stylesheet" href="{{ $theme->asset('menu.css') }}">
+    <link rel="stylesheet" href="{{ $theme->asset('parts.css') }}">
     @if (($blockCss = app(\App\Cms\Builder\BlockRegistry::class)->css()) !== '')
         <link rel="stylesheet" href="{{ url('theme-blocks.css') }}?v={{ substr(md5($blockCss), 0, 8) }}">
     @endif
@@ -36,34 +37,54 @@
 </head>
 <body>
     @if ($chrome)
-        <header class="lm-site-header">
-            @if (($headerHtml = $parts->html('header')) !== null)
-                <div class="lm-container">{!! $headerHtml !!}</div>
-            @else
-                <div class="lm-container lm-site-header__bar">
-                    <a class="lm-site-header__brand" href="{{ url('/') }}">{!! $identity->logoHtml() ?? e($siteName) !!}</a>
-                    {!! $menus->forLocation('primary') !!}
-                </div>
-            @endif
-        </header>
+        @php
+            $headerHtml = $parts->html('header');
+        @endphp
+        {{-- Gotowy projekt (z edytora) ma własny element <header>; własna część bez niego dostaje opakowanie. --}}
+        @if ($headerHtml !== null && str_starts_with(ltrim($headerHtml), '<header'))
+            {!! $headerHtml !!}
+        @else
+            <header class="lm-site-header">
+                @if ($headerHtml !== null)
+                    <div class="lm-container">{!! $headerHtml !!}</div>
+                @else
+                    <div class="lm-container lm-site-header__bar">
+                        <a class="lm-site-header__brand" href="{{ url('/') }}">{!! $identity->logoHtml() ?? e($siteName) !!}</a>
+                        {!! $menus->forLocation('primary') !!}
+                    </div>
+                @endif
+            </header>
+        @endif
     @endif
     <main>
         @yield('content')
     </main>
     @if ($chrome)
-        <footer class="lm-site-footer">
-            <div class="lm-container">
-                @if (($footerHtml = $parts->html('footer')) !== null)
-                    {!! $footerHtml !!}
-                @else
-                    {!! $menus->forLocation('footer') !!}
-                    © {{ date('Y') }} {{ $siteName }}
-                @endif
-                @if ($trackOn && $hasTracking && $siteSettings['consent_required'])
-                    · <a href="#" data-lm-cookie-settings>{{ __('Ustawienia cookies') }}</a>
-                @endif
-            </div>
-        </footer>
+        @php
+            $footerHtml = $parts->html('footer');
+            $cookieLink = $trackOn && $hasTracking && $siteSettings['consent_required'];
+        @endphp
+        @if ($footerHtml !== null && str_starts_with(ltrim($footerHtml), '<footer'))
+            @if ($cookieLink && ($end = strrpos($footerHtml, '</footer>')) !== false)
+                {!! substr_replace($footerHtml, '<div class="lm-container lm-footer__cookies"><a href="#" data-lm-cookie-settings>'.e(__('Ustawienia cookies')).'</a></div>', $end, 0) !!}
+            @else
+                {!! $footerHtml !!}
+            @endif
+        @else
+            <footer class="lm-site-footer lm-site-footer--default">
+                <div class="lm-container">
+                    @if ($footerHtml !== null)
+                        {!! $footerHtml !!}
+                    @else
+                        {!! $menus->forLocation('footer') !!}
+                        © {{ date('Y') }} {{ $siteName }}
+                    @endif
+                    @if ($cookieLink)
+                        · <a href="#" data-lm-cookie-settings>{{ __('Ustawienia cookies') }}</a>
+                    @endif
+                </div>
+            </footer>
+        @endif
     @endif
     @if ($trackOn && $siteSettings['custom_body_end'] !== '')
         {!! $siteSettings['custom_body_end'] !!}

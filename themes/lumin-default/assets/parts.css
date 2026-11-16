@@ -1,0 +1,249 @@
+/* Gotowe projekty nagłówków i stopek (Wygląd → Części). Klasy lm-header*, lm-topbar*, lm-footer*, lm-social. */
+
+/* Nagłówek */
+.lm-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    min-height: 4.5rem;
+}
+.lm-header--stack {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.25rem;
+    padding-block: 0.9rem 0.6rem;
+}
+.lm-header--stack .lm-menu__list {
+    justify-content: center;
+}
+.lm-site-header .lm-btn {
+    padding: 0.55rem 1.15rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #fff;
+}
+.lm-site-header .lm-btn-secondary {
+    color: var(--lm-text);
+}
+
+/* Pasek nad nagłówkiem */
+.lm-topbar {
+    background: var(--lm-bg-dark);
+    color: rgb(255 255 255 / 0.85);
+    font-size: 0.85rem;
+}
+.lm-topbar__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.25rem 1.5rem;
+    min-height: 2.5rem;
+}
+.lm-topbar p {
+    margin: 0;
+}
+.lm-topbar a {
+    color: inherit;
+}
+
+/* Ciemny nagłówek */
+.lm-header-dark {
+    background: var(--lm-bg-dark);
+    color: #fff;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+.lm-header-dark .lm-menu__link {
+    color: rgb(255 255 255 / 0.78);
+}
+.lm-header-dark .lm-menu__link:hover,
+.lm-header-dark .lm-menu__item.is-current > .lm-menu__link,
+.lm-header-dark .lm-menu__item.is-trail > .lm-menu__link {
+    color: #fff;
+    background: rgb(255 255 255 / 0.1);
+}
+.lm-header-dark .lm-menu__sub .lm-menu__link {
+    color: #111827;
+    background: none;
+}
+.lm-header-dark .lm-btn:not(.lm-btn-secondary) {
+    background: #fff;
+    color: var(--lm-bg-dark);
+}
+.lm-header-dark .lm-btn-secondary {
+    border-color: rgb(255 255 255 / 0.5);
+    color: #fff;
+    background: none;
+}
+
+/* Media społecznościowe */
+.lm-social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.lm-social a {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    text-decoration: none;
+    color: inherit;
+    opacity: 0.85;
+}
+.lm-social a:hover {
+    opacity: 1;
+}
+.lm-social--empty {
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+
+/* Stopka */
+.lm-footer {
+    background: var(--lm-bg-muted);
+    border-top: 1px solid var(--lm-border);
+    padding-block: 3.5rem 0;
+    font-size: 0.95rem;
+}
+.lm-footer a {
+    color: inherit;
+}
+.lm-footer h4 {
+    margin: 0 0 0.9rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
+.lm-footer p {
+    margin-block: 0 1rem;
+    color: var(--lm-muted-text);
+}
+.lm-footer ul:not(.lm-menu__list):not(.lm-social) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+}
+.lm-footer .lm-site-header__brand {
+    display: inline-block;
+    margin-bottom: 0.9rem;
+}
+.lm-footer .lm-menu__list {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+.lm-footer .lm-menu__link {
+    padding: 0;
+}
+.lm-footer .lm-menu__burger,
+.lm-footer .lm-menu__toggle,
+.lm-footer .lm-menu__sub,
+.lm-footer .lm-menu__mega {
+    display: none !important;
+}
+.lm-footer__bottom {
+    margin-top: 2.5rem;
+    padding-block: 1.25rem;
+    border-top: 1px solid var(--lm-border);
+}
+.lm-footer__bottom .lm-copyright,
+.lm-footer__row .lm-copyright {
+    margin: 0;
+    font-size: 0.875rem;
+}
+.lm-footer__cookies {
+    padding-block: 0 1.25rem;
+    font-size: 0.8rem;
+}
+
+/* Stopka z wezwaniem do działania */
+.lm-footer__cta {
+    margin: -3.5rem 0 3.5rem;
+    background: var(--lm-primary);
+    color: #fff;
+}
+.lm-footer__cta-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    padding-block: 2.25rem;
+}
+.lm-footer__cta h3 {
+    margin: 0 0 0.25rem;
+    color: inherit;
+}
+.lm-footer .lm-footer__cta p {
+    margin: 0;
+    color: rgb(255 255 255 / 0.8);
+}
+.lm-footer__cta .lm-btn {
+    background: #fff;
+    color: var(--lm-primary);
+}
+
+/* Prosta stopka w jednej linii */
+.lm-footer__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+    padding-bottom: 1.75rem;
+}
+.lm-footer__row .lm-menu__list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+}
+.lm-footer:has(> .lm-footer__row) {
+    padding-top: 1.75rem;
+}
+
+/* Ciemna stopka wyśrodkowana */
+.lm-footer-dark {
+    background: var(--lm-bg-dark);
+    color: #fff;
+    border-top: 0;
+}
+.lm-footer-dark p,
+.lm-footer-dark a {
+    color: rgb(255 255 255 / 0.75);
+}
+.lm-footer-dark .lm-footer__bottom {
+    border-color: rgb(255 255 255 / 0.15);
+}
+.lm-footer__stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    text-align: center;
+}
+.lm-footer__stack .lm-menu__list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem 1.5rem;
+}
+.lm-footer__stack .lm-footer__bottom {
+    align-self: stretch;
+    margin-top: 0.75rem;
+}
+@media (max-width: 640px) {
+    .lm-footer__cta {
+        margin-top: -3.5rem;
+    }
+}

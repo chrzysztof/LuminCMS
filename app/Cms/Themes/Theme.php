@@ -189,6 +189,51 @@ class Theme
         return $this->merged('ownParts', 'slot');
     }
 
+    /**
+     * Gotowe projekty części (nagłówków, stopek): manifest "part_presets" + plik parts/{slot}-{key}.html.
+     *
+     * @return list<array{slot: string, key: string, label: string, description: string}>
+     */
+    public function partPresets(): array
+    {
+        $out = [];
+
+        foreach (array_reverse($this->lineage()) as $theme) {
+            foreach ((array) ($theme->manifest['part_presets'] ?? []) as $p) {
+                if (! is_array($p) || ! preg_match('/^[a-z0-9_-]+$/', (string) ($p['slot'] ?? '')) || ! preg_match('/^[a-z0-9_-]+$/', (string) ($p['key'] ?? ''))) {
+                    continue;
+                }
+
+                $out[$p['slot'].'/'.$p['key']] = [
+                    'slot' => $p['slot'],
+                    'key' => $p['key'],
+                    'label' => (string) ($p['label'] ?? $p['key']),
+                    'description' => (string) ($p['description'] ?? ''),
+                ];
+            }
+        }
+
+        return array_values($out);
+    }
+
+    /** Surowy HTML projektu części (z atrybutami data-gjs-* dla edytora) z motywu, który go zawiera. */
+    public function partPresetHtml(string $slot, string $key): ?string
+    {
+        if (! preg_match('/^[a-z0-9_-]+$/', $slot.$key)) {
+            return null;
+        }
+
+        foreach ([...$this->lineage(), ...($this->fallback ? [$this->fallback] : [])] as $theme) {
+            $file = $theme->path."/parts/{$slot}-{$key}.html";
+
+            if (is_file($file)) {
+                return (string) file_get_contents($file);
+            }
+        }
+
+        return null;
+    }
+
     /** @return list<array{key: string, label: string}> */
     public function menuLocations(): array
     {

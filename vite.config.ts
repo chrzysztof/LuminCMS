@@ -62,6 +62,8 @@ export default defineConfig({
             'composer.json',
             'resources/js/components/ui/*',
             'resources/views/mail/*',
+            // Projekty części to surowy HTML wczytywany do edytora: formatowanie zmieniłoby jego znaczniki.
+            'themes/*/parts/*.html',
         ],
         sortTailwindcss: {
             functions: ['clsx', 'cn', 'cva'],

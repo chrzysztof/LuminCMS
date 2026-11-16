@@ -26,6 +26,9 @@ export const cmsUrl = {
     fieldExport: (id: number) => `/cms/fields/${id}/export`,
     shortcodes: '/cms/shortcodes',
     parts: '/cms/parts',
+    partPresets: '/cms/parts/presets',
+    partPresetPreview: (slot: string, key: string) =>
+        `/cms/parts/presets/${slot}/${key}/preview`,
     partAssign: (slot: string) => `/cms/parts/slots/${slot}`,
     partDelete: (id: number) => `/cms/parts/${id}`,
     importExport: '/cms/import',
