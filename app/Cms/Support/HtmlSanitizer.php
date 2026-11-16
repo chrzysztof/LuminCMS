@@ -13,14 +13,23 @@ use DOMNode;
 class HtmlSanitizer
 {
     private const TAGS = [
-        'p', 'br', 'strong', 'b', 'em', 'i', 'u', 's', 'code', 'pre', 'blockquote', 'hr',
+        'p', 'br', 'strong', 'b', 'em', 'i', 'u', 's', 'mark', 'sub', 'sup', 'code', 'pre', 'blockquote', 'hr',
         'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'a', 'img', 'table', 'thead', 'tbody', 'tr', 'th', 'td',
     ];
 
     /** Znaczniki usuwane razem z zawartością. */
     private const DROP = ['script', 'style', 'iframe', 'object', 'embed', 'form', 'input', 'button', 'textarea', 'select', 'svg', 'math', 'link', 'meta', 'template'];
 
+    /** Klasy wyrównania z edytora (style inline są usuwane, więc wyrównanie niesie klasa motywu). */
+    private const ALIGN_CLASSES = ['lm-center', 'lm-right'];
+
     private const ATTRIBUTES = [
+        'p' => ['class'],
+        'h2' => ['class'],
+        'h3' => ['class'],
+        'h4' => ['class'],
+        'h5' => ['class'],
+        'h6' => ['class'],
         'a' => ['href', 'title', 'target', 'rel'],
         'img' => ['src', 'alt', 'title', 'width', 'height'],
         'th' => ['colspan', 'rowspan', 'scope'],
@@ -107,6 +116,11 @@ class HtmlSanitizer
 
             if (in_array($name, ['href', 'src'], true) && ! $this->safeUrl($attr->value)) {
                 $el->removeAttribute($attr->name);
+            }
+
+            if ($name === 'class') {
+                $classes = array_values(array_intersect(preg_split('/\s+/', trim($attr->value)) ?: [], self::ALIGN_CLASSES));
+                $classes === [] ? $el->removeAttribute('class') : $el->setAttribute('class', implode(' ', $classes));
             }
         }
 

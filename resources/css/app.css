@@ -200,3 +200,55 @@
 .wysiwyg-content hr {
     border-color: var(--border);
 }
+
+.wysiwyg-content .lm-center {
+    text-align: center;
+}
+.wysiwyg-content .lm-right {
+    text-align: right;
+}
+.wysiwyg-content mark {
+    background: #fef08a;
+    border-radius: 0.2rem;
+    padding: 0 0.15rem;
+}
+.wysiwyg-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+}
+.wysiwyg-content img.ProseMirror-selectednode {
+    outline: 2px solid var(--brand);
+}
+.wysiwyg-content table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+.wysiwyg-content th,
+.wysiwyg-content td {
+    position: relative;
+    border: 1px solid var(--border);
+    padding: 0.4rem 0.6rem;
+    vertical-align: top;
+    text-align: left;
+}
+.wysiwyg-content th {
+    background: var(--muted);
+    font-weight: 600;
+}
+.wysiwyg-content td > * + *,
+.wysiwyg-content th > * + * {
+    margin-top: 0.4rem;
+}
+.wysiwyg-content .selectedCell::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--brand) 18%, transparent);
+    pointer-events: none;
+}
+.wysiwyg-content pre code {
+    background: none;
+    padding: 0;
+}

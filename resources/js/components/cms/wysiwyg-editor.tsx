@@ -1,10 +1,26 @@
+import { Extension } from '@tiptap/core';
+import CharacterCount from '@tiptap/extension-character-count';
+import Highlight from '@tiptap/extension-highlight';
+import Image from '@tiptap/extension-image';
+import Subscript from '@tiptap/extension-subscript';
+import Superscript from '@tiptap/extension-superscript';
+import {
+    Table,
+    TableCell,
+    TableHeader,
+    TableRow,
+} from '@tiptap/extension-table';
 import { EditorContent, useEditor, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import {
+    AlignCenter,
+    AlignLeft,
+    AlignRight,
     Bold,
     Code,
-    Heading2,
-    Heading3,
+    Code2,
+    Highlighter,
+    Image as ImageIcon,
     Italic,
     Link2,
     List,
@@ -12,12 +28,23 @@ import {
     Minus,
     Quote,
     Redo2,
+    RemoveFormatting,
     Strikethrough,
+    Subscript as SubscriptIcon,
+    Superscript as SuperscriptIcon,
+    Table as TableIcon,
     Underline as UnderlineIcon,
     Undo2,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useState } from 'react';
+import { MediaPicker } from '@/components/cms/media-picker';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { t } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
+import type { MediaItem } from '@/types/cms';
 
 type Props = {
     id?: string;
@@ -27,14 +54,46 @@ type Props = {
     minHeight?: number;
 };
 
+/**
+ * Wyrównanie akapitów i nagłówków przez klasy motywu (lm-center, lm-right), a nie przez style inline,
+ * bo serwer usuwa atrybut style.
+ */
+const Align = Extension.create({
+    name: 'lmAlign',
+    addGlobalAttributes() {
+        return [
+            {
+                types: ['paragraph', 'heading'],
+                attributes: {
+                    align: {
+                        default: null,
+                        parseHTML: (el: HTMLElement) =>
+                            el.classList.contains('lm-center')
+                                ? 'center'
+                                : el.classList.contains('lm-right')
+                                  ? 'right'
+                                  : null,
+                        renderHTML: (attrs: Record<string, unknown>) =>
+                            typeof attrs.align === 'string'
+                                ? { class: `lm-${attrs.align}` }
+                                : {},
+                    },
+                },
+            },
+        ];
+    },
+});
+
 function Btn({
     label,
     active,
+    disabled,
     onClick,
     children,
 }: {
     label: string;
     active?: boolean;
+    disabled?: boolean;
     onClick: () => void;
     children: React.ReactNode;
 }) {
@@ -44,10 +103,11 @@ function Btn({
             aria-label={label}
             title={label}
             aria-pressed={active}
+            disabled={disabled}
             onMouseDown={(e) => e.preventDefault()}
             onClick={onClick}
             className={cn(
-                'rounded p-1.5 hover:bg-muted [&_svg]:size-4',
+                'rounded p-1.5 hover:bg-muted disabled:opacity-40 [&_svg]:size-4',
                 active && 'bg-brand/15 text-brand',
             )}
         >
@@ -56,22 +116,109 @@ function Btn({
     );
 }
 
-function setLink(editor: Editor) {
-    const previous = (editor.getAttributes('link').href as string) ?? '';
-    const url = window.prompt(t('Adres linku (puste usuwa link)'), previous);
+function Sep() {
+    return <span aria-hidden className="mx-1 my-1 w-px bg-border" />;
+}
 
-    if (url === null) return;
+function setAlign(editor: Editor, align: 'center' | 'right' | null) {
+    editor
+        .chain()
+        .focus()
+        .updateAttributes('paragraph', { align })
+        .updateAttributes('heading', { align })
+        .run();
+}
 
-    if (url.trim() === '') {
-        editor.chain().focus().extendMarkRange('link').unsetLink().run();
-    } else {
-        editor
-            .chain()
-            .focus()
-            .extendMarkRange('link')
-            .setLink({ href: url.trim() })
-            .run();
+function currentAlign(editor: Editor): string | null {
+    return (
+        (editor.getAttributes('paragraph').align as string | null) ??
+        (editor.getAttributes('heading').align as string | null) ??
+        null
+    );
+}
+
+function blockValue(editor: Editor): string {
+    for (const level of [2, 3, 4]) {
+        if (editor.isActive('heading', { level })) return `h${level}`;
     }
+
+    return 'p';
+}
+
+function LinkPanel({
+    editor,
+    onClose,
+}: {
+    editor: Editor;
+    onClose: () => void;
+}) {
+    const attrs = editor.getAttributes('link');
+    const [url, setUrl] = useState<string>((attrs.href as string) ?? '');
+    const [blank, setBlank] = useState(attrs.target === '_blank');
+
+    const apply = () => {
+        const href = url.trim();
+        const chain = editor.chain().focus().extendMarkRange('link');
+
+        if (href === '') {
+            chain.unsetLink().run();
+        } else {
+            chain.setLink({ href, target: blank ? '_blank' : null }).run();
+        }
+
+        onClose();
+    };
+
+    return (
+        <div className="flex flex-wrap items-center gap-3 border-b bg-muted/20 p-2">
+            <Input
+                autoFocus
+                value={url}
+                placeholder="https://"
+                aria-label={t('Adres linku')}
+                className="h-8 max-w-sm flex-1"
+                onChange={(e) => setUrl(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        apply();
+                    }
+                    if (e.key === 'Escape') onClose();
+                }}
+            />
+            <Label className="flex items-center gap-2 text-sm font-normal">
+                <Checkbox
+                    checked={blank}
+                    onCheckedChange={(v) => setBlank(v === true)}
+                />
+                {t('Otwórz w nowej karcie')}
+            </Label>
+            <Button type="button" size="sm" onClick={apply}>
+                {t('Zastosuj')}
+            </Button>
+            {editor.isActive('link') && (
+                <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                        editor
+                            .chain()
+                            .focus()
+                            .extendMarkRange('link')
+                            .unsetLink()
+                            .run();
+                        onClose();
+                    }}
+                >
+                    {t('Usuń link')}
+                </Button>
+            )}
+            <Button type="button" size="sm" variant="ghost" onClick={onClose}>
+                {t('Anuluj')}
+            </Button>
+        </div>
+    );
 }
 
 /** Edytor tekstu sformatowanego (TipTap). Serwer i tak czyści HTML przy zapisie. */
@@ -82,13 +229,29 @@ export function WysiwygEditor({
     toolbar = 'full',
     minHeight = 200,
 }: Props) {
+    const [linkOpen, setLinkOpen] = useState(false);
+    const [mediaOpen, setMediaOpen] = useState(false);
+
     const editor = useEditor({
         immediatelyRender: false,
         extensions: [
             StarterKit.configure({
                 heading: { levels: [2, 3, 4] },
-                link: { openOnClick: false },
+                link: {
+                    openOnClick: false,
+                    HTMLAttributes: { target: null, rel: null },
+                },
             }),
+            Align,
+            Highlight,
+            Subscript,
+            Superscript,
+            Image.configure({ inline: false }),
+            Table,
+            TableRow,
+            TableHeader,
+            TableCell,
+            CharacterCount,
         ],
         content: value || '',
         editorProps: {
@@ -104,10 +267,58 @@ export function WysiwygEditor({
     if (!editor) return <div className="h-32 rounded-md border" />;
 
     const full = toolbar === 'full';
+    const align = currentAlign(editor);
+    const inTable = editor.isActive('table');
+
+    const insertImage = (items: MediaItem[]) => {
+        const item = items[0];
+
+        if (!item) return;
+
+        const size = item.sizes?.large ?? item.sizes?.medium_large ?? null;
+        editor
+            .chain()
+            .focus()
+            .setImage({
+                src: size?.url ?? item.url,
+                alt: item.alt || '',
+                title: item.title || undefined,
+                width: size?.width ?? item.width ?? undefined,
+                height: size?.height ?? item.height ?? undefined,
+            })
+            .run();
+    };
 
     return (
         <div className="rounded-md border focus-within:ring-[3px] focus-within:ring-ring/30">
-            <div className="flex flex-wrap gap-0.5 border-b bg-muted/40 p-1">
+            <div className="flex flex-wrap items-center gap-0.5 border-b bg-muted/40 p-1">
+                {full && (
+                    <>
+                        <select
+                            aria-label={t('Format')}
+                            value={blockValue(editor)}
+                            onChange={(e) => {
+                                const v = e.target.value;
+                                const chain = editor.chain().focus();
+
+                                if (v === 'p') chain.setParagraph().run();
+                                else
+                                    chain
+                                        .setHeading({
+                                            level: Number(v[1]) as 2 | 3 | 4,
+                                        })
+                                        .run();
+                            }}
+                            className="h-8 rounded border-0 bg-transparent px-2 text-sm hover:bg-muted"
+                        >
+                            <option value="p">{t('Akapit')}</option>
+                            <option value="h2">{t('Nagłówek 2')}</option>
+                            <option value="h3">{t('Nagłówek 3')}</option>
+                            <option value="h4">{t('Nagłówek 4')}</option>
+                        </select>
+                        <Sep />
+                    </>
+                )}
                 <Btn
                     label={t('Pogrubienie')}
                     active={editor.isActive('bold')}
@@ -143,31 +354,68 @@ export function WysiwygEditor({
                             <Strikethrough />
                         </Btn>
                         <Btn
-                            label={t('Nagłówek 2')}
-                            active={editor.isActive('heading', { level: 2 })}
+                            label={t('Zakreślenie')}
+                            active={editor.isActive('highlight')}
                             onClick={() =>
-                                editor
-                                    .chain()
-                                    .focus()
-                                    .toggleHeading({ level: 2 })
-                                    .run()
+                                editor.chain().focus().toggleHighlight().run()
                             }
                         >
-                            <Heading2 />
+                            <Highlighter />
                         </Btn>
                         <Btn
-                            label={t('Nagłówek 3')}
-                            active={editor.isActive('heading', { level: 3 })}
+                            label={t('Indeks górny')}
+                            active={editor.isActive('superscript')}
+                            onClick={() =>
+                                editor.chain().focus().toggleSuperscript().run()
+                            }
+                        >
+                            <SuperscriptIcon />
+                        </Btn>
+                        <Btn
+                            label={t('Indeks dolny')}
+                            active={editor.isActive('subscript')}
+                            onClick={() =>
+                                editor.chain().focus().toggleSubscript().run()
+                            }
+                        >
+                            <SubscriptIcon />
+                        </Btn>
+                        <Btn
+                            label={t('Wyczyść formatowanie')}
                             onClick={() =>
                                 editor
                                     .chain()
                                     .focus()
-                                    .toggleHeading({ level: 3 })
+                                    .unsetAllMarks()
+                                    .clearNodes()
                                     .run()
                             }
                         >
-                            <Heading3 />
+                            <RemoveFormatting />
                         </Btn>
+                        <Sep />
+                        <Btn
+                            label={t('Wyrównaj do lewej')}
+                            active={align === null}
+                            onClick={() => setAlign(editor, null)}
+                        >
+                            <AlignLeft />
+                        </Btn>
+                        <Btn
+                            label={t('Wyśrodkuj')}
+                            active={align === 'center'}
+                            onClick={() => setAlign(editor, 'center')}
+                        >
+                            <AlignCenter />
+                        </Btn>
+                        <Btn
+                            label={t('Wyrównaj do prawej')}
+                            active={align === 'right'}
+                            onClick={() => setAlign(editor, 'right')}
+                        >
+                            <AlignRight />
+                        </Btn>
+                        <Sep />
                     </>
                 )}
                 <Btn
@@ -190,13 +438,37 @@ export function WysiwygEditor({
                 </Btn>
                 <Btn
                     label={t('Link')}
-                    active={editor.isActive('link')}
-                    onClick={() => setLink(editor)}
+                    active={editor.isActive('link') || linkOpen}
+                    onClick={() => setLinkOpen((o) => !o)}
                 >
                     <Link2 />
                 </Btn>
                 {full && (
                     <>
+                        <Sep />
+                        <Btn
+                            label={t('Obraz z biblioteki mediów')}
+                            onClick={() => setMediaOpen(true)}
+                        >
+                            <ImageIcon />
+                        </Btn>
+                        <Btn
+                            label={t('Wstaw tabelę')}
+                            active={inTable}
+                            onClick={() =>
+                                editor
+                                    .chain()
+                                    .focus()
+                                    .insertTable({
+                                        rows: 3,
+                                        cols: 3,
+                                        withHeaderRow: true,
+                                    })
+                                    .run()
+                            }
+                        >
+                            <TableIcon />
+                        </Btn>
                         <Btn
                             label={t('Cytat')}
                             active={editor.isActive('blockquote')}
@@ -216,6 +488,15 @@ export function WysiwygEditor({
                             <Code />
                         </Btn>
                         <Btn
+                            label={t('Blok kodu')}
+                            active={editor.isActive('codeBlock')}
+                            onClick={() =>
+                                editor.chain().focus().toggleCodeBlock().run()
+                            }
+                        >
+                            <Code2 />
+                        </Btn>
+                        <Btn
                             label={t('Linia pozioma')}
                             onClick={() =>
                                 editor.chain().focus().setHorizontalRule().run()
@@ -228,19 +509,67 @@ export function WysiwygEditor({
                 <span className="ml-auto flex gap-0.5">
                     <Btn
                         label={t('Cofnij')}
+                        disabled={!editor.can().undo()}
                         onClick={() => editor.chain().focus().undo().run()}
                     >
                         <Undo2 />
                     </Btn>
                     <Btn
                         label={t('Ponów')}
+                        disabled={!editor.can().redo()}
                         onClick={() => editor.chain().focus().redo().run()}
                     >
                         <Redo2 />
                     </Btn>
                 </span>
             </div>
+            {inTable && full && (
+                <div className="flex flex-wrap gap-1 border-b bg-muted/20 p-1.5 text-xs">
+                    {(
+                        [
+                            [t('Dodaj wiersz'), 'addRowAfter'],
+                            [t('Dodaj kolumnę'), 'addColumnAfter'],
+                            [t('Usuń wiersz'), 'deleteRow'],
+                            [t('Usuń kolumnę'), 'deleteColumn'],
+                            [t('Wiersz nagłówka'), 'toggleHeaderRow'],
+                            [t('Usuń tabelę'), 'deleteTable'],
+                        ] as const
+                    ).map(([label, cmd]) => (
+                        <Button
+                            key={cmd}
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            className="h-7 px-2 text-xs"
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => editor.chain().focus()[cmd]().run()}
+                        >
+                            {label}
+                        </Button>
+                    ))}
+                </div>
+            )}
+            {linkOpen && (
+                <LinkPanel editor={editor} onClose={() => setLinkOpen(false)} />
+            )}
             <EditorContent editor={editor} />
+            {full && (
+                <div className="border-t px-3 py-1.5 text-xs text-muted-foreground">
+                    {t('{words} słów · {chars} znaków', {
+                        words: editor.storage.characterCount.words(),
+                        chars: editor.storage.characterCount.characters(),
+                    })}
+                </div>
+            )}
+            <MediaPicker
+                open={mediaOpen}
+                onOpenChange={setMediaOpen}
+                imagesOnly
+                onPick={(items) => {
+                    insertImage(items);
+                    setMediaOpen(false);
+                }}
+            />
         </div>
     );
 }
