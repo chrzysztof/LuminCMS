@@ -129,7 +129,7 @@ class ShortcodesTest extends TestCase
 
         $this->get('/cms/shortcodes')->assertOk()->assertInertia(fn ($page) => $page
             ->component('shortcodes/index')
-            ->has('shortcodes', 12)
+            ->has('shortcodes', 13)
             ->where('shortcodes.0.name', 'block')
             ->where('shortcodes.0.usage', fn ($u) => str_starts_with($u, '[block'))
             ->where('shortcodes.0.description', fn ($d) => $d !== ''));
