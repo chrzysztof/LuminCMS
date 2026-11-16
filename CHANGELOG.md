@@ -6,6 +6,8 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ### Added
 
+- Visual editor: save any selected element as a reusable block ("Save as block"). Saved blocks appear in a "My blocks" category on every page and can be managed (deleted) from the block panel.
+- Visual editor: version history. Every save and publish is recorded, the editor autosaves unsaved work every 30 seconds without touching the live page, offers to recover it after a crash and lets you restore any earlier version (up to 50 saves and 15 autosaves per page are kept).
 - Visual editor style panel: spacing (padding and margin), text alignment and size, columns and column gap, vertical alignment, background, rounded corners, shadow, border, narrow content width and per-device visibility. Settings are per device (desktop, tablet, phone) and produce clean utility classes (`lm-pt-4`, `lm-md-cols-2`, `lm-sm-pt-2`, `lm-hide-mobile`) without inline styles.
 - Visual editor library: ten ready-made sections (hero, features, steps, numbers, pricing, testimonials, FAQ, call to action, contact) in the block panel and a page library (landing, company, pricing, contact) under "Templates" in the toolbar.
 - `npm run build:utilities` regenerates the utility classes from `resources/js/lib/builder/utilities.json`.

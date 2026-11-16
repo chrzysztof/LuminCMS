@@ -14,6 +14,7 @@ use App\Http\Controllers\Cms\MenuController;
 use App\Http\Controllers\Cms\PartController;
 use App\Http\Controllers\Cms\RedirectController;
 use App\Http\Controllers\Cms\RelationController;
+use App\Http\Controllers\Cms\SavedBlockController;
 use App\Http\Controllers\Cms\SeoSettingsController;
 use App\Http\Controllers\Cms\ShortcodeController;
 use App\Http\Controllers\Cms\SiteSettingsController;
@@ -34,9 +35,16 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
     Route::put('content/{type:key}/{content}', [ContentController::class, 'update'])->name('content.update');
     Route::delete('content/{type:key}/{content}', [ContentController::class, 'destroy'])->name('content.destroy');
 
+    Route::middleware('can:edit_posts')->prefix('saved-blocks')->name('saved-blocks.')->group(function () {
+        Route::post('/', [SavedBlockController::class, 'store'])->name('store');
+        Route::delete('{block}', [SavedBlockController::class, 'destroy'])->name('destroy');
+    });
     Route::post('blocks/preview', [BlockController::class, 'preview'])->name('blocks.preview')->middleware('can:edit_posts');
     Route::get('content/{type:key}/{content}/builder', [BuilderController::class, 'edit'])->name('content.builder');
     Route::put('content/{type:key}/{content}/builder', [BuilderController::class, 'save'])->name('content.builder.save');
+    Route::put('content/{type:key}/{content}/builder/autosave', [BuilderController::class, 'autosave'])->name('content.builder.autosave');
+    Route::get('content/{type:key}/{content}/builder/revisions', [BuilderController::class, 'revisions'])->name('content.builder.revisions');
+    Route::get('content/{type:key}/{content}/builder/revisions/{revision}', [BuilderController::class, 'revision'])->name('content.builder.revision');
     Route::get('content/{type:key}/{content}/preview', [SiteController::class, 'preview'])->name('content.preview');
 
     Route::middleware('can:manage_seo')->group(function () {

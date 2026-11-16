@@ -2,7 +2,7 @@ import type { Editor } from 'grapesjs';
 import { SECTIONS } from '@/lib/builder/sections';
 import { t } from '@/lib/i18n';
 
-const icon = (path: string) =>
+export const icon = (path: string) =>
     `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;
 
 import { placeholderImage } from '@/lib/builder/placeholder';

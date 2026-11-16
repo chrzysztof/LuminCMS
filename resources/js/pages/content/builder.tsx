@@ -5,7 +5,10 @@ import 'grapesjs/dist/css/grapes.min.css';
 import '../../../css/builder.css';
 import {
     ArrowLeft,
+    Bookmark,
+    BookmarkPlus,
     Eye,
+    History,
     LayoutTemplate,
     ImagePlus,
     Layers,
@@ -24,7 +27,15 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import {
+    HistoryDialog,
+    formatRevisionDate,
+} from '@/components/cms/builder/history-dialog';
 import { PageTemplatesDialog } from '@/components/cms/builder/page-templates-dialog';
+import {
+    ManageBlocksDialog,
+    SaveBlockDialog,
+} from '@/components/cms/builder/saved-blocks-dialogs';
 import { StylePanel, type Device } from '@/components/cms/builder/style-panel';
 import { MediaPicker } from '@/components/cms/media-picker';
 import { ThemeBlockDialog } from '@/components/cms/theme-block-dialog';
@@ -36,6 +47,7 @@ import {
     registerThemeBlocks,
     type ThemeBlock,
 } from '@/lib/builder/theme-blocks';
+import { syncSavedBlocks, type SavedBlock } from '@/lib/builder/saved-blocks';
 import { registerComponentTypes } from '@/lib/builder/types';
 import { cmsUrl } from '@/lib/cms-urls';
 import { cn } from '@/lib/utils';
@@ -47,7 +59,13 @@ type Props = {
     content: { id: number; title: string; status: ContentStatus; slug: string };
     project: ProjectData | null;
     themeBlocks: ThemeBlock[];
+    savedBlocks: SavedBlock[];
+    /** Autozapis nowszy niż ostatni zapis: niezapisane zmiany do odzyskania. */
+    recovery: { id: number; created_at: string } | null;
 };
+
+/** Co ile ms edytor odkłada autozapis, jeśli są niezapisane zmiany. */
+const AUTOSAVE_MS = 30_000;
 
 const devices = [
     { id: 'Desktop', label: t('Komputer'), icon: Monitor, width: '' },
@@ -75,6 +93,8 @@ export default function Builder({
     content,
     project,
     themeBlocks,
+    savedBlocks,
+    recovery,
 }: Props) {
     const canvas = useRef<HTMLDivElement>(null);
     const blocksEl = useRef<HTMLDivElement>(null);
@@ -95,6 +115,7 @@ export default function Builder({
         name: string;
         isImage: boolean;
         isBlock: boolean;
+        isWrapper: boolean;
     } | null>(null);
     const [blockDialog, setBlockDialog] = useState<{
         block: ThemeBlock;
@@ -103,6 +124,13 @@ export default function Builder({
     const [history, setHistory] = useState({ undo: false, redo: false });
     const [picking, setPicking] = useState(false);
     const [templatesOpen, setTemplatesOpen] = useState(false);
+    const [historyOpen, setHistoryOpen] = useState(false);
+    const [saved, setSaved] = useState<SavedBlock[]>(savedBlocks);
+    const [saveBlockOpen, setSaveBlockOpen] = useState(false);
+    const [manageOpen, setManageOpen] = useState(false);
+    const [savingBlock, setSavingBlock] = useState(false);
+    const [autosavedAt, setAutosavedAt] = useState<string | null>(null);
+    const apiBase = `/cms/content/${type.key}/${content.id}/builder`;
 
     const save = useCallback(
         async (publish = false) => {
@@ -139,6 +167,120 @@ export default function Builder({
     useEffect(() => {
         saveRef.current = save;
     }, [save]);
+
+    const dirtyRef = useRef(false);
+    useEffect(() => {
+        dirtyRef.current = dirty;
+    }, [dirty]);
+
+    // Autozapis: co jakiś czas odkłada bieżący stan do historii (strona na żywo się nie zmienia).
+    useEffect(() => {
+        let last = '';
+        const timer = window.setInterval(() => {
+            const editor = editorRef.current;
+            if (!editor || !dirtyRef.current) return;
+
+            const project = editor.getProjectData();
+            const json = JSON.stringify(project);
+            if (json === last) return;
+            last = json;
+
+            api<{ saved_at: string }>(`${apiBase}/autosave`, {
+                method: 'PUT',
+                body: { project },
+            })
+                .then((r) => setAutosavedAt(r.saved_at))
+                .catch(() => {
+                    last = '';
+                });
+        }, AUTOSAVE_MS);
+
+        return () => window.clearInterval(timer);
+    }, [apiBase]);
+
+    const restoreRevision = useCallback(
+        async (id: number) => {
+            const editor = editorRef.current;
+            if (!editor) return;
+
+            try {
+                // Najpierw odkładamy obecny stan, żeby przywrócenie niczego nie zgubiło.
+                if (dirtyRef.current)
+                    await api(`${apiBase}/autosave`, {
+                        method: 'PUT',
+                        body: { project: editor.getProjectData() },
+                    });
+
+                const { project: restored } = await api<{
+                    project: ProjectData;
+                }>(`${apiBase}/revisions/${id}`);
+                editor.loadProjectData(restored);
+                setDirty(true);
+                toast.success(
+                    t(
+                        'Przywrócono wersję. Zapisz, aby zastąpiła obecną stronę.',
+                    ),
+                );
+            } catch (e) {
+                toast.error((e as Error).message);
+                throw e;
+            }
+        },
+        [apiBase],
+    );
+
+    // Po wejściu do edytora proponujemy odzyskanie niezapisanych zmian z autozapisu.
+    useEffect(() => {
+        if (!recovery) return;
+
+        const id = toast(t('Znaleziono niezapisane zmiany z autozapisu'), {
+            description: formatRevisionDate(recovery.created_at),
+            duration: Infinity,
+            action: {
+                label: t('Przywróć'),
+                onClick: () => void restoreRevision(recovery.id),
+            },
+        });
+
+        return () => {
+            toast.dismiss(id);
+        };
+    }, [recovery, restoreRevision]);
+
+    useEffect(() => {
+        if (editorInst) syncSavedBlocks(editorInst, saved);
+    }, [editorInst, saved]);
+
+    const saveAsBlock = async (name: string) => {
+        const component = editorRef.current?.getSelected();
+        if (!component) return;
+
+        setSavingBlock(true);
+        try {
+            const block = await api<SavedBlock>('/cms/saved-blocks', {
+                method: 'POST',
+                body: { name, html: component.toHTML() },
+            });
+            setSaved((list) =>
+                [...list, block].sort((a, b) => a.name.localeCompare(b.name)),
+            );
+            setSaveBlockOpen(false);
+            toast.success(t('Blok zapisany w „Moje bloki”.'));
+        } catch (e) {
+            toast.error((e as Error).message);
+        } finally {
+            setSavingBlock(false);
+        }
+    };
+
+    const deleteBlock = async (block: SavedBlock) => {
+        try {
+            await api(`/cms/saved-blocks/${block.id}`, { method: 'DELETE' });
+            setSaved((list) => list.filter((b) => b.id !== block.id));
+        } catch (e) {
+            toast.error((e as Error).message);
+        }
+    };
 
     const openBlockSettings = useCallback(
         (component: Component) => {
@@ -228,6 +370,7 @@ export default function Builder({
                 name: c.getName(),
                 isImage: c.is('lm-image'),
                 isBlock: c.is('lm-block'),
+                isWrapper: c.is('wrapper'),
             }),
         );
         editor.on('component:deselected', () => setSelected(null));
@@ -369,7 +512,14 @@ export default function Builder({
                                 </span>
                                 <StatusBadge status={status} />
                                 {dirty && (
-                                    <span className="text-xs text-amber-600">
+                                    <span
+                                        className="text-xs text-amber-600"
+                                        title={
+                                            autosavedAt
+                                                ? `${t('Autozapis')}: ${formatRevisionDate(autosavedAt)}`
+                                                : undefined
+                                        }
+                                    >
                                         {t('niezapisane')}
                                     </span>
                                 )}
@@ -448,6 +598,17 @@ export default function Builder({
                             <Button
                                 type="button"
                                 variant="ghost"
+                                size="icon"
+                                className="size-9"
+                                aria-label={t('Historia wersji')}
+                                title={t('Historia wersji')}
+                                onClick={() => setHistoryOpen(true)}
+                            >
+                                <History />
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="ghost"
                                 size="sm"
                                 onClick={() => void preview()}
                             >
@@ -501,9 +662,22 @@ export default function Builder({
                                     !leftOpen && 'hidden',
                                 )}
                             >
-                                <p className="border-b px-4 py-3 text-sm font-semibold">
-                                    {t('Bloki')}
-                                </p>
+                                <div className="flex items-center justify-between border-b py-1.5 pr-1.5 pl-4">
+                                    <p className="text-sm font-semibold">
+                                        {t('Bloki')}
+                                    </p>
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        className="size-8"
+                                        aria-label={t('Moje bloki')}
+                                        title={t('Moje bloki')}
+                                        onClick={() => setManageOpen(true)}
+                                    >
+                                        <Bookmark />
+                                    </Button>
+                                </div>
                                 <div
                                     ref={blocksEl}
                                     className="min-h-0 flex-1 overflow-y-auto"
@@ -606,6 +780,20 @@ export default function Builder({
                                             {t('Wybierz obraz z biblioteki')}
                                         </Button>
                                     )}
+                                    {selected && !selected.isWrapper && (
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="sm"
+                                            className="mb-2 w-full"
+                                            onClick={() =>
+                                                setSaveBlockOpen(true)
+                                            }
+                                        >
+                                            <BookmarkPlus />{' '}
+                                            {t('Zapisz jako blok')}
+                                        </Button>
+                                    )}
                                     <div ref={traitsEl} />
                                     <StylePanel
                                         editor={editorInst}
@@ -637,6 +825,30 @@ export default function Builder({
 
                         setDirty(true);
                     }}
+                />
+
+                <HistoryDialog
+                    open={historyOpen}
+                    baseUrl={apiBase}
+                    onOpenChange={setHistoryOpen}
+                    onRestore={restoreRevision}
+                />
+
+                {saveBlockOpen && (
+                    <SaveBlockDialog
+                        open
+                        defaultName={selected?.name ?? ''}
+                        saving={savingBlock}
+                        onOpenChange={setSaveBlockOpen}
+                        onSave={(name) => void saveAsBlock(name)}
+                    />
+                )}
+
+                <ManageBlocksDialog
+                    open={manageOpen}
+                    blocks={saved}
+                    onOpenChange={setManageOpen}
+                    onDelete={(b) => void deleteBlock(b)}
                 />
 
                 {blockDialog && (
