@@ -4,56 +4,6 @@ import { t } from '@/lib/i18n';
 type Option = { id: string; name: string; cls?: string };
 type ClassGroup = { name: string; label: string; options: Option[] };
 
-const bg: ClassGroup = {
-    name: 'bg',
-    label: t('Tło'),
-    options: [
-        { id: '', name: t('Białe') },
-        { id: 'muted', name: t('Jasnoszare'), cls: 'lm-bg-muted' },
-        { id: 'brand', name: t('Kolor marki'), cls: 'lm-bg-brand' },
-        { id: 'dark', name: t('Ciemne'), cls: 'lm-bg-dark' },
-    ],
-};
-
-const pad: ClassGroup = {
-    name: 'pad',
-    label: t('Odstępy pionowe'),
-    options: [
-        { id: 'sm', name: t('Małe'), cls: 'lm-pad-sm' },
-        { id: '', name: t('Normalne') },
-        { id: 'lg', name: t('Duże'), cls: 'lm-pad-lg' },
-    ],
-};
-
-const align: ClassGroup = {
-    name: 'align',
-    label: t('Wyrównanie tekstu'),
-    options: [
-        { id: '', name: t('Do lewej') },
-        { id: 'center', name: t('Do środka'), cls: 'lm-center' },
-        { id: 'right', name: t('Do prawej'), cls: 'lm-right' },
-    ],
-};
-
-const cols: ClassGroup = {
-    name: 'cols',
-    label: t('Liczba kolumn'),
-    options: [
-        { id: '2', name: '2', cls: 'lm-cols-2' },
-        { id: '3', name: '3', cls: 'lm-cols-3' },
-        { id: '4', name: '4', cls: 'lm-cols-4' },
-    ],
-};
-
-const valign: ClassGroup = {
-    name: 'valign',
-    label: t('Wyrównanie w pionie'),
-    options: [
-        { id: '', name: t('Do góry') },
-        { id: 'center', name: t('Do środka'), cls: 'lm-items-center' },
-    ],
-};
-
 const variant: ClassGroup = {
     name: 'variant',
     label: t('Styl przycisku'),
@@ -87,11 +37,9 @@ function classGroups(groups: ClassGroup[]) {
                 const current = group.options.find(
                     (o) => o.cls && this.getClasses().includes(o.cls),
                 );
-                this.set(
-                    group.name,
-                    current ? current.id : group.name === 'cols' ? '2' : '',
-                    { silent: true },
-                );
+                this.set(group.name, current ? current.id : '', {
+                    silent: true,
+                });
                 this.on(`change:${group.name}`, () => apply(this, group));
             });
         },
@@ -105,31 +53,23 @@ const base = { resizable: false, copyable: true, stylable: false };
 export function registerComponentTypes(editor: Editor) {
     const dc = editor.DomComponents;
 
-    const section = classGroups([bg, pad, align]);
     dc.addType('lm-section', {
         isComponent: (el) =>
             el.tagName === 'SECTION' && el.classList?.contains('lm-section')
                 ? { type: 'lm-section' }
                 : false,
         model: {
-            defaults: { ...base, name: t('Sekcja'), traits: section.traits },
-            init(this: Component) {
-                section.init.call(this);
-            },
+            defaults: { ...base, name: t('Sekcja'), traits: [] },
         },
     });
 
-    const grid = classGroups([cols, valign]);
     dc.addType('lm-grid', {
         isComponent: (el) =>
             el.tagName === 'DIV' && el.classList?.contains('lm-grid')
                 ? { type: 'lm-grid' }
                 : false,
         model: {
-            defaults: { ...base, name: t('Kolumny'), traits: grid.traits },
-            init(this: Component) {
-                grid.init.call(this);
-            },
+            defaults: { ...base, name: t('Kolumny'), traits: [] },
         },
     });
 
@@ -138,10 +78,9 @@ export function registerComponentTypes(editor: Editor) {
             el.tagName === 'DIV' && el.classList?.contains('lm-card')
                 ? { type: 'lm-card' }
                 : false,
-        model: { defaults: { ...base, name: t('Karta') } },
+        model: { defaults: { ...base, name: t('Karta'), traits: [] } },
     });
 
-    const textAlign = classGroups([align]);
     dc.addType('lm-heading', {
         extend: 'text',
         isComponent: (el) =>
@@ -161,11 +100,9 @@ export function registerComponentTypes(editor: Editor) {
                             label: `H${n}`,
                         })),
                     },
-                    ...textAlign.traits,
                 ],
             },
             init(this: Component) {
-                textAlign.init.call(this);
                 this.set('level', String(this.get('tagName') ?? 'h2'), {
                     silent: true,
                 });
@@ -181,10 +118,7 @@ export function registerComponentTypes(editor: Editor) {
         isComponent: (el) =>
             el.tagName === 'P' ? { type: 'lm-paragraph' } : false,
         model: {
-            defaults: { ...base, name: t('Akapit'), traits: textAlign.traits },
-            init(this: Component) {
-                textAlign.init.call(this);
-            },
+            defaults: { ...base, name: t('Akapit'), traits: [] },
         },
     });
 

@@ -2,6 +2,14 @@
 
 All notable changes to Lumin CMS are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/) (while below 1.0, minor releases may include breaking changes).
 
+## [Unreleased]
+
+### Added
+
+- Visual editor style panel: spacing (padding and margin), text alignment and size, columns and column gap, vertical alignment, background, rounded corners, shadow, border, narrow content width and per-device visibility. Settings are per device (desktop, tablet, phone) and produce clean utility classes (`lm-pt-4`, `lm-md-cols-2`, `lm-sm-pt-2`, `lm-hide-mobile`) without inline styles.
+- `npm run build:utilities` regenerates the utility classes from `resources/js/lib/builder/utilities.json`.
+- Rich-text editor: icon toolbar with a "more tools" row, block format, highlight, sub/superscript, text alignment, images from the media library, tables, code blocks and a link panel.
+
 ## [0.2.0] - 2026-11-16
 
 ### Added

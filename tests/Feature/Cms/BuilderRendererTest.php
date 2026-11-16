@@ -37,6 +37,23 @@ class BuilderRendererTest extends TestCase
         $this->assertSame('<section class="lm-section lm-bg-muted"><h1>Cześć &amp; witaj</h1><p>Tekst</p></section>', $html);
     }
 
+    public function test_responsive_utility_classes_are_kept_and_have_css(): void
+    {
+        $html = $this->render([[
+            'tagName' => 'div', 'classes' => ['lm-grid', 'lm-cols-3', 'lm-md-cols-2', 'lm-sm-cols-1', 'lm-pt-4', 'lm-sm-pt-2', 'lm-hide-mobile'],
+            'components' => [],
+        ]]);
+
+        $this->assertSame('<div class="lm-grid lm-cols-3 lm-md-cols-2 lm-sm-cols-1 lm-pt-4 lm-sm-pt-2 lm-hide-mobile"></div>', $html);
+
+        // Każda klasa narzędziowa ma regułę w arkuszu (generowanym przez scripts/build-utilities.mjs).
+        $css = file_get_contents(public_path('css/lumin-blocks.css'));
+
+        foreach (['.lm-cols-3', '.lm-md-cols-2', '.lm-sm-cols-1', '.lm-pt-4', '.lm-sm-pt-2', '.lm-hide-mobile'] as $selector) {
+            $this->assertStringContainsString($selector.' ', $css);
+        }
+    }
+
     public function test_empty_or_malformed_project_renders_nothing(): void
     {
         $this->assertSame('', app(BuilderRenderer::class)->render([]));

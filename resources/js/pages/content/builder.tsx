@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { StylePanel, type Device } from '@/components/cms/builder/style-panel';
 import { MediaPicker } from '@/components/cms/media-picker';
 import { ThemeBlockDialog } from '@/components/cms/theme-block-dialog';
 import { StatusBadge } from '@/components/cms/status-badge';
@@ -52,6 +53,18 @@ const devices = [
     { id: 'Mobile', label: t('Telefon'), icon: Smartphone, width: '375px' },
 ];
 
+/** W edytorze elementy ukryte na danym urządzeniu zostają widoczne (przygaszone), żeby dało się je zaznaczyć. */
+const HIDDEN_PREVIEW_CSS = [
+    '@media (min-width:901px){body .lm-hide-desktop',
+    '@media (min-width:641px) and (max-width:900px){body .lm-hide-tablet',
+    '@media (max-width:640px){body .lm-hide-mobile',
+]
+    .map(
+        (selector) =>
+            `${selector}{display:revert!important;opacity:.35;outline:1px dashed #94a3b8}}`,
+    )
+    .join('');
+
 const panelClass =
     'pointer-events-auto flex min-h-0 flex-col overflow-hidden rounded-2xl border bg-white/95 shadow-xl backdrop-blur';
 
@@ -66,6 +79,7 @@ export default function Builder({
     const layersEl = useRef<HTMLDivElement>(null);
     const traitsEl = useRef<HTMLDivElement>(null);
     const editorRef = useRef<Editor | null>(null);
+    const [editorInst, setEditorInst] = useState<Editor | null>(null);
 
     const [device, setDevice] = useState('Desktop');
     const [leftOpen, setLeftOpen] = useState(true);
@@ -170,6 +184,7 @@ export default function Builder({
             traitManager: { appendTo: traitsEl.current },
             styleManager: { sectors: [] },
             selectorManager: { componentFirst: true },
+            protectedCss: `body{margin:0}${HIDDEN_PREVIEW_CSS}`,
             canvas: {
                 styles: [
                     '/css/lumin-blocks.css',
@@ -246,6 +261,7 @@ export default function Builder({
         blocksContainer.addEventListener('click', addBlock, true);
 
         editorRef.current = editor;
+        setEditorInst(editor);
         refresh();
         setDirty(false);
 
@@ -253,6 +269,7 @@ export default function Builder({
             blocksContainer.removeEventListener('click', addBlock, true);
             editor.destroy();
             editorRef.current = null;
+            setEditorInst(null);
         };
         // Edytor tworzymy raz dla danej treści.
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -579,6 +596,11 @@ export default function Builder({
                                         </Button>
                                     )}
                                     <div ref={traitsEl} />
+                                    <StylePanel
+                                        editor={editorInst}
+                                        device={device as Device}
+                                        onChange={() => setDirty(true)}
+                                    />
                                 </div>
                                 <div
                                     ref={layersEl}
