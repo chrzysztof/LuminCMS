@@ -37,10 +37,24 @@ if (galleries.length && typeof HTMLDialogElement === 'function') {
         });
     });
 
-    dialog.querySelector('.lm-lightbox__close').addEventListener('click', function () { dialog.close(); });
-    dialog.querySelector('.lm-lightbox__prev').addEventListener('click', function () { show(index - 1); });
-    dialog.querySelector('.lm-lightbox__next').addEventListener('click', function () { show(index + 1); });
-    dialog.addEventListener('click', function (e) { if (e.target === dialog) dialog.close(); });
+    dialog
+        .querySelector('.lm-lightbox__close')
+        .addEventListener('click', function () {
+            dialog.close();
+        });
+    dialog
+        .querySelector('.lm-lightbox__prev')
+        .addEventListener('click', function () {
+            show(index - 1);
+        });
+    dialog
+        .querySelector('.lm-lightbox__next')
+        .addEventListener('click', function () {
+            show(index + 1);
+        });
+    dialog.addEventListener('click', function (e) {
+        if (e.target === dialog) dialog.close();
+    });
     dialog.addEventListener('keydown', function (e) {
         if (e.key === 'ArrowLeft') show(index - 1);
         if (e.key === 'ArrowRight') show(index + 1);

@@ -1,5 +1,9 @@
 var counters = document.querySelectorAll('[data-lm-count]');
-if (counters.length && 'IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+if (
+    counters.length &&
+    'IntersectionObserver' in window &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+) {
     var run = function (el) {
         var end = parseFloat(el.getAttribute('data-lm-count'));
         var decimals = (String(end).split('.')[1] || '').length;
@@ -13,13 +17,18 @@ if (counters.length && 'IntersectionObserver' in window && !window.matchMedia('(
         el.textContent = (0).toFixed(decimals);
         requestAnimationFrame(step);
     };
-    var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-                observer.unobserve(entry.target);
-                run(entry.target);
-            }
-        });
-    }, { threshold: 0.4 });
-    counters.forEach(function (el) { observer.observe(el); });
+    var observer = new IntersectionObserver(
+        function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    observer.unobserve(entry.target);
+                    run(entry.target);
+                }
+            });
+        },
+        { threshold: 0.4 },
+    );
+    counters.forEach(function (el) {
+        observer.observe(el);
+    });
 }

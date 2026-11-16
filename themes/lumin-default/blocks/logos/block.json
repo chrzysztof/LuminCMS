@@ -3,7 +3,18 @@
     "category": "Widgety",
     "icon": "<rect x=\"3\" y=\"5\" width=\"7\" height=\"5\" rx=\"1\"/><rect x=\"14\" y=\"5\" width=\"7\" height=\"5\" rx=\"1\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"5\" rx=\"1\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"5\" rx=\"1\"/>",
     "fields": [
-        { "type": "text", "name": "title", "label": "Tytuł (opcjonalnie)", "default_value": "Zaufali nam" },
-        { "type": "gallery", "name": "logos", "label": "Logo", "return_format": "array", "size": "medium" }
+        {
+            "type": "text",
+            "name": "title",
+            "label": "Tytuł (opcjonalnie)",
+            "default_value": "Zaufali nam"
+        },
+        {
+            "type": "gallery",
+            "name": "logos",
+            "label": "Logo",
+            "return_format": "array",
+            "size": "medium"
+        }
     ]
 }

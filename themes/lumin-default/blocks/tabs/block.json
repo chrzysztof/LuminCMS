@@ -9,7 +9,12 @@
             "label": "Zakładki",
             "button_label": "Dodaj zakładkę",
             "sub_fields": [
-                { "type": "text", "name": "title", "label": "Tytuł zakładki", "required": true },
+                {
+                    "type": "text",
+                    "name": "title",
+                    "label": "Tytuł zakładki",
+                    "required": true
+                },
                 { "type": "textarea", "name": "text", "label": "Treść" }
             ]
         }

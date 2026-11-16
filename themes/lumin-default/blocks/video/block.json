@@ -3,13 +3,28 @@
     "category": "Widgety",
     "icon": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2\"/><path d=\"M10 9.5v5l4.5-2.5z\"/>",
     "fields": [
-        { "type": "text", "name": "title", "label": "Tytuł (opis dla czytników ekranu)", "default_value": "Film" },
-        { "type": "url", "name": "url", "label": "Adres wideo (YouTube, Vimeo albo plik MP4)", "required": true },
+        {
+            "type": "text",
+            "name": "title",
+            "label": "Tytuł (opis dla czytników ekranu)",
+            "default_value": "Film"
+        },
+        {
+            "type": "url",
+            "name": "url",
+            "label": "Adres wideo (YouTube, Vimeo albo plik MP4)",
+            "required": true
+        },
         {
             "type": "select",
             "name": "ratio",
             "label": "Proporcje",
-            "choices": { "16-9": "16:9", "4-3": "4:3", "1-1": "1:1", "9-16": "9:16 (pionowe)" },
+            "choices": {
+                "16-9": "16:9",
+                "4-3": "4:3",
+                "1-1": "1:1",
+                "9-16": "9:16 (pionowe)"
+            },
             "default_value": "16-9"
         }
     ]
