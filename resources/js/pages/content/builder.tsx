@@ -30,6 +30,7 @@ import {
     HistoryDialog,
     formatRevisionDate,
 } from '@/components/cms/builder/history-dialog';
+import { BuilderContextMenu } from '@/components/cms/builder/context-menu';
 import { PageTemplatesDialog } from '@/components/cms/builder/page-templates-dialog';
 import {
     ManageBlocksDialog,
@@ -41,6 +42,7 @@ import { ThemeBlockDialog } from '@/components/cms/theme-block-dialog';
 import { StatusBadge } from '@/components/cms/status-badge';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
+import { registerShortcuts } from '@/lib/builder/actions';
 import { registerBlocks } from '@/lib/builder/blocks';
 import {
     registerThemeBlocks,
@@ -118,6 +120,11 @@ export default function Builder({
     const [dirty, setDirty] = useState(false);
     const [empty, setEmpty] = useState(!project);
     const [status, setStatus] = useState<ContentStatus>(content.status);
+    const [menu, setMenu] = useState<{
+        x: number;
+        y: number;
+        component: Component;
+    } | null>(null);
     const [selected, setSelected] = useState<{
         name: string;
         isImage: boolean;
@@ -410,6 +417,38 @@ export default function Builder({
             () => void saveRef.current(false),
         );
 
+        registerShortcuts(editor);
+
+        // Menu prawego przycisku: zaznacza element pod kursorem i otwiera własne menu zamiast przeglądarkowego.
+        let frameDoc: Document | null = null;
+        const onContext = (e: MouseEvent) => {
+            const el = e.target as
+                | (HTMLElement & { __gjsv?: { model: Component } })
+                | null;
+            const comp = el?.closest<
+                HTMLElement & { __gjsv?: { model: Component } }
+            >('*')?.__gjsv?.model;
+            if (!comp || comp.is('wrapper')) return;
+            e.preventDefault();
+            editor.select(comp);
+            const frameRect =
+                editor.Canvas.getFrameEl().getBoundingClientRect();
+            setMenu({
+                x: frameRect.left + e.clientX,
+                y: frameRect.top + e.clientY,
+                component: comp,
+            });
+        };
+        const attachContext = () => {
+            frameDoc?.removeEventListener('contextmenu', onContext);
+            frameDoc = editor.Canvas.getDocument() ?? null;
+            frameDoc?.addEventListener('contextmenu', onContext);
+        };
+        // Dokument ramki płótna powstaje dopiero po załadowaniu, więc podpinamy się po zdarzeniach ładowania.
+        editor.on('canvas:frame:load', attachContext);
+        editor.on('load', attachContext);
+        attachContext();
+
         // Kliknięcie bloku dodaje go na koniec strony (alternatywa dla przeciągania, np. na ekranach dotykowych).
         // Nasłuch w fazie przechwytywania, bo GrapesJS obsługuje własne zdarzenia bloków.
         const blocksContainer = blocksEl.current;
@@ -441,6 +480,7 @@ export default function Builder({
 
         return () => {
             blocksContainer.removeEventListener('click', addBlock, true);
+            frameDoc?.removeEventListener('contextmenu', onContext);
             editor.destroy();
             editorRef.current = null;
             setEditorInst(null);
@@ -489,6 +529,15 @@ export default function Builder({
 
     return (
         <>
+            {menu && editorInst && (
+                <BuilderContextMenu
+                    editor={editorInst}
+                    component={menu.component}
+                    x={menu.x}
+                    y={menu.y}
+                    onClose={() => setMenu(null)}
+                />
+            )}
             <Head title={t('Edytor: {name}', { name: content.title })} />
             <div className="lumin-builder fixed inset-0 overflow-hidden bg-neutral-200">
                 <div ref={canvas} className="absolute inset-0" />
