@@ -1,0 +1,105 @@
+.lm-posts-block {
+    padding-block: var(--lm-space);
+}
+.lm-posts-block h2 {
+    margin: 0 0 1.25rem;
+}
+.lm-posts-block__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+.lm-posts-block__filters a {
+    padding: 0.35rem 0.9rem;
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: var(--lm-text);
+    border: 1px solid var(--lm-border);
+    border-radius: 999px;
+}
+.lm-posts-block__filters a[aria-current] {
+    color: #fff;
+    background: var(--lm-primary);
+    border-color: var(--lm-primary);
+}
+.lm-posts-block__items {
+    display: grid;
+    gap: 1.5rem;
+}
+.lm-posts-block__items--cards {
+    grid-template-columns: repeat(var(--lm-posts-cols, 3), 1fr);
+}
+.lm-posts-block__items--cols-2 {
+    --lm-posts-cols: 2;
+}
+.lm-posts-block__items--cols-3 {
+    --lm-posts-cols: 3;
+}
+.lm-posts-block__items--cols-4 {
+    --lm-posts-cols: 4;
+}
+@media (max-width: 900px) {
+    .lm-posts-block__items--cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 640px) {
+    .lm-posts-block__items--cards {
+        grid-template-columns: 1fr;
+    }
+}
+.lm-posts-block__item {
+    overflow: hidden;
+    background: var(--lm-bg);
+    border: 1px solid var(--lm-border);
+    border-radius: var(--lm-radius);
+}
+.lm-posts-block__items--list .lm-posts-block__item {
+    display: grid;
+    grid-template-columns: minmax(0, 14rem) 1fr;
+}
+.lm-posts-block__items--list
+    .lm-posts-block__item:not(:has(.lm-posts-block__image)) {
+    grid-template-columns: 1fr;
+}
+@media (max-width: 640px) {
+    .lm-posts-block__items--list .lm-posts-block__item {
+        grid-template-columns: 1fr;
+    }
+}
+.lm-posts-block__image {
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+}
+.lm-posts-block__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.lm-posts-block__body {
+    padding: 1.1rem 1.25rem 1.3rem;
+}
+.lm-posts-block__body time {
+    font-size: 0.8rem;
+    color: var(--lm-muted, #6b7280);
+}
+.lm-posts-block__body h3 {
+    margin: 0.2rem 0 0.4rem;
+    font-size: 1.15rem;
+}
+.lm-posts-block__body h3 a {
+    color: inherit;
+    text-decoration: none;
+}
+.lm-posts-block__body h3 a:hover {
+    color: var(--lm-primary);
+}
+.lm-posts-block__body p {
+    margin: 0;
+    color: var(--lm-muted, #6b7280);
+}
+.lm-posts-block__empty {
+    color: var(--lm-muted, #6b7280);
+}

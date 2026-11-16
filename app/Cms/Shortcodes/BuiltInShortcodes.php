@@ -78,10 +78,11 @@ class BuiltInShortcodes
         }, '[link id="12"]Zobacz ofertę[/link]', 'Odnośnik do treści o podanym id; bez tekstu użyje jej tytułu.');
 
         // Blok motywu wstawiony w edytorze wizualnym (markup z szablonu bloku aktywnego motywu).
-        $sc->add('block', function (array $a) {
+        $sc->add('block', function (array $a, string $content, ?Content $current) {
             return app(BlockRegistry::class)->render(
                 (string) ($a['name'] ?? ''),
                 BlockRegistry::decode((string) ($a['data'] ?? '')),
+                $current,
             );
         }, '[block name="hero-banner" data="…"]', 'Blok motywu dodany w edytorze wizualnym. Wstawia go edytor, nie wpisuj tego kodu ręcznie.');
 

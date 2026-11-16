@@ -2,8 +2,12 @@
 
 namespace App\Cms\Builder;
 
+use App\Cms\Content\Content;
+use App\Cms\Content\ContentType;
 use App\Cms\Fields\FieldRegistry;
 use App\Cms\Fields\FieldValidator;
+use App\Cms\Taxonomy\Taxonomy;
+use App\Cms\Taxonomy\Term;
 use App\Cms\Themes\ThemeManager;
 use Illuminate\Support\Facades\View;
 use Illuminate\Validation\ValidationException;
@@ -120,9 +124,31 @@ class BlockRegistry
             'label' => $b['label'],
             'category' => $b['category'],
             'icon' => $b['icon'],
-            'fields' => $b['fields'],
+            'fields' => array_map(fn (array $f) => $this->withChoices($f), $b['fields']),
             'defaults' => $this->defaults($b),
         ], $this->all()));
+    }
+
+    /**
+     * Opcje wyboru z danych serwisu ("choices_source" w block.json): content_types, taxonomies albo terms
+     * (wartość "taksonomia:slug"). Pobierane dopiero przy edycji i walidacji, więc zwykłe wyświetlanie strony nie robi zapytań.
+     */
+    private function withChoices(array $field): array
+    {
+        $source = $field['choices_source'] ?? null;
+
+        if (! is_string($source)) {
+            return $field;
+        }
+
+        $choices = match ($source) {
+            'content_types' => ContentType::where('key', '!=', 'part')->orderBy('id')->get()->pluck('label_plural', 'key')->all(),
+            'taxonomies' => Taxonomy::orderBy('id')->get()->pluck('label', 'key')->all(),
+            'terms' => Term::with('taxonomy')->orderBy('name')->get()->mapWithKeys(fn (Term $t) => [$t->taxonomy->key.':'.$t->slug => $t->taxonomy->label.': '.$t->name])->all(),
+            default => [],
+        };
+
+        return [...$field, 'choices' => ($field['choices'] ?? []) + $choices];
     }
 
     private function defaults(array $block): array
@@ -158,6 +184,8 @@ class BlockRegistry
                 continue;
             }
 
+            $field = $this->withChoices($field);
+
             try {
                 $result = $this->validator->validate([$field], [$field['name'] => $attrs[$field['name']]]);
             } catch (ValidationException) {
@@ -187,7 +215,7 @@ class BlockRegistry
         return $out;
     }
 
-    public function render(string $name, array $attrs): string
+    public function render(string $name, array $attrs, ?Content $current = null): string
     {
         $block = $this->get($name);
 
@@ -199,6 +227,7 @@ class BlockRegistry
             return trim(View::file($block['dir'].'/render.blade.php', [
                 'attrs' => $this->formatted($block, $this->normalize($name, $attrs)),
                 'block' => $block,
+                'current' => $current,
             ])->render());
         } catch (Throwable $e) {
             // Błąd w szablonie bloku nie może wyłączać całej strony.

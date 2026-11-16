@@ -1,0 +1,104 @@
+{
+    "label": "Lista wpisów",
+    "category": "Treści dynamiczne",
+    "icon": "<rect x=\"3\" y=\"4\" width=\"8\" height=\"7\" rx=\"1.5\"/><rect x=\"13\" y=\"4\" width=\"8\" height=\"7\" rx=\"1.5\"/><path d=\"M3 15h18M3 19h12\"/>",
+    "fields": [
+        {
+            "type": "text",
+            "name": "title",
+            "label": "Tytuł sekcji",
+            "default_value": "Najnowsze wpisy"
+        },
+        {
+            "type": "select",
+            "name": "type",
+            "label": "Typ treści",
+            "choices_source": "content_types",
+            "default_value": "post"
+        },
+        {
+            "type": "select",
+            "name": "term",
+            "label": "Tylko z kategorii lub tagu",
+            "choices_source": "terms",
+            "choices": { "": "Wszystkie" },
+            "default_value": ""
+        },
+        {
+            "type": "select",
+            "name": "filter_taxonomy",
+            "label": "Filtr dla odwiedzających",
+            "instructions": "Pokazuje przyciski kategorii nad listą.",
+            "choices_source": "taxonomies",
+            "choices": { "": "Bez filtra" },
+            "default_value": ""
+        },
+        {
+            "type": "number",
+            "name": "limit",
+            "label": "Liczba wpisów",
+            "default_value": 6,
+            "min": 1,
+            "max": 24
+        },
+        {
+            "type": "select",
+            "name": "orderby",
+            "label": "Sortuj według",
+            "choices": {
+                "date": "Daty publikacji",
+                "title": "Tytułu",
+                "menu_order": "Kolejności ręcznej"
+            },
+            "default_value": "date"
+        },
+        {
+            "type": "select",
+            "name": "order",
+            "label": "Kierunek",
+            "choices": {
+                "desc": "Malejąco (najnowsze najpierw)",
+                "asc": "Rosnąco"
+            },
+            "default_value": "desc"
+        },
+        {
+            "type": "select",
+            "name": "layout",
+            "label": "Układ",
+            "choices": { "cards": "Karty", "list": "Lista" },
+            "default_value": "cards"
+        },
+        {
+            "type": "select",
+            "name": "columns",
+            "label": "Kolumny (karty)",
+            "choices": { "2": "2", "3": "3", "4": "4" },
+            "default_value": "3"
+        },
+        {
+            "type": "true_false",
+            "name": "show_image",
+            "label": "Pokaż obraz wyróżniający",
+            "default_value": 1
+        },
+        {
+            "type": "true_false",
+            "name": "show_date",
+            "label": "Pokaż datę",
+            "default_value": 1
+        },
+        {
+            "type": "true_false",
+            "name": "show_excerpt",
+            "label": "Pokaż zajawkę",
+            "default_value": 1
+        },
+        {
+            "type": "true_false",
+            "name": "exclude_current",
+            "label": "Pomiń bieżącą treść",
+            "default_value": 1
+        }
+    ]
+}

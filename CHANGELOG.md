@@ -6,6 +6,7 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ### Added
 
+- "Post list" block (Dynamic content category): lists published content of any type with filters set in the editor (category or tag, order, number), cards or list layout with 2-4 columns, optional featured image, date and excerpt, and the option to skip the current page. An optional visitor filter shows category buttons above the list and filters server-side (`?filtr=slug`, no JavaScript). Theme block fields can now take their options from the site (`choices_source`: `content_types`, `taxonomies`, `terms`), and block templates receive the current content as `$current`.
 - Custom fields in blocks: in the visual editor select a heading, paragraph, button, link or image and choose a custom field of the page in "Custom field" (text, HTML content, link address or image). The value is filled in when the page is displayed, so changing the field updates the page without re-saving it; text left in the editor is the fallback for an empty field. The `[field]` shortcode got formats (`text`, `html`, `url`, `image`), a fallback value (`[field name="x"]fallback[/field]`) and now outputs rich values (links, selects, image fields, rich text). Generated HTML stays clean: only the shortcode is stored, no editor attributes.
 - Widgets (new "Widgets" category in the visual editor): video (YouTube with the privacy-friendly domain, Vimeo with Do Not Track, or an MP4 file), tabs (keyboard accessible), animated counters (final numbers are shown without JavaScript), gallery with a lightbox (native `<dialog>`, arrow keys and Escape), logo grid and an OpenStreetMap map. They are theme blocks rendered on the server, so embeds work although the content filter strips `iframe` and scripts. Themes can now ship a `script.js` next to a block's `style.css`; scripts are bundled into `/theme-blocks.js` and loaded with `defer`.
 - Visual editor: right-click context menu (duplicate, copy, paste, copy and paste style, move up/down, select parent, delete) and keyboard shortcuts: Ctrl/⌘+D duplicate, Alt+↑/↓ move, Ctrl/⌘+↑ select parent, Ctrl/⌘+Alt+C / V copy and paste style.
@@ -24,7 +25,6 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 - Shortcode parser: a self-closing shortcode (`[name /]`) no longer swallows text up to a later closing tag of the same name.
 - SEO descriptions are built from rendered content, so shortcodes no longer appear as raw `[...]` in meta descriptions.
-
 
 ## [0.2.0] - 2026-11-16
 
