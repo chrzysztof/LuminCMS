@@ -103,23 +103,8 @@ main {
 .lm-hero.lm-center p {
     margin-inline: auto;
 }
-.lm-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 2rem;
-}
-.lm-center .lm-actions {
-    justify-content: center;
-}
 .lm-btn {
     padding: 0.85rem 1.6rem;
-}
-.lm-container > h2.lm-center + p.lm-center {
-    max-width: 42rem;
-    margin: -0.2rem auto 2.75rem;
-    color: var(--lm-muted-text);
-    font-size: 1.15rem;
 }
 .lm-card {
     box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);

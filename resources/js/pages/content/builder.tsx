@@ -6,6 +6,7 @@ import '../../../css/builder.css';
 import {
     ArrowLeft,
     Eye,
+    LayoutTemplate,
     ImagePlus,
     Layers,
     LayoutGrid,
@@ -23,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { PageTemplatesDialog } from '@/components/cms/builder/page-templates-dialog';
 import { StylePanel, type Device } from '@/components/cms/builder/style-panel';
 import { MediaPicker } from '@/components/cms/media-picker';
 import { ThemeBlockDialog } from '@/components/cms/theme-block-dialog';
@@ -100,6 +102,7 @@ export default function Builder({
     } | null>(null);
     const [history, setHistory] = useState({ undo: false, redo: false });
     const [picking, setPicking] = useState(false);
+    const [templatesOpen, setTemplatesOpen] = useState(false);
 
     const save = useCallback(
         async (publish = false) => {
@@ -438,6 +441,14 @@ export default function Builder({
                                 type="button"
                                 variant="ghost"
                                 size="sm"
+                                onClick={() => setTemplatesOpen(true)}
+                            >
+                                <LayoutTemplate /> {t('Szablony')}
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
                                 onClick={() => void preview()}
                             >
                                 <Eye /> {t('Podgląd')}
@@ -613,6 +624,20 @@ export default function Builder({
                         </div>
                     </div>
                 </div>
+
+                <PageTemplatesDialog
+                    open={templatesOpen}
+                    hasContent={(editorInst?.getComponents().length ?? 0) > 0}
+                    onOpenChange={setTemplatesOpen}
+                    onInsert={(html, mode) => {
+                        if (!editorInst) return;
+
+                        if (mode === 'replace') editorInst.setComponents(html);
+                        else editorInst.addComponents(html);
+
+                        setDirty(true);
+                    }}
+                />
 
                 {blockDialog && (
                     <ThemeBlockDialog

@@ -1,14 +1,13 @@
 import type { Editor } from 'grapesjs';
+import { SECTIONS } from '@/lib/builder/sections';
 import { t } from '@/lib/i18n';
 
 const icon = (path: string) =>
     `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;
 
-export const placeholderImage =
-    'data:image/svg+xml;utf8,' +
-    encodeURIComponent(
-        '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><rect width="800" height="500" fill="#ececef"/><g fill="none" stroke="#9a9aa5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><rect x="300" y="170" width="200" height="160" rx="14"/><circle cx="360" cy="225" r="16"/><path d="M310 320l60-60 40 40 30-30 60 60"/></g></svg>',
-    );
+import { placeholderImage } from '@/lib/builder/placeholder';
+
+export { placeholderImage };
 
 const img = `<img class="lm-image" src="${placeholderImage}" alt="">`;
 
@@ -137,6 +136,16 @@ const blocks: BlockDef[] = [
 ];
 
 export function registerBlocks(editor: Editor) {
+    SECTIONS.forEach((s) =>
+        editor.Blocks.add(`lib-${s.id}`, {
+            label: t(s.label),
+            category: t('Gotowe sekcje'),
+            media: icon(s.icon),
+            content: s.html,
+            select: true,
+        }),
+    );
+
     blocks.forEach((b) =>
         editor.Blocks.add(b.id, {
             label: b.label,

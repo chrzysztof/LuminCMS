@@ -253,6 +253,83 @@ a {
     margin: 3rem auto;
 }
 
+/* Podtytuł pod wyśrodkowanym nagłówkiem sekcji */
+.lm-container > h2.lm-center + p.lm-center {
+    max-width: 42rem;
+    margin: -0.2rem auto 2.75rem;
+    color: var(--lm-muted-text);
+    font-size: 1.15rem;
+}
+
+/* Gotowe sekcje (biblioteka edytora): kroki, liczby, cennik, FAQ, opinie, przyciski w rzędzie */
+.lm-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+}
+.lm-center .lm-actions {
+    justify-content: center;
+}
+.lm-step {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 0.75rem;
+    border-radius: 999px;
+    background: var(--lm-primary);
+    color: #fff;
+    font-weight: 700;
+}
+.lm-stat strong {
+    display: block;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+.lm-stat span {
+    color: var(--lm-muted-text);
+}
+.lm-price__amount {
+    margin: 0.25rem 0 1rem;
+    font-size: 2.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+.lm-price__amount small {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--lm-muted-text);
+}
+.lm-price .lm-list {
+    margin-bottom: 1.5rem;
+}
+.lm-featured {
+    border-color: var(--lm-primary);
+}
+.lm-author {
+    margin: 1rem 0 0;
+    font-size: 0.9rem;
+    color: var(--lm-muted-text);
+}
+.lm-author strong {
+    color: var(--lm-text);
+}
+.lm-faq details {
+    border-bottom: 1px solid var(--lm-border);
+    padding-block: 1rem;
+}
+.lm-faq summary {
+    cursor: pointer;
+    font-weight: 600;
+}
+.lm-faq details p {
+    margin: 0.75rem 0 0;
+    color: var(--lm-muted-text);
+}
+
 /* @utilities:start (wygenerowane przez scripts/build-utilities.mjs, nie edytuj ręcznie) */
 .lm-pt-0 {
     padding-top: 0;
