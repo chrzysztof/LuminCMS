@@ -1,0 +1,35 @@
+.lm-logos {
+    padding-block: var(--lm-space);
+}
+.lm-logos__title {
+    margin: 0 0 1.5rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--lm-muted, #6b7280);
+}
+.lm-logos__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    align-items: center;
+    justify-content: center;
+}
+.lm-logos__list img {
+    display: block;
+    width: auto;
+    max-width: 9rem;
+    height: 2.5rem;
+    object-fit: contain;
+    opacity: 0.6;
+    filter: grayscale(1);
+    transition: opacity 0.2s, filter 0.2s;
+}
+.lm-logos__list img:hover {
+    opacity: 1;
+    filter: none;
+}

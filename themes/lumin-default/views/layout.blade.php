@@ -90,5 +90,8 @@
         {!! $siteSettings['custom_body_end'] !!}
     @endif
     <script src="{{ $theme->asset('menu.js') }}" defer></script>
+    @if (($blockJs = app(\App\Cms\Builder\BlockRegistry::class)->js()) !== '')
+        <script src="{{ url('theme-blocks.js') }}?v={{ substr(md5($blockJs), 0, 8) }}" defer></script>
+    @endif
 </body>
 </html>

@@ -1,0 +1,19 @@
+{
+    "label": "Liczniki",
+    "category": "Widgety",
+    "icon": "<path d=\"M4 19V9M10 19V5M16 19v-7M22 19H2\"/>",
+    "fields": [
+        {
+            "type": "repeater",
+            "name": "items",
+            "label": "Liczniki",
+            "button_label": "Dodaj licznik",
+            "sub_fields": [
+                { "type": "number", "name": "value", "label": "Wartość", "required": true },
+                { "type": "text", "name": "prefix", "label": "Przed liczbą (np. +)" },
+                { "type": "text", "name": "suffix", "label": "Po liczbie (np. %, lat)" },
+                { "type": "text", "name": "label", "label": "Opis" }
+            ]
+        }
+    ]
+}

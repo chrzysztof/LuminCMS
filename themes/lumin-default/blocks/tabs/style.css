@@ -1,0 +1,32 @@
+.lm-tabs {
+    max-width: 50rem;
+    margin-inline: auto;
+}
+.lm-tabs__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--lm-border);
+}
+.lm-tabs__tab {
+    padding: 0.65rem 1.1rem;
+    font: inherit;
+    font-weight: 600;
+    color: var(--lm-muted, #6b7280);
+    background: none;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    cursor: pointer;
+}
+.lm-tabs__tab[aria-selected='true'] {
+    color: var(--lm-text);
+    border-bottom-color: var(--lm-primary);
+}
+.lm-tabs__tab:focus-visible {
+    outline: 2px solid var(--lm-primary);
+    outline-offset: 2px;
+}
+.lm-tabs__panel {
+    padding: 1.25rem 0;
+}

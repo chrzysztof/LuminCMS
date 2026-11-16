@@ -1,0 +1,17 @@
+{
+    "label": "Zakładki",
+    "category": "Widgety",
+    "icon": "<path d=\"M3 8h6l1.5-3H17l1.5 3H21v11H3z\"/>",
+    "fields": [
+        {
+            "type": "repeater",
+            "name": "items",
+            "label": "Zakładki",
+            "button_label": "Dodaj zakładkę",
+            "sub_fields": [
+                { "type": "text", "name": "title", "label": "Tytuł zakładki", "required": true },
+                { "type": "textarea", "name": "text", "label": "Treść" }
+            ]
+        }
+    ]
+}

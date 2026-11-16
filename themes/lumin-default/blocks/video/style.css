@@ -1,0 +1,25 @@
+.lm-video {
+    margin: 0 auto;
+    max-width: 60rem;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #000;
+    border-radius: var(--lm-radius);
+}
+.lm-video--4-3 { aspect-ratio: 4 / 3; }
+.lm-video--1-1 { aspect-ratio: 1; max-width: 36rem; }
+.lm-video--9-16 { aspect-ratio: 9 / 16; max-width: 24rem; }
+.lm-video iframe,
+.lm-video video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+.lm-widget-empty {
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--lm-muted, #6b7280);
+    border: 1px dashed var(--lm-border);
+    border-radius: var(--lm-radius);
+}

@@ -117,7 +117,7 @@ class ThemeManagementTest extends TestCase
 
         // Bloki: nadpisany z dziecka, pozostałe od rodzica.
         $blocks = app(BlockRegistry::class);
-        $this->assertSame(['hero-banner', 'nav-menu', 'site-copyright', 'site-logo', 'social-links', 'testimonials'], array_keys($blocks->all()));
+        $this->assertSame(['counters', 'gallery', 'hero-banner', 'logos', 'map', 'nav-menu', 'site-copyright', 'site-logo', 'social-links', 'tabs', 'testimonials', 'video'], array_keys($blocks->all()));
         $this->assertSame('Mój baner', $blocks->get('hero-banner')['label']);
         $this->assertSame('<b>X</b>', $blocks->render('hero-banner', ['heading' => 'X']));
 

@@ -1,0 +1,17 @@
+{
+    "label": "Mapa",
+    "category": "Widgety",
+    "icon": "<path d=\"M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z\"/><circle cx=\"12\" cy=\"9.5\" r=\"2.5\"/>",
+    "fields": [
+        { "type": "number", "name": "lat", "label": "Szerokość geograficzna (np. 51.1079)", "required": true, "step": "any" },
+        { "type": "number", "name": "lon", "label": "Długość geograficzna (np. 17.0385)", "required": true, "step": "any" },
+        {
+            "type": "select",
+            "name": "zoom",
+            "label": "Przybliżenie",
+            "choices": { "0.02": "Ulica", "0.06": "Dzielnica", "0.2": "Miasto" },
+            "default_value": "0.02"
+        },
+        { "type": "text", "name": "title", "label": "Opis mapy (dla czytników ekranu)", "default_value": "Mapa" }
+    ]
+}

@@ -14,6 +14,7 @@ use Throwable;
  *   block.json         etykieta, kategoria, ikona i pola (te same typy pól co w polach własnych)
  *   render.blade.php   HTML bloku ($attrs: sformatowane wartości pól, $block: definicja)
  *   style.css          opcjonalne style (łączone w /theme-blocks.css)
+ *   script.js          opcjonalny skrypt (łączony w /theme-blocks.js, ładowany z defer)
  *
  * W edytorze blok zapisuje tylko nazwę i wartości pól. W HTML trafia shortcode [block], który
  * jest zamieniany na markup przy każdym wyświetleniu, więc zmiana szablonu bloku działa od razu.
@@ -219,6 +220,20 @@ class BlockRegistry
         }
 
         return trim($css);
+    }
+
+    /** Skrypty bloków (script.js) aktywnego motywu; każdy blok sam sprawdza, czy jego elementy są na stronie. */
+    public function js(): string
+    {
+        $js = '';
+
+        foreach ($this->all() as $block) {
+            if (is_file($block['dir'].'/script.js')) {
+                $js .= '(function(){'.file_get_contents($block['dir'].'/script.js')."\n})();\n";
+            }
+        }
+
+        return trim($js);
     }
 
     /** Dane bloku w atrybucie shortcode: JSON w base64url (bez znaków specjalnych shortcode'ów). */

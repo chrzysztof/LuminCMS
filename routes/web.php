@@ -15,6 +15,7 @@ Route::get('robots.txt', [SitemapController::class, 'robots'])->name('robots');
 
 Route::get('theme-vars.css', fn () => response(app(Customizer::class)->css(), 200, ['Content-Type' => 'text/css; charset=UTF-8', 'Cache-Control' => 'no-cache']))->name('theme.vars');
 Route::get('theme-blocks.css', fn () => response(app(BlockRegistry::class)->css(), 200, ['Content-Type' => 'text/css; charset=UTF-8', 'Cache-Control' => 'no-cache']))->name('theme.blocks');
+Route::get('theme-blocks.js', fn () => response(app(BlockRegistry::class)->js(), 200, ['Content-Type' => 'text/javascript; charset=UTF-8', 'Cache-Control' => 'no-cache']))->name('theme.blocks.js');
 Route::get('theme-assets/{theme}/{path}', ThemeAssetController::class)->where('path', '.+')->name('theme.asset');
 
 Route::post('locale', LocaleController::class)->name('locale');

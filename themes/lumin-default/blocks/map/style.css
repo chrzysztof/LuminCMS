@@ -1,0 +1,16 @@
+.lm-map {
+    margin: 0 auto;
+    max-width: 60rem;
+}
+.lm-map iframe {
+    display: block;
+    width: 100%;
+    height: 24rem;
+    border: 0;
+    border-radius: var(--lm-radius);
+}
+.lm-map figcaption {
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    text-align: right;
+}

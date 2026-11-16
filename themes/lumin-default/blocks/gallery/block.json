@@ -1,0 +1,15 @@
+{
+    "label": "Galeria",
+    "category": "Widgety",
+    "icon": "<rect x=\"3\" y=\"3\" width=\"8\" height=\"8\" rx=\"1.5\"/><rect x=\"13\" y=\"3\" width=\"8\" height=\"8\" rx=\"1.5\"/><rect x=\"3\" y=\"13\" width=\"8\" height=\"8\" rx=\"1.5\"/><rect x=\"13\" y=\"13\" width=\"8\" height=\"8\" rx=\"1.5\"/>",
+    "fields": [
+        { "type": "gallery", "name": "images", "label": "Zdjęcia", "return_format": "array", "size": "medium" },
+        {
+            "type": "select",
+            "name": "columns",
+            "label": "Kolumny",
+            "choices": { "2": "2", "3": "3", "4": "4" },
+            "default_value": "3"
+        }
+    ]
+}
