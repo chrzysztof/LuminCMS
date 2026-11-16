@@ -20,6 +20,7 @@ use App\Http\Controllers\Cms\ShortcodeController;
 use App\Http\Controllers\Cms\SiteSettingsController;
 use App\Http\Controllers\Cms\TaxonomyController;
 use App\Http\Controllers\Cms\ThemeController;
+use App\Http\Controllers\Cms\UpdateController;
 use App\Http\Controllers\Cms\UserController;
 use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
@@ -58,6 +59,11 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
         Route::post('redirects/{redirect}/toggle', [RedirectController::class, 'toggle'])->name('redirects.toggle');
         Route::get('settings/seo', [SeoSettingsController::class, 'edit'])->name('settings.seo');
         Route::put('settings/seo', [SeoSettingsController::class, 'update'])->name('settings.seo.update');
+    });
+    Route::middleware('can:manage_options')->group(function () {
+        Route::get('updates', [UpdateController::class, 'index'])->name('updates.index');
+        Route::post('updates/check', [UpdateController::class, 'check'])->name('updates.check');
+        Route::post('updates/install', [UpdateController::class, 'install'])->name('updates.install');
     });
     Route::get('analytics', AnalyticsController::class)->name('analytics')->middleware('can:manage_options');
     Route::middleware('can:manage_options')->group(function () {

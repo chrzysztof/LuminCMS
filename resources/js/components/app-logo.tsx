@@ -1,4 +1,8 @@
+import { usePage } from '@inertiajs/react';
+
 export default function AppLogo() {
+    const { cmsVersion } = usePage<{ cmsVersion?: string }>().props;
+
     return (
         <>
             <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
@@ -9,7 +13,7 @@ export default function AppLogo() {
                     Lumin
                 </span>
                 <span className="truncate text-xs text-muted-foreground">
-                    CMS v0.1
+                    CMS {cmsVersion ? `v${cmsVersion}` : ''}
                 </span>
             </div>
         </>

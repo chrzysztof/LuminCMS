@@ -6,6 +6,7 @@ use App\Cms\Content\ContentType;
 use App\Cms\I18n\Locales;
 use App\Cms\Roles\ContentAccess;
 use App\Cms\Roles\RoleRegistry;
+use App\Cms\Updates\UpdateChecker;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -57,6 +58,12 @@ class HandleInertiaRequests extends Middleware
                     ->map(fn (ContentType $t) => $t->only(['key', 'label', 'label_plural', 'icon']))
                     ->values()
                 : [],
+            // Powiadomienie o nowej wersji: tylko z cache (bez zapytań sieciowych), tylko dla administratorów.
+            'cmsUpdate' => fn () => $request->user() && RoleRegistry::grants($request->user()->role, 'manage_options')
+                && app(UpdateChecker::class)->updateAvailable()
+                ? ['version' => app(UpdateChecker::class)->cached()?->version, 'current' => app(UpdateChecker::class)->current()]
+                : null,
+            'cmsVersion' => config('cms.version'),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

@@ -15,6 +15,8 @@ mkdir -p "$OUT" "$WORK/$NAME"
 git ls-files -z | grep -zv -e '^tests/' -e '^\.github/' -e '^scripts/' -e '^\.git' | xargs -0 -I{} cp --parents {} "$WORK/$NAME"
 
 cd "$WORK/$NAME"
+# Numer wersji, który system porównuje z najnowszym wydaniem (aktualizator sprawdza zgodność z tagiem).
+printf '%s\n' "${VERSION#v}" > VERSION
 composer install --no-dev --optimize-autoloader --no-interaction --no-progress --prefer-dist
 # Composer czasem pobiera źródła z git zamiast archiwów: repozytoria nie należą do paczki.
 find vendor -name .git -prune -exec rm -rf {} +
@@ -30,4 +32,6 @@ touch database/.gitkeep storage/logs/.gitkeep
 cd "$WORK"
 rm -f "$OUT/$NAME.zip"
 zip -qr "$OUT/$NAME.zip" "$NAME"
+# Suma SHA-256 obok paczki: aktualizator weryfikuje nią pobrany plik.
+(cd "$OUT" && sha256sum "$NAME.zip" > "$NAME.zip.sha256")
 echo "Gotowe: $OUT/$NAME.zip ($(du -h "$OUT/$NAME.zip" | cut -f1))"

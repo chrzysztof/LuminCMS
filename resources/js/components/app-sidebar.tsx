@@ -7,6 +7,7 @@ import {
     ArrowRightLeft,
     ArrowUpDown,
     Globe,
+    ArrowUpCircle,
     ListTree,
     Search,
     Image as ImageIcon,
@@ -100,7 +101,18 @@ export function AppSidebar() {
         : [];
     const settingsItems: NavItem[] = [
         ...(can('manage_options')
-            ? [{ title: t('Witryna'), href: cmsUrl.siteSettings, icon: Globe }]
+            ? [
+                  {
+                      title: t('Witryna'),
+                      href: cmsUrl.siteSettings,
+                      icon: Globe,
+                  },
+                  {
+                      title: t('Aktualizacje'),
+                      href: cmsUrl.updates,
+                      icon: ArrowUpCircle,
+                  },
+              ]
             : []),
         ...(can('manage_seo')
             ? [
