@@ -15,7 +15,6 @@ import {
     LayoutGrid,
     Loader2,
     Monitor,
-    PanelLeft,
     PanelRight,
     Redo2,
     Save,
@@ -104,9 +103,11 @@ export default function Builder({
     const [editorInst, setEditorInst] = useState<Editor | null>(null);
 
     const [device, setDevice] = useState('Desktop');
-    const [leftOpen, setLeftOpen] = useState(true);
-    const [rightOpen, setRightOpen] = useState(true);
-    const [tab, setTab] = useState<'props' | 'layers'>('props');
+    const [panelOpen, setPanelOpen] = useState(true);
+    const [tab, setTab] = useState<'blocks' | 'props' | 'layers'>('blocks');
+    const tabRef = useRef(tab);
+    // Wstawienie bloku też zaznacza element - wtedy panel zostaje na liście bloków.
+    const adding = useRef(false);
     const [saving, setSaving] = useState(false);
     const [dirty, setDirty] = useState(false);
     const [empty, setEmpty] = useState(!project);
@@ -167,6 +168,10 @@ export default function Builder({
     useEffect(() => {
         saveRef.current = save;
     }, [save]);
+
+    useEffect(() => {
+        tabRef.current = tab;
+    }, [tab]);
 
     const dirtyRef = useRef(false);
     useEffect(() => {
@@ -365,14 +370,22 @@ export default function Builder({
             refresh();
         });
         editor.on('load', refresh);
-        editor.on('component:selected', (c) =>
+        editor.on('block:drag:start', () => {
+            adding.current = true;
+        });
+        editor.on('block:drag:stop', () => {
+            window.setTimeout(() => (adding.current = false), 500);
+        });
+        editor.on('component:selected', (c) => {
+            // Zaznaczenie elementu na stronie przełącza panel na jego właściwości.
+            if (!adding.current && tabRef.current === 'blocks') setTab('props');
             setSelected({
                 name: c.getName(),
                 isImage: c.is('lm-image'),
                 isBlock: c.is('lm-block'),
                 isWrapper: c.is('wrapper'),
-            }),
-        );
+            });
+        });
         editor.on('component:deselected', () => setSelected(null));
         // Po upuszczeniu bloku motywu od razu pokazujemy jego ustawienia.
         editor.on('block:drag:stop', (c) => {
@@ -396,6 +409,8 @@ export default function Builder({
             );
             if (!block) return;
 
+            adding.current = true;
+            window.setTimeout(() => (adding.current = false), 500);
             const added =
                 editor.getWrapper()?.append(block.getContent() as string) ?? [];
             if (added[0]) {
@@ -642,70 +657,33 @@ export default function Builder({
                     </div>
 
                     {/* Panele boczne */}
-                    <div className="flex min-h-0 flex-1 items-stretch justify-between gap-3">
-                        <div className="flex min-h-0 flex-col gap-2">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                size="icon"
-                                aria-label={t('Bloki')}
-                                title={t('Bloki')}
-                                className="pointer-events-auto size-9 bg-white"
-                                onClick={() => setLeftOpen((o) => !o)}
-                            >
-                                <PanelLeft />
-                            </Button>
-                            <div
-                                className={cn(
-                                    panelClass,
-                                    'min-h-0 w-60 flex-1',
-                                    !leftOpen && 'hidden',
-                                )}
-                            >
-                                <div className="flex items-center justify-between border-b py-1.5 pr-1.5 pl-4">
-                                    <p className="text-sm font-semibold">
-                                        {t('Bloki')}
-                                    </p>
-                                    <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        className="size-8"
-                                        aria-label={t('Moje bloki')}
-                                        title={t('Moje bloki')}
-                                        onClick={() => setManageOpen(true)}
-                                    >
-                                        <Bookmark />
-                                    </Button>
-                                </div>
-                                <div
-                                    ref={blocksEl}
-                                    className="min-h-0 flex-1 overflow-y-auto"
-                                />
-                            </div>
-                        </div>
-
+                    <div className="flex min-h-0 flex-1 items-stretch justify-end gap-3">
                         <div className="flex min-h-0 flex-col items-end gap-2">
                             <Button
                                 type="button"
                                 variant="outline"
                                 size="icon"
-                                aria-label={t('Właściwości')}
-                                title={t('Właściwości')}
+                                aria-label={t('Panel')}
+                                title={t('Panel')}
                                 className="pointer-events-auto size-9 bg-white"
-                                onClick={() => setRightOpen((o) => !o)}
+                                onClick={() => setPanelOpen((o) => !o)}
                             >
                                 <PanelRight />
                             </Button>
                             <div
                                 className={cn(
                                     panelClass,
-                                    'min-h-0 w-72 flex-1',
-                                    !rightOpen && 'hidden',
+                                    'min-h-0 w-80 flex-1',
+                                    !panelOpen && 'hidden',
                                 )}
                             >
                                 <div className="flex border-b p-1.5">
                                     {[
+                                        {
+                                            id: 'blocks',
+                                            label: t('Bloki'),
+                                            icon: LayoutGrid,
+                                        },
                                         {
                                             id: 'props',
                                             label: t('Właściwości'),
@@ -721,18 +699,42 @@ export default function Builder({
                                             key={id}
                                             type="button"
                                             onClick={() =>
-                                                setTab(id as 'props' | 'layers')
+                                                setTab(id as typeof tab)
                                             }
+                                            title={label}
+                                            aria-label={label}
                                             className={cn(
-                                                'flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-sm',
+                                                'flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-sm',
                                                 tab === id
-                                                    ? 'bg-brand-soft font-medium text-brand-foreground'
-                                                    : 'text-muted-foreground hover:bg-muted',
+                                                    ? 'flex-[2.2] bg-brand-soft font-medium text-brand-foreground'
+                                                    : 'flex-1 text-muted-foreground hover:bg-muted',
                                             )}
                                         >
-                                            <Icon className="size-4" /> {label}
+                                            <Icon className="size-4" />
+                                            {tab === id && label}
                                         </button>
                                     ))}
+                                </div>
+                                <div
+                                    className={cn(
+                                        'flex min-h-0 flex-1 flex-col',
+                                        tab !== 'blocks' && 'hidden',
+                                    )}
+                                >
+                                    <div className="flex justify-end border-b px-1.5 py-1">
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => setManageOpen(true)}
+                                        >
+                                            <Bookmark /> {t('Moje bloki')}
+                                        </Button>
+                                    </div>
+                                    <div
+                                        ref={blocksEl}
+                                        className="min-h-0 flex-1 overflow-y-auto"
+                                    />
                                 </div>
                                 <div
                                     className={cn(
