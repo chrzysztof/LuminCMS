@@ -1,7 +1,7 @@
 import { Head, router } from '@inertiajs/react';
-import { ImagePlus, Loader2, X } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
-import { MediaPicker } from '@/components/cms/media-picker';
+import { ImageField } from '@/components/cms/image-field';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -18,6 +18,8 @@ type Seo = {
     title_template: string;
     separator: string;
     default_og_image_id: number | null;
+    logo_id: number | null;
+    favicon_id: number | null;
     twitter_handle: string;
     noindex_site: boolean;
 };
@@ -25,6 +27,8 @@ type Seo = {
 type Props = {
     seo: Seo;
     defaultImage: MediaItem | null;
+    logo: MediaItem | null;
+    favicon: MediaItem | null;
     sitemapUrl: string;
     robotsUrl: string;
 };
@@ -35,12 +39,15 @@ const nativeClass =
 export default function SeoSettings({
     seo,
     defaultImage,
+    logo: initialLogo,
+    favicon: initialFavicon,
     sitemapUrl,
     robotsUrl,
 }: Props) {
     const [data, setData] = useState<Seo>(seo);
     const [image, setImage] = useState<MediaItem | null>(defaultImage);
-    const [picking, setPicking] = useState(false);
+    const [logo, setLogo] = useState<MediaItem | null>(initialLogo);
+    const [favicon, setFavicon] = useState<MediaItem | null>(initialFavicon);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [processing, setProcessing] = useState(false);
     const set = <K extends keyof Seo>(key: K, value: Seo[K]) =>
@@ -100,6 +107,42 @@ export default function SeoSettings({
                 </div>
 
                 <div className="grid max-w-3xl gap-5">
+                    <Card className="gap-4">
+                        <CardHeader>
+                            <CardTitle className="text-base">
+                                {t('Tożsamość witryny')}
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="grid gap-6 sm:grid-cols-2">
+                            <ImageField
+                                label={t('Logo')}
+                                hint={t(
+                                    'Wyświetlane w nagłówku zamiast nazwy witryny. Najlepiej PNG lub WebP z przezroczystym tłem.',
+                                )}
+                                value={logo}
+                                previewClassName="h-14 w-auto"
+                                error={errors.logo_id}
+                                onChange={(item) => {
+                                    setLogo(item);
+                                    set('logo_id', item?.id ?? null);
+                                }}
+                            />
+                            <ImageField
+                                label={t('Favicon')}
+                                hint={t(
+                                    'Ikona w karcie przeglądarki. Kwadratowy obraz PNG, najlepiej 512 × 512 px.',
+                                )}
+                                value={favicon}
+                                previewClassName="size-14 object-contain"
+                                error={errors.favicon_id}
+                                onChange={(item) => {
+                                    setFavicon(item);
+                                    set('favicon_id', item?.id ?? null);
+                                }}
+                            />
+                        </CardContent>
+                    </Card>
+
                     <Card className="gap-4">
                         <CardHeader>
                             <CardTitle className="text-base">
@@ -215,57 +258,18 @@ export default function SeoSettings({
                                     }
                                 />,
                             )}
-                            <div className="space-y-2">
-                                <Label>
-                                    {t('Domyślny obraz do udostępniania')}
-                                </Label>
-                                {image && (
-                                    <div className="relative w-full max-w-xs overflow-hidden rounded-lg border">
-                                        <img
-                                            src={image.url}
-                                            alt={image.alt}
-                                            className="w-full"
-                                        />
-                                        <button
-                                            type="button"
-                                            aria-label={t('Usuń obraz')}
-                                            onClick={() => {
-                                                setImage(null);
-                                                set(
-                                                    'default_og_image_id',
-                                                    null,
-                                                );
-                                            }}
-                                            className="absolute top-2 right-2 rounded-full bg-black/70 p-1 text-white"
-                                        >
-                                            <X className="size-4" />
-                                        </button>
-                                    </div>
-                                )}
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => setPicking(true)}
-                                >
-                                    <ImagePlus />{' '}
-                                    {image
-                                        ? t('Zmień obraz')
-                                        : t('Wybierz obraz')}
-                                </Button>
-                                <MediaPicker
-                                    open={picking}
-                                    onOpenChange={setPicking}
-                                    imagesOnly
-                                    onPick={(items) => {
-                                        setImage(items[0] ?? null);
-                                        set(
-                                            'default_og_image_id',
-                                            items[0]?.id ?? null,
-                                        );
-                                    }}
-                                />
-                            </div>
+                            <ImageField
+                                label={t('Domyślny obraz do udostępniania')}
+                                value={image}
+                                error={errors.default_og_image_id}
+                                onChange={(item) => {
+                                    setImage(item);
+                                    set(
+                                        'default_og_image_id',
+                                        item?.id ?? null,
+                                    );
+                                }}
+                            />
                         </CardContent>
                     </Card>
 

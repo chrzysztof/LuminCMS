@@ -253,6 +253,14 @@ a {
     margin: 3rem auto;
 }
 
+/* Logo witryny ([site_logo] i nagłówek motywu) */
+.lm-site-logo {
+    display: block;
+    height: 2.25rem;
+    width: auto;
+    max-width: 100%;
+}
+
 /* Podtytuł pod wyśrodkowanym nagłówkiem sekcji */
 .lm-container > h2.lm-center + p.lm-center {
     max-width: 42rem;

@@ -8,6 +8,7 @@ use App\Cms\Content\ContentResolver;
 use App\Cms\Content\ContentType;
 use App\Cms\Menus\MenuRenderer;
 use App\Cms\Settings\Settings;
+use App\Cms\Settings\SiteIdentity;
 use App\Cms\Taxonomy\Term;
 
 /** Shortcody dostępne od razu. */
@@ -24,6 +25,8 @@ class BuiltInShortcodes
         }, '[date format="d.m.Y"]', 'Dzisiejsza data w podanym formacie (format PHP).');
 
         $sc->add('site_name', fn () => e(app(Settings::class)->get('seo', 'site_name', config('app.name'))), '[site_name]', 'Nazwa witryny z ustawień SEO.');
+
+        $sc->add('site_logo', fn () => app(SiteIdentity::class)->logoHtml() ?? e(app(Settings::class)->get('seo', 'site_name', config('app.name'))), '[site_logo]', 'Logo witryny (a gdy go nie ustawiono, jej nazwa).');
 
         $sc->add('site_url', fn () => e(rtrim(url('/'), '/')), '[site_url]', 'Adres główny witryny.');
 

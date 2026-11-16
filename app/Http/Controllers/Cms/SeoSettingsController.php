@@ -23,6 +23,8 @@ class SeoSettingsController extends Controller
         return Inertia::render('site-settings/seo', [
             'seo' => $seo,
             'defaultImage' => $image?->asArray('medium'),
+            'logo' => $this->media($seo['logo_id'])?->asArray('medium'),
+            'favicon' => $this->media($seo['favicon_id'])?->asArray('thumbnail'),
             'sitemapUrl' => url('/sitemap.xml'),
             'robotsUrl' => url('/robots.txt'),
         ]);
@@ -37,12 +39,17 @@ class SeoSettingsController extends Controller
             'title_template' => ['required', 'string', 'max:150', 'regex:/%title%/'],
             'separator' => ['required', 'string', 'max:5'],
             'default_og_image_id' => ['nullable', 'integer', Rule::exists('media', 'id')],
+            'logo_id' => ['nullable', 'integer', Rule::exists('media', 'id')->where(fn ($q) => $q->where('mime', 'like', 'image/%'))],
+            'favicon_id' => ['nullable', 'integer', Rule::exists('media', 'id')->where(fn ($q) => $q->where('mime', 'like', 'image/%'))],
             'twitter_handle' => ['nullable', 'string', 'max:50', 'regex:/^@?[A-Za-z0-9_]*$/'],
             'noindex_site' => ['boolean'],
         ], ['title_template.regex' => __('Szablon musi zawierać znacznik %title%.')]);
 
         $this->settings->save('seo', [
             ...$data,
+            'logo_id' => $data['logo_id'] ?? null,
+            'favicon_id' => $data['favicon_id'] ?? null,
+            'default_og_image_id' => $data['default_og_image_id'] ?? null,
             'tagline' => $data['tagline'] ?? '',
             'description' => $data['description'] ?? '',
             'twitter_handle' => $data['twitter_handle'] ?? '',
@@ -52,5 +59,10 @@ class SeoSettingsController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Ustawienia SEO zapisane.')]);
 
         return back();
+    }
+
+    private function media(mixed $id): ?Media
+    {
+        return $id ? Media::find($id) : null;
     }
 }

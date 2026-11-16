@@ -108,6 +108,8 @@ class CmsServiceProvider extends ServiceProvider
                 'title_template' => '%title% %sep% %site%',
                 'separator' => '–',
                 'default_og_image_id' => null,
+                'logo_id' => null,
+                'favicon_id' => null,
                 'twitter_handle' => '',
                 'noindex_site' => false,
             ],

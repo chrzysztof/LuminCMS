@@ -6,6 +6,7 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ### Added
 
+- Site identity: choose a logo and a favicon in SEO settings. The logo replaces the site name in the theme header, the favicon (also used as Apple touch icon) is added to every page, the logo is included in structured data and a new `[site_logo]` shortcode places it in header parts and content.
 - Visual editor: save any selected element as a reusable block ("Save as block"). Saved blocks appear in a "My blocks" category on every page and can be managed (deleted) from the block panel.
 - Visual editor: version history. Every save and publish is recorded, the editor autosaves unsaved work every 30 seconds without touching the live page, offers to recover it after a crash and lets you restore any earlier version (up to 50 saves and 15 autosaves per page are kept).
 - Visual editor style panel: spacing (padding and margin), text alignment and size, columns and column gap, vertical alignment, background, rounded corners, shadow, border, narrow content width and per-device visibility. Settings are per device (desktop, tablet, phone) and produce clean utility classes (`lm-pt-4`, `lm-md-cols-2`, `lm-sm-pt-2`, `lm-hide-mobile`) without inline styles.

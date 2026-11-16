@@ -6,6 +6,7 @@ use App\Cms\Content\Content;
 use App\Cms\Content\ContentResolver;
 use App\Cms\Media\Media;
 use App\Cms\Settings\Settings;
+use App\Cms\Settings\SiteIdentity;
 use Illuminate\Support\Str;
 
 /**
@@ -198,8 +199,14 @@ class SeoResolver
             fn ($url) => $url !== '',
         ));
 
-        if ($social !== []) {
-            $graph[] = ['@type' => 'Organization', '@id' => url('/').'#organization', 'name' => $site['site_name'], 'url' => url('/'), 'sameAs' => $social];
+        $logo = app(SiteIdentity::class)->logo();
+
+        if ($social !== [] || $logo) {
+            $graph[] = array_filter([
+                '@type' => 'Organization', '@id' => url('/').'#organization', 'name' => $site['site_name'], 'url' => url('/'),
+                'logo' => $logo ? ['@type' => 'ImageObject', 'url' => $logo['url'], 'width' => $logo['width'], 'height' => $logo['height']] : null,
+                'sameAs' => $social ?: null,
+            ]);
             $graph[0]['publisher'] = ['@id' => url('/').'#organization'];
         }
 

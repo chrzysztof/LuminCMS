@@ -1,5 +1,6 @@
 @php
     $siteName = app(\App\Cms\Settings\Settings::class)->get('seo', 'site_name', config('app.name'));
+    $identity = app(\App\Cms\Settings\SiteIdentity::class);
     $siteSettings = app(\App\Cms\Settings\Settings::class)->group('site');
     $preview = $preview ?? false;
     $chrome = $chrome ?? true;
@@ -13,6 +14,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    @if ($favicon = $identity->favicon())
+        <link rel="icon" href="{{ $favicon['url'] }}" type="{{ $favicon['type'] }}">
+        <link rel="apple-touch-icon" href="{{ $favicon['url'] }}">
+    @endif
     @isset($seo)
         @include('theme::partials.seo', ['seo' => $seo])
     @else
@@ -36,7 +41,7 @@
                 <div class="lm-container">{!! $headerHtml !!}</div>
             @else
                 <div class="lm-container lm-site-header__bar">
-                    <a class="lm-site-header__brand" href="{{ url('/') }}">{{ $siteName }}</a>
+                    <a class="lm-site-header__brand" href="{{ url('/') }}">{!! $identity->logoHtml() ?? e($siteName) !!}</a>
                     {!! $menus->forLocation('primary') !!}
                 </div>
             @endif
