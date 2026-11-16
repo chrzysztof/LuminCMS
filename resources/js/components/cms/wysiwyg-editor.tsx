@@ -19,6 +19,8 @@ import {
     Bold,
     Code,
     Code2,
+    Ellipsis,
+    Heading,
     Highlighter,
     Image as ImageIcon,
     Italic,
@@ -33,6 +35,7 @@ import {
     Subscript as SubscriptIcon,
     Superscript as SuperscriptIcon,
     Table as TableIcon,
+    Rows3,
     Underline as UnderlineIcon,
     Undo2,
 } from 'lucide-react';
@@ -40,6 +43,12 @@ import { useState } from 'react';
 import { MediaPicker } from '@/components/cms/media-picker';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { t } from '@/lib/i18n';
@@ -113,6 +122,39 @@ function Btn({
         >
             {children}
         </button>
+    );
+}
+
+/** Przycisk-ikona otwierający małe menu (format, wyrównanie, tabela). */
+function MenuBtn({
+    label,
+    active,
+    icon,
+    children,
+}: {
+    label: string;
+    active?: boolean;
+    icon: React.ReactNode;
+    children: React.ReactNode;
+}) {
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <button
+                    type="button"
+                    aria-label={label}
+                    title={label}
+                    onMouseDown={(e) => e.preventDefault()}
+                    className={cn(
+                        'rounded p-1.5 hover:bg-muted [&_svg]:size-4',
+                        active && 'bg-brand/15 text-brand',
+                    )}
+                >
+                    {icon}
+                </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">{children}</DropdownMenuContent>
+        </DropdownMenu>
     );
 }
 
@@ -231,6 +273,7 @@ export function WysiwygEditor({
 }: Props) {
     const [linkOpen, setLinkOpen] = useState(false);
     const [mediaOpen, setMediaOpen] = useState(false);
+    const [more, setMore] = useState(false);
 
     const editor = useEditor({
         immediatelyRender: false,
@@ -289,35 +332,44 @@ export function WysiwygEditor({
             .run();
     };
 
+    const AlignIcon =
+        align === 'center'
+            ? AlignCenter
+            : align === 'right'
+              ? AlignRight
+              : AlignLeft;
+
     return (
         <div className="rounded-md border focus-within:ring-[3px] focus-within:ring-ring/30">
             <div className="flex flex-wrap items-center gap-0.5 border-b bg-muted/40 p-1">
                 {full && (
-                    <>
-                        <select
-                            aria-label={t('Format')}
-                            value={blockValue(editor)}
-                            onChange={(e) => {
-                                const v = e.target.value;
-                                const chain = editor.chain().focus();
-
-                                if (v === 'p') chain.setParagraph().run();
-                                else
-                                    chain
-                                        .setHeading({
-                                            level: Number(v[1]) as 2 | 3 | 4,
-                                        })
-                                        .run();
-                            }}
-                            className="h-8 rounded border-0 bg-transparent px-2 text-sm hover:bg-muted"
+                    <MenuBtn
+                        label={t('Format')}
+                        active={blockValue(editor) !== 'p'}
+                        icon={<Heading />}
+                    >
+                        <DropdownMenuItem
+                            onSelect={() =>
+                                editor.chain().focus().setParagraph().run()
+                            }
                         >
-                            <option value="p">{t('Akapit')}</option>
-                            <option value="h2">{t('Nagłówek 2')}</option>
-                            <option value="h3">{t('Nagłówek 3')}</option>
-                            <option value="h4">{t('Nagłówek 4')}</option>
-                        </select>
-                        <Sep />
-                    </>
+                            {t('Akapit')}
+                        </DropdownMenuItem>
+                        {([2, 3, 4] as const).map((level) => (
+                            <DropdownMenuItem
+                                key={level}
+                                onSelect={() =>
+                                    editor
+                                        .chain()
+                                        .focus()
+                                        .setHeading({ level })
+                                        .run()
+                                }
+                            >
+                                {t('Nagłówek {n}', { n: level })}
+                            </DropdownMenuItem>
+                        ))}
+                    </MenuBtn>
                 )}
                 <Btn
                     label={t('Pogrubienie')}
@@ -333,91 +385,6 @@ export function WysiwygEditor({
                 >
                     <Italic />
                 </Btn>
-                {full && (
-                    <>
-                        <Btn
-                            label={t('Podkreślenie')}
-                            active={editor.isActive('underline')}
-                            onClick={() =>
-                                editor.chain().focus().toggleUnderline().run()
-                            }
-                        >
-                            <UnderlineIcon />
-                        </Btn>
-                        <Btn
-                            label={t('Przekreślenie')}
-                            active={editor.isActive('strike')}
-                            onClick={() =>
-                                editor.chain().focus().toggleStrike().run()
-                            }
-                        >
-                            <Strikethrough />
-                        </Btn>
-                        <Btn
-                            label={t('Zakreślenie')}
-                            active={editor.isActive('highlight')}
-                            onClick={() =>
-                                editor.chain().focus().toggleHighlight().run()
-                            }
-                        >
-                            <Highlighter />
-                        </Btn>
-                        <Btn
-                            label={t('Indeks górny')}
-                            active={editor.isActive('superscript')}
-                            onClick={() =>
-                                editor.chain().focus().toggleSuperscript().run()
-                            }
-                        >
-                            <SuperscriptIcon />
-                        </Btn>
-                        <Btn
-                            label={t('Indeks dolny')}
-                            active={editor.isActive('subscript')}
-                            onClick={() =>
-                                editor.chain().focus().toggleSubscript().run()
-                            }
-                        >
-                            <SubscriptIcon />
-                        </Btn>
-                        <Btn
-                            label={t('Wyczyść formatowanie')}
-                            onClick={() =>
-                                editor
-                                    .chain()
-                                    .focus()
-                                    .unsetAllMarks()
-                                    .clearNodes()
-                                    .run()
-                            }
-                        >
-                            <RemoveFormatting />
-                        </Btn>
-                        <Sep />
-                        <Btn
-                            label={t('Wyrównaj do lewej')}
-                            active={align === null}
-                            onClick={() => setAlign(editor, null)}
-                        >
-                            <AlignLeft />
-                        </Btn>
-                        <Btn
-                            label={t('Wyśrodkuj')}
-                            active={align === 'center'}
-                            onClick={() => setAlign(editor, 'center')}
-                        >
-                            <AlignCenter />
-                        </Btn>
-                        <Btn
-                            label={t('Wyrównaj do prawej')}
-                            active={align === 'right'}
-                            onClick={() => setAlign(editor, 'right')}
-                        >
-                            <AlignRight />
-                        </Btn>
-                        <Sep />
-                    </>
-                )}
                 <Btn
                     label={t('Lista punktowana')}
                     active={editor.isActive('bulletList')}
@@ -436,6 +403,40 @@ export function WysiwygEditor({
                 >
                     <ListOrdered />
                 </Btn>
+                {full && (
+                    <>
+                        <Btn
+                            label={t('Cytat')}
+                            active={editor.isActive('blockquote')}
+                            onClick={() =>
+                                editor.chain().focus().toggleBlockquote().run()
+                            }
+                        >
+                            <Quote />
+                        </Btn>
+                        <MenuBtn
+                            label={t('Wyrównanie')}
+                            active={align !== null}
+                            icon={<AlignIcon />}
+                        >
+                            <DropdownMenuItem
+                                onSelect={() => setAlign(editor, null)}
+                            >
+                                <AlignLeft /> {t('Wyrównaj do lewej')}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onSelect={() => setAlign(editor, 'center')}
+                            >
+                                <AlignCenter /> {t('Wyśrodkuj')}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onSelect={() => setAlign(editor, 'right')}
+                            >
+                                <AlignRight /> {t('Wyrównaj do prawej')}
+                            </DropdownMenuItem>
+                        </MenuBtn>
+                    </>
+                )}
                 <Btn
                     label={t('Link')}
                     active={editor.isActive('link') || linkOpen}
@@ -445,7 +446,6 @@ export function WysiwygEditor({
                 </Btn>
                 {full && (
                     <>
-                        <Sep />
                         <Btn
                             label={t('Obraz z biblioteki mediów')}
                             onClick={() => setMediaOpen(true)}
@@ -469,41 +469,36 @@ export function WysiwygEditor({
                         >
                             <TableIcon />
                         </Btn>
-                        <Btn
-                            label={t('Cytat')}
-                            active={editor.isActive('blockquote')}
-                            onClick={() =>
-                                editor.chain().focus().toggleBlockquote().run()
-                            }
-                        >
-                            <Quote />
-                        </Btn>
-                        <Btn
-                            label={t('Kod')}
-                            active={editor.isActive('code')}
-                            onClick={() =>
-                                editor.chain().focus().toggleCode().run()
-                            }
-                        >
-                            <Code />
-                        </Btn>
-                        <Btn
-                            label={t('Blok kodu')}
-                            active={editor.isActive('codeBlock')}
-                            onClick={() =>
-                                editor.chain().focus().toggleCodeBlock().run()
-                            }
-                        >
-                            <Code2 />
-                        </Btn>
-                        <Btn
-                            label={t('Linia pozioma')}
-                            onClick={() =>
-                                editor.chain().focus().setHorizontalRule().run()
-                            }
-                        >
-                            <Minus />
-                        </Btn>
+                        {inTable && (
+                            <MenuBtn
+                                label={t('Edytuj tabelę')}
+                                active
+                                icon={<Rows3 />}
+                            >
+                                {(
+                                    [
+                                        [t('Dodaj wiersz'), 'addRowAfter'],
+                                        [t('Dodaj kolumnę'), 'addColumnAfter'],
+                                        [t('Usuń wiersz'), 'deleteRow'],
+                                        [t('Usuń kolumnę'), 'deleteColumn'],
+                                        [
+                                            t('Wiersz nagłówka'),
+                                            'toggleHeaderRow',
+                                        ],
+                                        [t('Usuń tabelę'), 'deleteTable'],
+                                    ] as const
+                                ).map(([label, cmd]) => (
+                                    <DropdownMenuItem
+                                        key={cmd}
+                                        onSelect={() =>
+                                            editor.chain().focus()[cmd]().run()
+                                        }
+                                    >
+                                        {label}
+                                    </DropdownMenuItem>
+                                ))}
+                            </MenuBtn>
+                        )}
                     </>
                 )}
                 <span className="ml-auto flex gap-0.5">
@@ -521,32 +516,105 @@ export function WysiwygEditor({
                     >
                         <Redo2 />
                     </Btn>
+                    {full && (
+                        <Btn
+                            label={t('Więcej narzędzi')}
+                            active={more}
+                            onClick={() => setMore((m) => !m)}
+                        >
+                            <Ellipsis />
+                        </Btn>
+                    )}
                 </span>
             </div>
-            {inTable && full && (
-                <div className="flex flex-wrap gap-1 border-b bg-muted/20 p-1.5 text-xs">
-                    {(
-                        [
-                            [t('Dodaj wiersz'), 'addRowAfter'],
-                            [t('Dodaj kolumnę'), 'addColumnAfter'],
-                            [t('Usuń wiersz'), 'deleteRow'],
-                            [t('Usuń kolumnę'), 'deleteColumn'],
-                            [t('Wiersz nagłówka'), 'toggleHeaderRow'],
-                            [t('Usuń tabelę'), 'deleteTable'],
-                        ] as const
-                    ).map(([label, cmd]) => (
-                        <Button
-                            key={cmd}
-                            type="button"
-                            size="sm"
-                            variant="outline"
-                            className="h-7 px-2 text-xs"
-                            onMouseDown={(e) => e.preventDefault()}
-                            onClick={() => editor.chain().focus()[cmd]().run()}
-                        >
-                            {label}
-                        </Button>
-                    ))}
+            {full && more && (
+                <div className="flex flex-wrap items-center gap-0.5 border-b bg-muted/20 p-1">
+                    <Btn
+                        label={t('Podkreślenie')}
+                        active={editor.isActive('underline')}
+                        onClick={() =>
+                            editor.chain().focus().toggleUnderline().run()
+                        }
+                    >
+                        <UnderlineIcon />
+                    </Btn>
+                    <Btn
+                        label={t('Przekreślenie')}
+                        active={editor.isActive('strike')}
+                        onClick={() =>
+                            editor.chain().focus().toggleStrike().run()
+                        }
+                    >
+                        <Strikethrough />
+                    </Btn>
+                    <Btn
+                        label={t('Zakreślenie')}
+                        active={editor.isActive('highlight')}
+                        onClick={() =>
+                            editor.chain().focus().toggleHighlight().run()
+                        }
+                    >
+                        <Highlighter />
+                    </Btn>
+                    <Btn
+                        label={t('Indeks górny')}
+                        active={editor.isActive('superscript')}
+                        onClick={() =>
+                            editor.chain().focus().toggleSuperscript().run()
+                        }
+                    >
+                        <SuperscriptIcon />
+                    </Btn>
+                    <Btn
+                        label={t('Indeks dolny')}
+                        active={editor.isActive('subscript')}
+                        onClick={() =>
+                            editor.chain().focus().toggleSubscript().run()
+                        }
+                    >
+                        <SubscriptIcon />
+                    </Btn>
+                    <Sep />
+                    <Btn
+                        label={t('Kod')}
+                        active={editor.isActive('code')}
+                        onClick={() =>
+                            editor.chain().focus().toggleCode().run()
+                        }
+                    >
+                        <Code />
+                    </Btn>
+                    <Btn
+                        label={t('Blok kodu')}
+                        active={editor.isActive('codeBlock')}
+                        onClick={() =>
+                            editor.chain().focus().toggleCodeBlock().run()
+                        }
+                    >
+                        <Code2 />
+                    </Btn>
+                    <Btn
+                        label={t('Linia pozioma')}
+                        onClick={() =>
+                            editor.chain().focus().setHorizontalRule().run()
+                        }
+                    >
+                        <Minus />
+                    </Btn>
+                    <Sep />
+                    <Btn
+                        label={t('Wyczyść formatowanie')}
+                        onClick={() =>
+                            editor
+                                .chain()
+                                .focus()
+                                .unsetAllMarks()
+                                .clearNodes()
+                                .run()
+                        }
+                    >
+                        <RemoveFormatting />
+                    </Btn>
                 </div>
             )}
             {linkOpen && (
