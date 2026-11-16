@@ -76,7 +76,7 @@ class Shortcodes
         }
 
         $names = implode('|', array_map(fn ($n) => preg_quote($n, '~'), array_keys($this->handlers)));
-        $pattern = '~\[(\[?)('.$names.')(?![\w-])([^\]]*?)(\/)?\](?:(.*?)\[\/\2\])?(\]?)~is';
+        $pattern = '~\[(\[?)('.$names.')(?![\w-])([^\]]*?)(?:(\/)\]|\](?:(.*?)\[\/\2\])?)(\]?)~is';
 
         return preg_replace_callback($pattern, function (array $m) use ($current, $depth) {
             // [[nazwa]] => dosłowne [nazwa]

@@ -6,6 +6,7 @@ use App\Cms\Builder\BlockRegistry;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentResolver;
 use App\Cms\Content\ContentType;
+use App\Cms\Fields\FieldOutput;
 use App\Cms\Menus\MenuRenderer;
 use App\Cms\Settings\Settings;
 use App\Cms\Settings\SiteIdentity;
@@ -44,19 +45,24 @@ class BuiltInShortcodes
             return '<a class="'.$class.'" href="'.e($url).'"'.($new ? ' target="_blank" rel="noopener noreferrer"' : '').'>'.$label.'</a>';
         }, '[button url="/kontakt" style="secondary"]Napisz do nas[/button]', 'Przycisk z odnośnikiem. Opcje: style="secondary", new="1" (nowa karta).');
 
-        // Wartość pola własnego bieżącej treści (albo treści o podanym id).
+        // Wartość pola własnego bieżącej treści (albo treści o podanym id). Zawartość między znacznikami
+        // jest wartością zastępczą, gdy pole jest puste: [field name="podtytul"]Domyślny podtytuł[/field].
         $sc->add('field', function (array $a, string $content, ?Content $current) {
             $source = isset($a['id']) ? Content::published()->find((int) $a['id']) : $current;
             $name = (string) ($a['name'] ?? ($a[0] ?? ''));
+            $format = in_array($a['format'] ?? 'text', FieldOutput::FORMATS, true) ? ($a['format'] ?? 'text') : 'text';
+            $fallback = $format === 'url' ? (FieldOutput::url($a['default'] ?? '') ?? '') : $content;
 
-            if (! $source || $name === '') {
-                return '';
-            }
+            $value = $source && $name !== '' ? $source->field($name) : null;
+            $out = match ($format) {
+                'html' => FieldOutput::html($value),
+                'url' => FieldOutput::url($value) === null ? '' : e(FieldOutput::url($value)),
+                'image' => FieldOutput::image($value, preg_match('/^[a-z0-9_]+$/', $a['size'] ?? '') ? $a['size'] : 'large', preg_replace('/[^A-Za-z0-9_ -]/', '', $a['class'] ?? ''), (string) ($a['alt'] ?? '')),
+                default => FieldOutput::text($value),
+            };
 
-            $value = $source->field($name);
-
-            return is_scalar($value) || $value instanceof \Stringable ? e((string) $value) : '';
-        }, '[field name="telefon"] / [field name="telefon" id="12"]', 'Wartość pola własnego tej treści albo treści o podanym id.');
+            return $out !== '' ? $out : ($format === 'url' ? e($fallback) : $fallback);
+        }, '[field name="telefon"] / [field name="zdjecie" format="image"] / [field name="www" format="url"]', 'Wartość pola własnego tej treści albo treści o podanym id. Formaty: text, html, url, image; zawartość między znacznikami to wartość zastępcza.');
 
         // Odnośnik do treści po id.
         $sc->add('link', function (array $a, string $content) {

@@ -7,6 +7,7 @@ use App\Cms\Content\ContentResolver;
 use App\Cms\Media\Media;
 use App\Cms\Settings\Settings;
 use App\Cms\Settings\SiteIdentity;
+use App\Cms\Shortcodes\Shortcodes;
 use Illuminate\Support\Str;
 
 /**
@@ -71,6 +72,8 @@ class SeoResolver
         }
 
         $source = trim((string) $content->excerpt) !== '' ? (string) $content->excerpt : (string) $content->html_cache;
+        // Shortcody (pola własne, bloki) zamieniamy na treść, żeby opis nie zawierał surowych [field ...].
+        $source = app(Shortcodes::class)->render($source, $content);
         $text = trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags($source), ENT_QUOTES | ENT_HTML5, 'UTF-8')) ?? '');
 
         return $text !== '' ? Str::limit($text, self::DESCRIPTION_LIMIT, '…', preserveWords: true) : (string) $this->site()['description'];

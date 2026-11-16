@@ -179,7 +179,7 @@ class FieldRegistry
     }
 
     /** @return array<string, array> pola (z ustawieniami domyślnymi) po nazwie */
-    private function fieldsFor(Content $content): array
+    public function fieldsFor(Content $content): array
     {
         $key = $content->getKey().'|'.$content->updated_at?->getTimestamp();
 

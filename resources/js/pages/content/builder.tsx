@@ -30,6 +30,10 @@ import {
     HistoryDialog,
     formatRevisionDate,
 } from '@/components/cms/builder/history-dialog';
+import {
+    FieldBinding,
+    type CustomField,
+} from '@/components/cms/builder/field-binding';
 import { BuilderContextMenu } from '@/components/cms/builder/context-menu';
 import { PageTemplatesDialog } from '@/components/cms/builder/page-templates-dialog';
 import {
@@ -60,6 +64,7 @@ type Props = {
     content: { id: number; title: string; status: ContentStatus; slug: string };
     project: ProjectData | null;
     themeBlocks: ThemeBlock[];
+    customFields: CustomField[];
     savedBlocks: SavedBlock[];
     /** Autozapis nowszy niż ostatni zapis: niezapisane zmiany do odzyskania. */
     recovery: { id: number; created_at: string } | null;
@@ -98,6 +103,7 @@ export default function Builder({
     content,
     project,
     themeBlocks,
+    customFields,
     savedBlocks,
     recovery,
     seedHtml,
@@ -347,7 +353,7 @@ export default function Builder({
             traitManager: { appendTo: traitsEl.current },
             styleManager: { sectors: [] },
             selectorManager: { componentFirst: true },
-            protectedCss: `body{margin:0}${HIDDEN_PREVIEW_CSS}`,
+            protectedCss: `body{margin:0}${HIDDEN_PREVIEW_CSS}[data-lm-field]{outline:1px dashed #7c3aed;outline-offset:2px}`,
             canvas: {
                 styles: [
                     '/css/lumin-blocks.css',
@@ -858,6 +864,11 @@ export default function Builder({
                                             {t('Zapisz jako blok')}
                                         </Button>
                                     )}
+                                    <FieldBinding
+                                        editor={editorInst}
+                                        fields={customFields}
+                                        onChange={() => setDirty(true)}
+                                    />
                                     <div ref={traitsEl} />
                                     <StylePanel
                                         editor={editorInst}

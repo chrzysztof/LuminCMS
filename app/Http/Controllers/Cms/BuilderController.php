@@ -9,6 +9,7 @@ use App\Cms\Builder\RevisionRecorder;
 use App\Cms\Builder\SavedBlock;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentType;
+use App\Cms\Fields\FieldRegistry;
 use App\Cms\Roles\ContentAccess;
 use App\Cms\Themes\Parts;
 use App\Cms\Themes\ThemeManager;
@@ -41,12 +42,38 @@ class BuilderController extends Controller
             ],
             'project' => $content->builder_data,
             'themeBlocks' => $this->blocks->definitions(),
+            'customFields' => $this->customFields($content),
             'savedBlocks' => SavedBlock::orderBy('name')->get(['id', 'name', 'html', 'user_id'])->all(),
             'recovery' => $this->recovery($content),
             'seedHtml' => $this->presetSeed($request, $type, $content),
             // Arkusze motywu w kanwie, żeby edytor pokazywał stronę tak jak publiczna witryna (nagłówek, menu, hero).
             'themeStyles' => [$theme->asset('theme.css'), $theme->asset('menu.css'), $theme->asset('parts.css')],
         ]);
+    }
+
+    /**
+     * Pola własne dostępne dla tej treści (z grup pasujących do jej typu, szablonu i terminów), do powiązania z elementami.
+     *
+     * @return list<array{name: string, label: string, type: string, preview: string}>
+     */
+    private function customFields(Content $content): array
+    {
+        $skip = ['message', 'tab', 'accordion', 'password', 'repeater', 'flexible_content', 'group', 'clone', 'layout_element'];
+
+        return collect(app(FieldRegistry::class)->fieldsFor($content))
+            ->reject(fn ($f) => in_array($f['type'], $skip, true))
+            ->map(function ($f, $name) use ($content) {
+                $raw = $content->fields[$name] ?? null;
+
+                return [
+                    'name' => (string) $name,
+                    'label' => (string) ($f['label'] ?? $name),
+                    'type' => (string) $f['type'],
+                    'preview' => is_scalar($raw) ? mb_strimwidth(strip_tags((string) $raw), 0, 60, '…') : '',
+                ];
+            })
+            ->values()
+            ->all();
     }
 
     public function save(Request $request, ContentType $type, Content $content): JsonResponse

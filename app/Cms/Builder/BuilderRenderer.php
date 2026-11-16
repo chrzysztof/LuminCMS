@@ -34,6 +34,9 @@ class BuilderRenderer
     // Bez "id": GrapesJS generuje losowe identyfikatory (np. "i74n"), które zaśmiecałyby HTML.
     private const ATTRIBUTES = ['title', 'role', 'lang', 'href', 'target', 'rel', 'src', 'alt', 'width', 'height', 'colspan', 'rowspan', 'scope'];
 
+    /** Elementy, w które pole może wstawić HTML (z edytora treści). */
+    private const HTML_TARGETS = ['div', 'section', 'article', 'aside', 'blockquote', 'li', 'td', 'figcaption'];
+
     private const MAX_DEPTH = 40;
 
     /** @var Collection<int, Media> */
@@ -124,6 +127,13 @@ class BuilderRenderer
         $attributes = (array) ($component['attributes'] ?? []);
         $classes = $this->classes($component['classes'] ?? [], $attributes['class'] ?? '');
 
+        $field = $this->binding($attributes);
+
+        // Powiązanie z polem własnym: wartość pojawia się przy wyświetleniu, więc zmiana pola działa bez ponownego zapisu strony.
+        if ($field !== null && $tag === 'img' && $field['bind'] === 'src') {
+            return '[field name="'.$field['name'].'" format="image" class="'.e(implode(' ', $classes)).'" alt="'.e((string) ($attributes['alt'] ?? '')).'" /]';
+        }
+
         if ($tag === 'img' && is_numeric($attributes['data-media-id'] ?? null)) {
             return $this->picture($attributes, $classes);
         }
@@ -135,11 +145,35 @@ class BuilderRenderer
 
         $open = '<'.$tag.$this->attributeString($tag, $attributes, $classes);
 
+        if ($field !== null && $tag === 'a' && $field['bind'] === 'href') {
+            $open = preg_replace('/ href="[^"]*"/', '', $open).' href="[field name=\''.$field['name'].'\' format=\'url\' default=\'#\' /]"';
+        }
+
+        if ($field !== null && in_array($field['bind'], ['text', 'html'], true) && ! in_array($tag, self::VOID, true)) {
+            $format = $field['bind'] === 'html' && in_array($tag, self::HTML_TARGETS, true) ? 'html' : 'text';
+
+            return $open.'>[field name="'.$field['name'].'" format="'.$format.'"]'.$this->inner($component, $depth).'[/field]</'.$tag.'>';
+        }
+
         if (in_array($tag, self::VOID, true)) {
             return $open.'>';
         }
 
         return $open.'>'.$this->inner($component, $depth).'</'.$tag.'>';
+    }
+
+    /** @return array{name: string, bind: string}|null */
+    private function binding(array $attributes): ?array
+    {
+        $name = $attributes['data-lm-field'] ?? null;
+
+        if (! is_string($name) || ! preg_match('/^[a-z0-9_]{1,64}$/', $name)) {
+            return null;
+        }
+
+        $bind = $attributes['data-lm-bind'] ?? 'text';
+
+        return ['name' => $name, 'bind' => in_array($bind, ['text', 'html', 'href', 'src'], true) ? $bind : 'text'];
     }
 
     private function themeBlock(array $component): string

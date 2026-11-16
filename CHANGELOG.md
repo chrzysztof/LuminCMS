@@ -6,6 +6,7 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ### Added
 
+- Custom fields in blocks: in the visual editor select a heading, paragraph, button, link or image and choose a custom field of the page in "Custom field" (text, HTML content, link address or image). The value is filled in when the page is displayed, so changing the field updates the page without re-saving it; text left in the editor is the fallback for an empty field. The `[field]` shortcode got formats (`text`, `html`, `url`, `image`), a fallback value (`[field name="x"]fallback[/field]`) and now outputs rich values (links, selects, image fields, rich text). Generated HTML stays clean: only the shortcode is stored, no editor attributes.
 - Widgets (new "Widgets" category in the visual editor): video (YouTube with the privacy-friendly domain, Vimeo with Do Not Track, or an MP4 file), tabs (keyboard accessible), animated counters (final numbers are shown without JavaScript), gallery with a lightbox (native `<dialog>`, arrow keys and Escape), logo grid and an OpenStreetMap map. They are theme blocks rendered on the server, so embeds work although the content filter strips `iframe` and scripts. Themes can now ship a `script.js` next to a block's `style.css`; scripts are bundled into `/theme-blocks.js` and loaded with `defer`.
 - Visual editor: right-click context menu (duplicate, copy, paste, copy and paste style, move up/down, select parent, delete) and keyboard shortcuts: Ctrl/⌘+D duplicate, Alt+↑/↓ move, Ctrl/⌘+↑ select parent, Ctrl/⌘+Alt+C / V copy and paste style.
 - Update notifications and one-click updates (Settings → Updates, administrators only). The system checks GitHub Releases twice a day (and on demand with "Check now"), shows a banner in the panel when a newer version exists and lists the release notes. Installing downloads the release package, verifies its SHA-256 checksum, extracts it safely, switches on maintenance mode, replaces the code keeping a backup, runs migrations and clears caches; any error restores the previous version. `.env`, `storage`, the database and custom themes are never touched. Also available from the terminal: `php artisan cms:check-updates` and `php artisan cms:update`. Git checkouts and read-only hosts get manual instructions instead. Set `CMS_UPDATE_CHECKS=false` to disable all update requests or `CMS_SELF_UPDATE=false` to keep notifications only. Release packages now contain a `VERSION` file and a `.sha256` checksum is published next to the ZIP.
@@ -18,6 +19,12 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 - Visual editor library: ten ready-made sections (hero, features, steps, numbers, pricing, testimonials, FAQ, call to action, contact) in the block panel and a page library (landing, company, pricing, contact) under "Templates" in the toolbar.
 - `npm run build:utilities` regenerates the utility classes from `resources/js/lib/builder/utilities.json`.
 - Rich-text editor: icon toolbar with a "more tools" row, block format, highlight, sub/superscript, text alignment, images from the media library, tables, code blocks and a link panel.
+
+### Fixed
+
+- Shortcode parser: a self-closing shortcode (`[name /]`) no longer swallows text up to a later closing tag of the same name.
+- SEO descriptions are built from rendered content, so shortcodes no longer appear as raw `[...]` in meta descriptions.
+
 
 ## [0.2.0] - 2026-11-16
 
