@@ -4,6 +4,13 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-11-17
+
+### Fixed
+
+- The default theme's post template shows the lead paragraph (excerpt) only when it is filled in, so posts without an excerpt no longer render an empty line under the title.
+- The release package for 0.3.0 was never built because its tag was missing the `v` prefix. 0.3.1 is the first installable package of the 0.3 series (it includes everything listed under 0.3.0); install or update to 0.3.1 instead of 0.3.0.
+
 ## [0.3.0] - 2026-11-17
 
 ### Added
@@ -112,6 +119,7 @@ First public release. Download `lumin-cms-0.1.0.zip` from the GitHub release: it
 - Google Analytics 4, Tag Manager and Meta Pixel with a cookie-consent banner.
 - Optional dashboard widget with visits, sessions and top pages from the Google Analytics 4 Data API. It uses a Google service account whose key is stored encrypted.
 
+[0.3.1]: https://github.com/chrzysztof/lumincms/releases/tag/v0.3.1
 [0.3.0]: https://github.com/chrzysztof/lumincms/releases/tag/v0.3.0
 [0.2.0]: https://github.com/chrzysztof/lumincms/releases/tag/v0.2.0
 [0.1.0]: https://github.com/chrzysztof/lumincms/releases/tag/v0.1.0

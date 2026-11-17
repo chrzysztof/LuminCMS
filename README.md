@@ -39,7 +39,7 @@ Lumin is built on Laravel 13 with a React admin panel and server-rendered public
 
 ## Status
 
-**v0.3.0.** The core is feature-complete for building a brochure or blog site: content types and taxonomies, the visual editor with dynamic bindings and the Theme Builder, custom fields, media, SEO, menus, redirects, themes, users and roles, the installer, in-panel updates and the JSON importer. Still to come: forms, scroll effects and AI helpers. Expect rough edges and API changes before 1.0. See [`CHANGELOG.md`](CHANGELOG.md) for what is in each release.
+**v0.3.1.** The core is feature-complete for building a brochure or blog site: content types and taxonomies, the visual editor with dynamic bindings and the Theme Builder, custom fields, media, SEO, menus, redirects, themes, users and roles, the installer, in-panel updates and the JSON importer. Still to come: forms, scroll effects and AI helpers. Expect rough edges and API changes before 1.0. See [`CHANGELOG.md`](CHANGELOG.md) for what is in each release.
 
 ## Admin languages
 
