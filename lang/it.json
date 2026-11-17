@@ -1382,5 +1382,8 @@
     "Do": "Al",
     "W edytorze element jest zawsze widoczny; warunek działa na stronie.": "Nell'editor l'elemento è sempre visibile; la condizione vale sulla pagina.",
     "Pola własne tej treści": "Campi di questo contenuto",
-    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Il campo scelto sostituisce l'impostazione del blocco nella pagina; se è vuoto resta l'impostazione fissa. L'anteprima dell'editor mostra l'impostazione del blocco."
+    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Il campo scelto sostituisce l'impostazione del blocco nella pagina; se è vuoto resta l'impostazione fissa. L'anteprima dell'editor mostra l'impostazione del blocco.",
+    "Paginacja": "Paginazione",
+    "Dzieli listę na strony (?strona=2) z przyciskami Poprzednia / Następna.": "Divide l'elenco in pagine (?strona=2) con i link Precedente / Successiva.",
+    "Liczba wpisów (na stronę)": "Numero di voci (per pagina)"
 }

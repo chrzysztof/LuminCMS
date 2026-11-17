@@ -1382,5 +1382,8 @@
     "Do": "Au",
     "W edytorze element jest zawsze widoczny; warunek działa na stronie.": "Dans l'éditeur l'élément est toujours visible ; la condition s'applique sur la page.",
     "Pola własne tej treści": "Champs de ce contenu",
-    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Le champ choisi remplace le réglage du bloc sur la page ; s'il est vide, le réglage fixe est utilisé. L'aperçu de l'éditeur montre le réglage du bloc."
+    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Le champ choisi remplace le réglage du bloc sur la page ; s'il est vide, le réglage fixe est utilisé. L'aperçu de l'éditeur montre le réglage du bloc.",
+    "Paginacja": "Pagination",
+    "Dzieli listę na strony (?strona=2) z przyciskami Poprzednia / Następna.": "Divise la liste en pages (?strona=2) avec les liens Précédente / Suivante.",
+    "Liczba wpisów (na stronę)": "Nombre d'entrées (par page)"
 }

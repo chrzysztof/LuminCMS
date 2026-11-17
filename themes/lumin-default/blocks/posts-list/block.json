@@ -21,7 +21,9 @@
             "name": "term",
             "label": "Tylko z kategorii lub tagu",
             "choices_source": "terms",
-            "choices": { "": "Wszystkie" },
+            "choices": {
+                "": "Wszystkie"
+            },
             "default_value": ""
         },
         {
@@ -30,16 +32,25 @@
             "label": "Filtr dla odwiedzających",
             "instructions": "Pokazuje przyciski kategorii nad listą.",
             "choices_source": "taxonomies",
-            "choices": { "": "Bez filtra" },
+            "choices": {
+                "": "Bez filtra"
+            },
             "default_value": ""
         },
         {
             "type": "number",
             "name": "limit",
-            "label": "Liczba wpisów",
+            "label": "Liczba wpisów (na stronę)",
             "default_value": 6,
             "min": 1,
             "max": 24
+        },
+        {
+            "type": "true_false",
+            "name": "paginate",
+            "label": "Paginacja",
+            "instructions": "Dzieli listę na strony (?strona=2) z przyciskami Poprzednia / Następna.",
+            "default_value": 0
         },
         {
             "type": "select",
@@ -66,14 +77,21 @@
             "type": "select",
             "name": "layout",
             "label": "Układ",
-            "choices": { "cards": "Karty", "list": "Lista" },
+            "choices": {
+                "cards": "Karty",
+                "list": "Lista"
+            },
             "default_value": "cards"
         },
         {
             "type": "select",
             "name": "columns",
             "label": "Kolumny (karty)",
-            "choices": { "2": "2", "3": "3", "4": "4" },
+            "choices": {
+                "2": "2",
+                "3": "3",
+                "4": "4"
+            },
             "default_value": "3"
         },
         {

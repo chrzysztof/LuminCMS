@@ -1181,5 +1181,8 @@
     "Do": "To",
     "W edytorze element jest zawsze widoczny; warunek działa na stronie.": "In the editor the element is always visible; the condition applies on the page.",
     "Pola własne tej treści": "Fields of this content",
-    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "The chosen field replaces the block setting on the page; when it is empty, the fixed setting is used. The editor preview shows the block setting."
+    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "The chosen field replaces the block setting on the page; when it is empty, the fixed setting is used. The editor preview shows the block setting.",
+    "Paginacja": "Pagination",
+    "Dzieli listę na strony (?strona=2) z przyciskami Poprzednia / Następna.": "Splits the list into pages (?strona=2) with Previous / Next links.",
+    "Liczba wpisów (na stronę)": "Number of items (per page)"
 }

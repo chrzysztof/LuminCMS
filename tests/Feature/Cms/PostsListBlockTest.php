@@ -131,4 +131,28 @@ class PostsListBlockTest extends TestCase
         $this->assertArrayNotHasKey('part', $type['choices']);
         $this->assertArrayHasKey('category:nowosci', $term['choices']);
     }
+
+    public function test_pagination_splits_the_list_and_keeps_filters(): void
+    {
+        $attrs = ['type' => 'post', 'limit' => 2, 'paginate' => 1, 'filter_taxonomy' => 'category'];
+
+        $one = $this->render($attrs);
+        $this->assertSame(2, substr_count($one, '<article'));
+        $this->assertStringContainsString('class="lm-posts-block__pager"', $one);
+        $this->assertStringContainsString('rel="next"', $one);
+        $this->assertStringNotContainsString('rel="prev"', $one);
+
+        $this->get('/?strona=2');
+        $two = $this->render($attrs);
+        $this->assertSame(1, substr_count($two, '<article'));
+        $this->assertStringContainsString('Gamma', $two);
+        $this->assertStringContainsString('rel="prev"', $two);
+        $this->assertStringContainsString('aria-current="page">2<', $two);
+
+        // Strona spoza zakresu wraca do ostatniej, filtr zeruje numer strony, bez paginacji nie ma nawigacji.
+        $this->get('/?strona=99');
+        $this->assertStringContainsString('aria-current="page">2<', $this->render($attrs));
+        $this->assertStringNotContainsString('lm-posts-block__pager', $this->render(['type' => 'post', 'limit' => 2]));
+        $this->assertDoesNotMatchRegularExpression('/filtr=nowosci[^"]*strona=/', $this->render($attrs));
+    }
 }

@@ -17,16 +17,18 @@ class PostsList
 {
     public const QUERY = 'filtr';
 
+    public const PAGE_QUERY = 'strona';
+
     private const ORDER = ['date', 'title', 'menu_order'];
 
     /**
      * @param  array<string, mixed>  $attrs  wartości pól bloku
-     * @return array{items: Collection<int, Content>, media: Collection<int, Media>, filters: list<array{slug: string, name: string}>, active: ?string, type: ?ContentType}
+     * @return array{items: Collection<int, Content>, media: Collection<int, Media>, filters: list<array{slug: string, name: string}>, active: ?string, type: ?ContentType, page: int, pages: int}
      */
-    public function get(array $attrs, ?Content $current = null, ?string $visitorTerm = null): array
+    public function get(array $attrs, ?Content $current = null, ?string $visitorTerm = null, int $page = 1): array
     {
         $type = ContentType::where('key', (string) (($attrs['type'] ?? '') ?: 'post'))->where('key', '!=', 'part')->first();
-        $empty = ['items' => collect(), 'media' => collect(), 'filters' => [], 'active' => null, 'type' => $type];
+        $empty = ['items' => collect(), 'media' => collect(), 'filters' => [], 'active' => null, 'type' => $type, 'page' => 1, 'pages' => 1];
 
         if (! $type) {
             return $empty;
@@ -59,10 +61,21 @@ class PostsList
             default => $query->orderBy('published_at', $order)->orderBy('id', $order),
         };
 
-        $items = $query->limit(max(1, min(24, (int) (($attrs['limit'] ?? 0) ?: 6))))->get();
+        $limit = max(1, min(24, (int) (($attrs['limit'] ?? 0) ?: 6)));
+        $pages = 1;
+
+        if (! empty($attrs['paginate'])) {
+            $pages = max(1, (int) ceil((clone $query)->count() / $limit));
+            $page = max(1, min($page, $pages));
+            $query->offset(($page - 1) * $limit);
+        } else {
+            $page = 1;
+        }
+
+        $items = $query->limit($limit)->get();
         $media = Media::whereIn('id', $items->pluck('featured_media_id')->filter()->all())->get()->keyBy('id');
 
-        return ['items' => $items, 'media' => $media, 'filters' => $filters, 'active' => $active, 'type' => $type];
+        return ['items' => $items, 'media' => $media, 'filters' => $filters, 'active' => $active, 'type' => $type, 'page' => $page, 'pages' => $pages];
     }
 
     /** @return array{0: string, 1: string}|null */

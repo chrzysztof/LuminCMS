@@ -10,7 +10,8 @@
     gap: 0.5rem;
     margin-bottom: 1.5rem;
 }
-.lm-posts-block__filters a {
+.lm-posts-block__filters a,
+.lm-posts-block__pager a {
     padding: 0.35rem 0.9rem;
     font-size: 0.9rem;
     text-decoration: none;
@@ -18,7 +19,8 @@
     border: 1px solid var(--lm-border);
     border-radius: 999px;
 }
-.lm-posts-block__filters a[aria-current] {
+.lm-posts-block__filters a[aria-current],
+.lm-posts-block__pager a[aria-current] {
     color: #fff;
     background: var(--lm-primary);
     border-color: var(--lm-primary);
@@ -102,4 +104,12 @@
 }
 .lm-posts-block__empty {
     color: var(--lm-muted, #6b7280);
+}
+
+.lm-posts-block__pager {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
 }

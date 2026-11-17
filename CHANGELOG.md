@@ -6,6 +6,7 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ### Added
 
+- Pagination in the post list block: turn on "Pagination" to split the list into pages (`?strona=2`) with Previous / numbered / Next links. It works with the visitor filter (choosing a filter returns to page 1) and needs no JavaScript.
 - Display conditions in the visual editor: show an element only to logged-in or logged-out visitors, only when a custom field is filled or empty, or only in a chosen period (from/to date). Conditions are evaluated when the page is displayed (nesting works) and an invalid condition hides the element; the editor always shows it.
 - Theme block settings can be linked to custom fields of the page (or the title, excerpt and featured image): the field value replaces the block setting on the page and an empty field falls back to the setting. Works for text, link and image fields of any theme block, e.g. a video block fed from a "video URL" field.
 - Built-in content fields in editor bindings: besides custom fields, an image can be bound to the page's featured image, and text elements to the page title or excerpt (`[field name="_featured" format="image"]`, `_title`, `_excerpt`). Works with the fallback value, so an empty featured image simply renders nothing.

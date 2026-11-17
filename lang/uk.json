@@ -1382,5 +1382,8 @@
     "Do": "До",
     "W edytorze element jest zawsze widoczny; warunek działa na stronie.": "У редакторі елемент завжди видно; умова діє на сторінці.",
     "Pola własne tej treści": "Поля цього вмісту",
-    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Вибране поле замінює налаштування блоку на сторінці; якщо воно порожнє, діє задане налаштування. У попередньому перегляді редактора видно налаштування блоку."
+    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Вибране поле замінює налаштування блоку на сторінці; якщо воно порожнє, діє задане налаштування. У попередньому перегляді редактора видно налаштування блоку.",
+    "Paginacja": "Пагінація",
+    "Dzieli listę na strony (?strona=2) z przyciskami Poprzednia / Następna.": "Ділить список на сторінки (?strona=2) з посиланнями Попередня / Наступна.",
+    "Liczba wpisów (na stronę)": "Кількість записів (на сторінку)"
 }

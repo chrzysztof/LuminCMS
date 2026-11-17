@@ -1382,5 +1382,8 @@
     "Do": "Até",
     "W edytorze element jest zawsze widoczny; warunek działa na stronie.": "No editor o elemento está sempre visível; a condição aplica-se na página.",
     "Pola własne tej treści": "Campos deste conteúdo",
-    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "O campo escolhido substitui a definição do bloco na página; se estiver vazio, aplica-se a definição fixa. A pré-visualização do editor mostra a definição do bloco."
+    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "O campo escolhido substitui a definição do bloco na página; se estiver vazio, aplica-se a definição fixa. A pré-visualização do editor mostra a definição do bloco.",
+    "Paginacja": "Paginação",
+    "Dzieli listę na strony (?strona=2) z przyciskami Poprzednia / Następna.": "Divide a lista em páginas (?strona=2) com ligações Anterior / Seguinte.",
+    "Liczba wpisów (na stronę)": "Número de entradas (por página)"
 }

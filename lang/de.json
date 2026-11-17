@@ -1382,5 +1382,8 @@
     "Do": "Bis",
     "W edytorze element jest zawsze widoczny; warunek działa na stronie.": "Im Editor ist das Element immer sichtbar; die Bedingung gilt auf der Seite.",
     "Pola własne tej treści": "Felder dieses Inhalts",
-    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Das gewählte Feld ersetzt die Blockeinstellung auf der Seite; ist es leer, gilt die feste Einstellung. In der Editorvorschau sieht man die Blockeinstellung."
+    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Das gewählte Feld ersetzt die Blockeinstellung auf der Seite; ist es leer, gilt die feste Einstellung. In der Editorvorschau sieht man die Blockeinstellung.",
+    "Paginacja": "Seitennummerierung",
+    "Dzieli listę na strony (?strona=2) z przyciskami Poprzednia / Następna.": "Teilt die Liste in Seiten (?strona=2) mit Zurück-/Weiter-Links.",
+    "Liczba wpisów (na stronę)": "Anzahl Einträge (pro Seite)"
 }

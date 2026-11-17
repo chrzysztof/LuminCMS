@@ -1382,5 +1382,8 @@
     "Do": "Do",
     "W edytorze element jest zawsze widoczny; warunek działa na stronie.": "V editoru je prvek vždy vidět; podmínka platí na stránce.",
     "Pola własne tej treści": "Pole této položky",
-    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Vybrané pole nahradí nastavení bloku na stránce; je-li prázdné, použije se pevné nastavení. V náhledu editoru je vidět nastavení bloku."
+    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Vybrané pole nahradí nastavení bloku na stránce; je-li prázdné, použije se pevné nastavení. V náhledu editoru je vidět nastavení bloku.",
+    "Paginacja": "Stránkování",
+    "Dzieli listę na strony (?strona=2) z przyciskami Poprzednia / Następna.": "Rozdělí seznam na stránky (?strona=2) s tlačítky Předchozí / Další.",
+    "Liczba wpisów (na stronę)": "Počet položek (na stránku)"
 }

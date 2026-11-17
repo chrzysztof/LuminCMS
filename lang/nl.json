@@ -1382,5 +1382,8 @@
     "Do": "Tot",
     "W edytorze element jest zawsze widoczny; warunek działa na stronie.": "In de editor is het element altijd zichtbaar; de voorwaarde geldt op de pagina.",
     "Pola własne tej treści": "Velden van deze inhoud",
-    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Het gekozen veld vervangt de blokinstelling op de pagina; is het leeg, dan geldt de vaste instelling. In de editorvoorbeeld zie je de blokinstelling."
+    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Het gekozen veld vervangt de blokinstelling op de pagina; is het leeg, dan geldt de vaste instelling. In de editorvoorbeeld zie je de blokinstelling.",
+    "Paginacja": "Paginering",
+    "Dzieli listę na strony (?strona=2) z przyciskami Poprzednia / Następna.": "Verdeelt de lijst over pagina's (?strona=2) met links Vorige / Volgende.",
+    "Liczba wpisów (na stronę)": "Aantal items (per pagina)"
 }
