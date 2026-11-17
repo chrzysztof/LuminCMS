@@ -68,14 +68,16 @@ class WidgetBlocksTest extends TestCase
         $this->assertStringContainsString('>250</span>+', $out);
     }
 
-    public function test_map_uses_openstreetmap_and_rejects_bad_coordinates(): void
+    public function test_map_uses_openstreetmap_and_rejects_bad_points(): void
     {
-        $out = $this->render('map', ['lat' => '51.1079', 'lon' => '17.0385', 'zoom' => '0.02']);
+        $out = $this->render('map', ['location' => ['lat' => 51.1079, 'lng' => 17.0385, 'zoom' => 15, 'address' => 'Rynek, Wrocław']]);
         $this->assertStringContainsString('openstreetmap.org/export/embed.html', $out);
         $this->assertStringContainsString('marker=51.1079,17.0385', $out);
+        $this->assertStringContainsString('mlat=51.1079', $out);
 
-        $this->assertStringNotContainsString('<iframe', $this->render('map', ['lat' => '999', 'lon' => '17']));
-        $this->assertStringNotContainsString('<iframe', $this->render('map', ['lat' => 'x', 'lon' => '17']));
+        $this->assertStringNotContainsString('<iframe', $this->render('map', ['location' => ['lat' => 999, 'lng' => 17]]));
+        $this->assertStringNotContainsString('<iframe', $this->render('map', ['location' => ['lat' => 'x', 'lng' => 17]]));
+        $this->assertStringNotContainsString('<iframe', $this->render('map', []));
     }
 
     public function test_gallery_and_logos_render_images(): void

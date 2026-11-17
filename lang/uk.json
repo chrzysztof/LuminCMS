@@ -1401,5 +1401,8 @@
     "Kategoria": "Категорія",
     "Nazwa archiwum": "Назва архіву",
     "Tutaj pojawi się treść wpisu.": "Тут з'явиться вміст запису.",
-    "Tutaj pojawi się lista treści archiwum.": "Тут з'явиться список матеріалів архіву."
+    "Tutaj pojawi się lista treści archiwum.": "Тут з'явиться список матеріалів архіву.",
+    "Miejsce na mapie": "Місце на карті",
+    "Wyszukaj adres, kliknij na mapie albo przeciągnij znacznik. Przybliżenie mapy zostanie zapamiętane.": "Знайдіть адресу, клацніть на карті або перетягніть маркер. Масштаб карти буде збережено.",
+    "Wskaż miejsce na mapie w ustawieniach bloku.": "Оберіть місце на карті в налаштуваннях блоку."
 }

@@ -4,6 +4,10 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ## [Unreleased]
 
+### Changed
+
+- The map block now uses a place picker instead of typing coordinates: search an address, click the map or drag the marker; the zoom is remembered. Existing map blocks must be set again (the old latitude/longitude settings are no longer used).
+
 ## [0.3.1] - 2026-11-17
 
 ### Fixed

@@ -1401,5 +1401,8 @@
     "Kategoria": "Categorie",
     "Nazwa archiwum": "Naam van het archief",
     "Tutaj pojawi się treść wpisu.": "Hier verschijnt de inhoud van het bericht.",
-    "Tutaj pojawi się lista treści archiwum.": "Hier verschijnt de lijst met archiefinhoud."
+    "Tutaj pojawi się lista treści archiwum.": "Hier verschijnt de lijst met archiefinhoud.",
+    "Miejsce na mapie": "Plaats op de kaart",
+    "Wyszukaj adres, kliknij na mapie albo przeciągnij znacznik. Przybliżenie mapy zostanie zapamiętane.": "Zoek een adres, klik op de kaart of sleep de markering. De zoom wordt onthouden.",
+    "Wskaż miejsce na mapie w ustawieniach bloku.": "Kies een plaats op de kaart in de blokinstellingen."
 }

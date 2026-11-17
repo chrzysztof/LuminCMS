@@ -1401,5 +1401,8 @@
     "Kategoria": "Kategorie",
     "Nazwa archiwum": "Název archivu",
     "Tutaj pojawi się treść wpisu.": "Zde se zobrazí obsah položky.",
-    "Tutaj pojawi się lista treści archiwum.": "Zde se zobrazí seznam položek archivu."
+    "Tutaj pojawi się lista treści archiwum.": "Zde se zobrazí seznam položek archivu.",
+    "Miejsce na mapie": "Místo na mapě",
+    "Wyszukaj adres, kliknij na mapie albo przeciągnij znacznik. Przybliżenie mapy zostanie zapamiętane.": "Vyhledejte adresu, klikněte do mapy nebo přetáhněte značku. Přiblížení mapy se uloží.",
+    "Wskaż miejsce na mapie w ustawieniach bloku.": "Vyberte místo na mapě v nastavení bloku."
 }

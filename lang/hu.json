@@ -1401,5 +1401,8 @@
     "Kategoria": "Kategória",
     "Nazwa archiwum": "Archívum neve",
     "Tutaj pojawi się treść wpisu.": "Itt jelenik meg a bejegyzés tartalma.",
-    "Tutaj pojawi się lista treści archiwum.": "Itt jelenik meg az archívum tartalmainak listája."
+    "Tutaj pojawi się lista treści archiwum.": "Itt jelenik meg az archívum tartalmainak listája.",
+    "Miejsce na mapie": "Hely a térképen",
+    "Wyszukaj adres, kliknij na mapie albo przeciągnij znacznik. Przybliżenie mapy zostanie zapamiętane.": "Keress címet, kattints a térképre vagy húzd el a jelölőt. A nagyítás megmarad.",
+    "Wskaż miejsce na mapie w ustawieniach bloku.": "Válassz helyet a térképen a blokk beállításaiban."
 }

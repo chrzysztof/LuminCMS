@@ -1200,5 +1200,8 @@
     "Kategoria": "Category",
     "Nazwa archiwum": "Archive name",
     "Tutaj pojawi się treść wpisu.": "The post content will appear here.",
-    "Tutaj pojawi się lista treści archiwum.": "The archive content list will appear here."
+    "Tutaj pojawi się lista treści archiwum.": "The archive content list will appear here.",
+    "Miejsce na mapie": "Place on the map",
+    "Wyszukaj adres, kliknij na mapie albo przeciągnij znacznik. Przybliżenie mapy zostanie zapamiętane.": "Search for an address, click the map or drag the marker. The map zoom is remembered.",
+    "Wskaż miejsce na mapie w ustawieniach bloku.": "Pick a place on the map in the block settings."
 }
