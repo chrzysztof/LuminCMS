@@ -4,6 +4,8 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-17
+
 ### Added
 
 - Theme Builder (Appearance → Templates): design in the visual editor how single items, archives and category/tag pages look. Each content type, archive and taxonomy can be assigned a template built from a starter design; without one the theme's default view is used (a page template chosen in the theme still wins). New "Templates" blocks: post content, date and categories, archive heading and archive items (with pagination); title, excerpt and featured image come from element bindings. Deleting a part unassigns it from templates. Themes can ship starter designs as `parts/template-single.html` and `parts/template-archive.html`, and a `templated` view.
@@ -110,4 +112,6 @@ First public release. Download `lumin-cms-0.1.0.zip` from the GitHub release: it
 - Google Analytics 4, Tag Manager and Meta Pixel with a cookie-consent banner.
 - Optional dashboard widget with visits, sessions and top pages from the Google Analytics 4 Data API. It uses a Google service account whose key is stored encrypted.
 
+[0.3.0]: https://github.com/chrzysztof/lumincms/releases/tag/v0.3.0
+[0.2.0]: https://github.com/chrzysztof/lumincms/releases/tag/v0.2.0
 [0.1.0]: https://github.com/chrzysztof/lumincms/releases/tag/v0.1.0
