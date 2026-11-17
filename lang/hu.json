@@ -1385,5 +1385,21 @@
     "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "A kiválasztott mező felülírja a blokk beállítását az oldalon; ha üres, a rögzített beállítás marad. A szerkesztő előnézete a blokk beállítását mutatja.",
     "Paginacja": "Lapozás",
     "Dzieli listę na strony (?strona=2) z przyciskami Poprzednia / Następna.": "Oldalakra bontja a listát (?strona=2) Előző / Következő hivatkozásokkal.",
-    "Liczba wpisów (na stronę)": "Bejegyzések száma (oldalanként)"
+    "Liczba wpisów (na stronę)": "Bejegyzések száma (oldalanként)",
+    "Pojedyncze treści": "Egyedi tartalmak",
+    "Archiwa": "Archívumok",
+    "Domyślny widok motywu": "A téma alapértelmezett nézete",
+    "Utwórz szablon": "Sablon létrehozása",
+    "Zaprojektuj w edytorze wizualnym wygląd pojedynczych treści, archiwów i stron kategorii. Bez szablonu używany jest domyślny widok motywu. Treść wpisu i listę wstawiasz blokami z kategorii „Szablony”, a tytuł, zajawkę i obraz wyróżniający powiązaniem elementu z polem.": "A vizuális szerkesztőben megtervezheti az egyes tartalmak, archívumok és kategóriaoldalak megjelenését. Sablon nélkül a téma alapértelmezett nézete érvényes. A tartalmat és a listát a „Sablonok” kategória blokkjaival, a címet, a kivonatot és a kiemelt képet az elem mezőhöz kapcsolásával illesztheti be.",
+    "Treść wpisu": "Bejegyzés tartalma",
+    "Data i kategorie": "Dátum és kategóriák",
+    "Pokaż kategorie i tagi": "Kategóriák és címkék mutatása",
+    "Pokaż autora": "Szerző mutatása",
+    "Nagłówek archiwum": "Archívum címe",
+    "Pokaż opis kategorii": "Kategória leírásának mutatása",
+    "Lista treści archiwum": "Archívum tartalmainak listája",
+    "Kategoria": "Kategória",
+    "Nazwa archiwum": "Archívum neve",
+    "Tutaj pojawi się treść wpisu.": "Itt jelenik meg a bejegyzés tartalma.",
+    "Tutaj pojawi się lista treści archiwum.": "Itt jelenik meg az archívum tartalmainak listája."
 }

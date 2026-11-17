@@ -11,6 +11,8 @@ use App\Cms\Roles\ContentAccess;
 use App\Cms\Seo\SeoResolver;
 use App\Cms\Settings\Settings;
 use App\Cms\Shortcodes\Shortcodes;
+use App\Cms\Themes\Listing;
+use App\Cms\Themes\Templates;
 use App\Cms\Themes\ThemeManager;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -100,7 +102,11 @@ class SiteController extends Controller
         $content->loadMissing('type');
         $chosen = preg_match('/^[a-z0-9_-]+$/', (string) $content->template) ? (string) $content->template : 'default';
 
+        // Szablon zbudowany w Theme Builderze obowiązuje, gdy treść nie ma własnego szablonu strony z motywu.
+        $built = $chosen === 'default' ? app(Templates::class)->html("single:{$content->type->key}", $content) : null;
+
         $candidates = [
+            ...($built !== null ? ['templated'] : []),
             ...($chosen !== 'default' ? ["templates.{$chosen}"] : []),
             "single-{$content->type->key}",
             'single',
@@ -110,6 +116,7 @@ class SiteController extends Controller
         return $this->themes->view($candidates, [
             'content' => $content,
             'html' => $this->shortcodes->render($content->html_cache, $content),
+            'templateHtml' => $built,
             'preview' => $preview,
             'seo' => $this->seo->forContent($content, $preview),
         ]);
@@ -137,6 +144,15 @@ class SiteController extends Controller
         }
 
         abort_if($page > 1 && $items->isEmpty(), 404);
+
+        $templateKey = $listing['kind'] === 'archive' ? "archive:{$listing['type']->key}" : "taxonomy:{$listing['taxonomy']->key}";
+        app(Listing::class)->set($heading, $description, $items);
+        $built = app(Templates::class)->html($templateKey);
+
+        if ($built !== null) {
+            array_unshift($candidates, 'templated');
+            $extra['templateHtml'] = $built;
+        }
 
         return $this->themes->view($candidates, [
             'heading' => $heading,

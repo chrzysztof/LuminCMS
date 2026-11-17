@@ -13,6 +13,7 @@ use App\Cms\Fields\FieldOutput;
 use App\Cms\Fields\FieldRegistry;
 use App\Cms\Roles\ContentAccess;
 use App\Cms\Themes\Parts;
+use App\Cms\Themes\Templates;
 use App\Cms\Themes\ThemeManager;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -135,6 +136,11 @@ class BuilderController extends Controller
         }
 
         [$slot, $key] = array_pad(explode('-', $request->query('preset'), 2), 2, '');
+
+        // Projekty startowe szablonów Theme Buildera (template-single, template-archive) nie są częściami slotów.
+        if ($slot === 'template') {
+            return in_array($key, ['single', 'archive'], true) ? app(Templates::class)->starterHtml($key) : null;
+        }
 
         return $this->parts->presetHtml($slot, $key);
     }

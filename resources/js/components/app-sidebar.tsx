@@ -15,6 +15,7 @@ import {
     Tags,
     Code2,
     LayoutTemplate,
+    PanelsTopLeft,
     Palette,
     Paintbrush,
     Menu as MenuIcon,
@@ -96,6 +97,11 @@ export function AppSidebar() {
               { title: t('Motywy'), href: cmsUrl.themes, icon: Paintbrush },
               { title: t('Menu'), href: cmsUrl.menus, icon: MenuIcon },
               { title: t('Części'), href: cmsUrl.parts, icon: LayoutTemplate },
+              {
+                  title: t('Szablony'),
+                  href: cmsUrl.templates,
+                  icon: PanelsTopLeft,
+              },
               { title: t('Dostosuj'), href: cmsUrl.customize, icon: Palette },
           ]
         : [];

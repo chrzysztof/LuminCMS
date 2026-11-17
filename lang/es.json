@@ -1385,5 +1385,21 @@
     "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "El campo elegido sustituye el ajuste del bloque en la página; si está vacío, se usa el ajuste fijo. La vista previa del editor muestra el ajuste del bloque.",
     "Paginacja": "Paginación",
     "Dzieli listę na strony (?strona=2) z przyciskami Poprzednia / Następna.": "Divide la lista en páginas (?strona=2) con enlaces Anterior / Siguiente.",
-    "Liczba wpisów (na stronę)": "Número de entradas (por página)"
+    "Liczba wpisów (na stronę)": "Número de entradas (por página)",
+    "Pojedyncze treści": "Contenido individual",
+    "Archiwa": "Archivos",
+    "Domyślny widok motywu": "Vista predeterminada del tema",
+    "Utwórz szablon": "Crear plantilla",
+    "Zaprojektuj w edytorze wizualnym wygląd pojedynczych treści, archiwów i stron kategorii. Bez szablonu używany jest domyślny widok motywu. Treść wpisu i listę wstawiasz blokami z kategorii „Szablony”, a tytuł, zajawkę i obraz wyróżniający powiązaniem elementu z polem.": "Diseña en el editor visual el aspecto de los contenidos individuales, archivos y páginas de categoría. Sin plantilla se usa la vista predeterminada del tema. Inserta el contenido y la lista con bloques de la categoría «Plantillas», y el título, el extracto y la imagen destacada vinculando un elemento a un campo.",
+    "Treść wpisu": "Contenido de la entrada",
+    "Data i kategorie": "Fecha y categorías",
+    "Pokaż kategorie i tagi": "Mostrar categorías y etiquetas",
+    "Pokaż autora": "Mostrar autor",
+    "Nagłówek archiwum": "Encabezado del archivo",
+    "Pokaż opis kategorii": "Mostrar descripción de la categoría",
+    "Lista treści archiwum": "Lista de contenidos del archivo",
+    "Kategoria": "Categoría",
+    "Nazwa archiwum": "Nombre del archivo",
+    "Tutaj pojawi się treść wpisu.": "Aquí aparecerá el contenido de la entrada.",
+    "Tutaj pojawi się lista treści archiwum.": "Aquí aparecerá la lista de contenidos del archivo."
 }

@@ -1385,5 +1385,21 @@
     "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Das gewählte Feld ersetzt die Blockeinstellung auf der Seite; ist es leer, gilt die feste Einstellung. In der Editorvorschau sieht man die Blockeinstellung.",
     "Paginacja": "Seitennummerierung",
     "Dzieli listę na strony (?strona=2) z przyciskami Poprzednia / Następna.": "Teilt die Liste in Seiten (?strona=2) mit Zurück-/Weiter-Links.",
-    "Liczba wpisów (na stronę)": "Anzahl Einträge (pro Seite)"
+    "Liczba wpisów (na stronę)": "Anzahl Einträge (pro Seite)",
+    "Pojedyncze treści": "Einzelne Inhalte",
+    "Archiwa": "Archive",
+    "Domyślny widok motywu": "Standardansicht des Themes",
+    "Utwórz szablon": "Vorlage erstellen",
+    "Zaprojektuj w edytorze wizualnym wygląd pojedynczych treści, archiwów i stron kategorii. Bez szablonu używany jest domyślny widok motywu. Treść wpisu i listę wstawiasz blokami z kategorii „Szablony”, a tytuł, zajawkę i obraz wyróżniający powiązaniem elementu z polem.": "Gestalten Sie im visuellen Editor das Aussehen einzelner Inhalte, Archive und Kategorieseiten. Ohne Vorlage gilt die Standardansicht des Themes. Inhalt und Liste fügen Sie mit Blöcken der Kategorie „Vorlagen“ ein, Titel, Auszug und Beitragsbild durch Verknüpfen eines Elements mit einem Feld.",
+    "Treść wpisu": "Inhalt des Beitrags",
+    "Data i kategorie": "Datum und Kategorien",
+    "Pokaż kategorie i tagi": "Kategorien und Tags anzeigen",
+    "Pokaż autora": "Autor anzeigen",
+    "Nagłówek archiwum": "Archivüberschrift",
+    "Pokaż opis kategorii": "Kategoriebeschreibung anzeigen",
+    "Lista treści archiwum": "Liste der Archivinhalte",
+    "Kategoria": "Kategorie",
+    "Nazwa archiwum": "Name des Archivs",
+    "Tutaj pojawi się treść wpisu.": "Hier erscheint der Inhalt des Beitrags.",
+    "Tutaj pojawi się lista treści archiwum.": "Hier erscheint die Liste der Archivinhalte."
 }

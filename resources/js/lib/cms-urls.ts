@@ -29,6 +29,7 @@ export const cmsUrl = {
     fieldExport: (id: number) => `/cms/fields/${id}/export`,
     shortcodes: '/cms/shortcodes',
     parts: '/cms/parts',
+    templates: '/cms/templates',
     partPresets: '/cms/parts/presets',
     partPresetPreview: (slot: string, key: string) =>
         `/cms/parts/presets/${slot}/${key}/preview`,

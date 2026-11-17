@@ -1,0 +1,39 @@
+{
+    "label": "Lista treści archiwum",
+    "category": "Szablony",
+    "icon": "<rect x=\"3\" y=\"4\" width=\"8\" height=\"7\" rx=\"1.5\"/><rect x=\"13\" y=\"4\" width=\"8\" height=\"7\" rx=\"1.5\"/><path d=\"M3 15h18M3 19h12\"/>",
+    "fields": [
+        {
+            "type": "select",
+            "name": "layout",
+            "label": "Układ",
+            "choices": { "cards": "Karty", "list": "Lista" },
+            "default_value": "cards"
+        },
+        {
+            "type": "select",
+            "name": "columns",
+            "label": "Kolumny (karty)",
+            "choices": { "2": "2", "3": "3", "4": "4" },
+            "default_value": "3"
+        },
+        {
+            "type": "true_false",
+            "name": "show_image",
+            "label": "Pokaż obraz wyróżniający",
+            "default_value": 1
+        },
+        {
+            "type": "true_false",
+            "name": "show_date",
+            "label": "Pokaż datę",
+            "default_value": 1
+        },
+        {
+            "type": "true_false",
+            "name": "show_excerpt",
+            "label": "Pokaż zajawkę",
+            "default_value": 1
+        }
+    ]
+}

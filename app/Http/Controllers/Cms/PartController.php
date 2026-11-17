@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Cms;
 use App\Cms\Content\Content;
 use App\Cms\Themes\Customizer;
 use App\Cms\Themes\Parts;
+use App\Cms\Themes\Templates;
 use App\Cms\Themes\ThemeManager;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -106,6 +107,7 @@ class PartController extends Controller
             }
         }
 
+        app(Templates::class)->unassignPart($content->id);
         $content->delete();
 
         return back();

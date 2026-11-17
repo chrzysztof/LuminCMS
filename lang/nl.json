@@ -1385,5 +1385,21 @@
     "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Het gekozen veld vervangt de blokinstelling op de pagina; is het leeg, dan geldt de vaste instelling. In de editorvoorbeeld zie je de blokinstelling.",
     "Paginacja": "Paginering",
     "Dzieli listę na strony (?strona=2) z przyciskami Poprzednia / Następna.": "Verdeelt de lijst over pagina's (?strona=2) met links Vorige / Volgende.",
-    "Liczba wpisów (na stronę)": "Aantal items (per pagina)"
+    "Liczba wpisów (na stronę)": "Aantal items (per pagina)",
+    "Pojedyncze treści": "Losse inhoud",
+    "Archiwa": "Archieven",
+    "Domyślny widok motywu": "Standaardweergave van het thema",
+    "Utwórz szablon": "Sjabloon maken",
+    "Zaprojektuj w edytorze wizualnym wygląd pojedynczych treści, archiwów i stron kategorii. Bez szablonu używany jest domyślny widok motywu. Treść wpisu i listę wstawiasz blokami z kategorii „Szablony”, a tytuł, zajawkę i obraz wyróżniający powiązaniem elementu z polem.": "Ontwerp in de visuele editor hoe losse inhoud, archieven en categoriepagina's eruitzien. Zonder sjabloon geldt de standaardweergave van het thema. Voeg inhoud en lijst in met blokken uit de categorie ‘Sjablonen’, en titel, samenvatting en uitgelichte afbeelding door een element aan een veld te koppelen.",
+    "Treść wpisu": "Inhoud van het bericht",
+    "Data i kategorie": "Datum en categorieën",
+    "Pokaż kategorie i tagi": "Categorieën en tags tonen",
+    "Pokaż autora": "Auteur tonen",
+    "Nagłówek archiwum": "Archiefkop",
+    "Pokaż opis kategorii": "Categoriebeschrijving tonen",
+    "Lista treści archiwum": "Lijst met archiefinhoud",
+    "Kategoria": "Categorie",
+    "Nazwa archiwum": "Naam van het archief",
+    "Tutaj pojawi się treść wpisu.": "Hier verschijnt de inhoud van het bericht.",
+    "Tutaj pojawi się lista treści archiwum.": "Hier verschijnt de lijst met archiefinhoud."
 }

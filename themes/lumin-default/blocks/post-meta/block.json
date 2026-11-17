@@ -1,0 +1,25 @@
+{
+    "label": "Data i kategorie",
+    "category": "Szablony",
+    "icon": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"/><path d=\"M8 3v4M16 3v4M3 10h18\"/>",
+    "fields": [
+        {
+            "type": "true_false",
+            "name": "show_date",
+            "label": "Pokaż datę",
+            "default_value": 1
+        },
+        {
+            "type": "true_false",
+            "name": "show_terms",
+            "label": "Pokaż kategorie i tagi",
+            "default_value": 1
+        },
+        {
+            "type": "true_false",
+            "name": "show_author",
+            "label": "Pokaż autora",
+            "default_value": 0
+        }
+    ]
+}

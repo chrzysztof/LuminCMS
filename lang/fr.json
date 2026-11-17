@@ -1385,5 +1385,21 @@
     "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Le champ choisi remplace le réglage du bloc sur la page ; s'il est vide, le réglage fixe est utilisé. L'aperçu de l'éditeur montre le réglage du bloc.",
     "Paginacja": "Pagination",
     "Dzieli listę na strony (?strona=2) z przyciskami Poprzednia / Następna.": "Divise la liste en pages (?strona=2) avec les liens Précédente / Suivante.",
-    "Liczba wpisów (na stronę)": "Nombre d'entrées (par page)"
+    "Liczba wpisów (na stronę)": "Nombre d'entrées (par page)",
+    "Pojedyncze treści": "Contenus individuels",
+    "Archiwa": "Archives",
+    "Domyślny widok motywu": "Vue par défaut du thème",
+    "Utwórz szablon": "Créer un modèle",
+    "Zaprojektuj w edytorze wizualnym wygląd pojedynczych treści, archiwów i stron kategorii. Bez szablonu używany jest domyślny widok motywu. Treść wpisu i listę wstawiasz blokami z kategorii „Szablony”, a tytuł, zajawkę i obraz wyróżniający powiązaniem elementu z polem.": "Concevez dans l'éditeur visuel l'apparence des contenus individuels, des archives et des pages de catégorie. Sans modèle, la vue par défaut du thème est utilisée. Insérez le contenu et la liste avec les blocs de la catégorie « Modèles », et le titre, l'extrait et l'image à la une en liant un élément à un champ.",
+    "Treść wpisu": "Contenu de l'article",
+    "Data i kategorie": "Date et catégories",
+    "Pokaż kategorie i tagi": "Afficher catégories et étiquettes",
+    "Pokaż autora": "Afficher l'auteur",
+    "Nagłówek archiwum": "Titre de l'archive",
+    "Pokaż opis kategorii": "Afficher la description de la catégorie",
+    "Lista treści archiwum": "Liste des contenus de l'archive",
+    "Kategoria": "Catégorie",
+    "Nazwa archiwum": "Nom de l'archive",
+    "Tutaj pojawi się treść wpisu.": "Le contenu de l'article apparaîtra ici.",
+    "Tutaj pojawi się lista treści archiwum.": "La liste des contenus de l'archive apparaîtra ici."
 }

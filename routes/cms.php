@@ -19,6 +19,7 @@ use App\Http\Controllers\Cms\SeoSettingsController;
 use App\Http\Controllers\Cms\ShortcodeController;
 use App\Http\Controllers\Cms\SiteSettingsController;
 use App\Http\Controllers\Cms\TaxonomyController;
+use App\Http\Controllers\Cms\TemplateController;
 use App\Http\Controllers\Cms\ThemeController;
 use App\Http\Controllers\Cms\UpdateController;
 use App\Http\Controllers\Cms\UserController;
@@ -95,6 +96,10 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
         Route::get('parts/presets/{slot}/{key}/preview', [PartController::class, 'presetPreview'])->name('parts.presets.preview');
         Route::put('parts/slots/{slot}', [PartController::class, 'assign'])->name('parts.assign');
         Route::delete('parts/{content}', [PartController::class, 'destroy'])->name('parts.destroy');
+
+        Route::get('templates', [TemplateController::class, 'index'])->name('templates.index');
+        Route::post('templates', [TemplateController::class, 'store'])->name('templates.store');
+        Route::put('templates', [TemplateController::class, 'assign'])->name('templates.assign');
 
         Route::get('themes', [ThemeController::class, 'index'])->name('themes.index');
         Route::post('themes', [ThemeController::class, 'upload'])->name('themes.upload');

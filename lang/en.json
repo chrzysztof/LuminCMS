@@ -1184,5 +1184,21 @@
     "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "The chosen field replaces the block setting on the page; when it is empty, the fixed setting is used. The editor preview shows the block setting.",
     "Paginacja": "Pagination",
     "Dzieli listę na strony (?strona=2) z przyciskami Poprzednia / Następna.": "Splits the list into pages (?strona=2) with Previous / Next links.",
-    "Liczba wpisów (na stronę)": "Number of items (per page)"
+    "Liczba wpisów (na stronę)": "Number of items (per page)",
+    "Pojedyncze treści": "Single content",
+    "Archiwa": "Archives",
+    "Domyślny widok motywu": "Theme default view",
+    "Utwórz szablon": "Create template",
+    "Zaprojektuj w edytorze wizualnym wygląd pojedynczych treści, archiwów i stron kategorii. Bez szablonu używany jest domyślny widok motywu. Treść wpisu i listę wstawiasz blokami z kategorii „Szablony”, a tytuł, zajawkę i obraz wyróżniający powiązaniem elementu z polem.": "Design in the visual editor how single items, archives and category pages look. Without a template the theme's default view is used. Insert the content and the list with blocks from the \"Templates\" category, and the title, excerpt and featured image by linking an element to a field.",
+    "Treść wpisu": "Post content",
+    "Data i kategorie": "Date and categories",
+    "Pokaż kategorie i tagi": "Show categories and tags",
+    "Pokaż autora": "Show author",
+    "Nagłówek archiwum": "Archive heading",
+    "Pokaż opis kategorii": "Show category description",
+    "Lista treści archiwum": "Archive content list",
+    "Kategoria": "Category",
+    "Nazwa archiwum": "Archive name",
+    "Tutaj pojawi się treść wpisu.": "The post content will appear here.",
+    "Tutaj pojawi się lista treści archiwum.": "The archive content list will appear here."
 }

@@ -67,7 +67,7 @@ class Parts
         return $id ? $this->htmlOf($id) : null;
     }
 
-    public function htmlOf(int $contentId): ?string
+    public function htmlOf(int $contentId, ?Content $current = null): ?string
     {
         $part = Content::published()->whereHas('type', fn ($q) => $q->where('key', self::TYPE))->find($contentId);
 
@@ -75,7 +75,7 @@ class Parts
             return null;
         }
 
-        return $this->shortcodes->render($part->html_cache, $part);
+        return $this->shortcodes->render($part->html_cache, $current ?? $part);
     }
 
     /** Gotowe projekty części aktywnego motywu (opcjonalnie tylko dla jednego slotu). @return list<array{slot: string, key: string, label: string, description: string}> */

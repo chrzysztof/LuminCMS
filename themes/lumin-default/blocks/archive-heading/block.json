@@ -1,0 +1,13 @@
+{
+    "label": "Nagłówek archiwum",
+    "category": "Szablony",
+    "icon": "<path d=\"M5 5v14M19 5v14M5 12h14\"/>",
+    "fields": [
+        {
+            "type": "true_false",
+            "name": "show_description",
+            "label": "Pokaż opis kategorii",
+            "default_value": 1
+        }
+    ]
+}

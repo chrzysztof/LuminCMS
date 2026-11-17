@@ -1385,5 +1385,21 @@
     "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Vybrané pole nahradí nastavení bloku na stránce; je-li prázdné, použije se pevné nastavení. V náhledu editoru je vidět nastavení bloku.",
     "Paginacja": "Stránkování",
     "Dzieli listę na strony (?strona=2) z przyciskami Poprzednia / Następna.": "Rozdělí seznam na stránky (?strona=2) s tlačítky Předchozí / Další.",
-    "Liczba wpisów (na stronę)": "Počet položek (na stránku)"
+    "Liczba wpisów (na stronę)": "Počet položek (na stránku)",
+    "Pojedyncze treści": "Jednotlivé položky",
+    "Archiwa": "Archivy",
+    "Domyślny widok motywu": "Výchozí zobrazení motivu",
+    "Utwórz szablon": "Vytvořit šablonu",
+    "Zaprojektuj w edytorze wizualnym wygląd pojedynczych treści, archiwów i stron kategorii. Bez szablonu używany jest domyślny widok motywu. Treść wpisu i listę wstawiasz blokami z kategorii „Szablony”, a tytuł, zajawkę i obraz wyróżniający powiązaniem elementu z polem.": "Ve vizuálním editoru navrhněte vzhled jednotlivých položek, archivů a stránek kategorií. Bez šablony se použije výchozí zobrazení motivu. Obsah a seznam vložíte bloky z kategorie „Šablony“, název, perex a hlavní obrázek propojením prvku s polem.",
+    "Treść wpisu": "Obsah položky",
+    "Data i kategorie": "Datum a kategorie",
+    "Pokaż kategorie i tagi": "Zobrazit kategorie a štítky",
+    "Pokaż autora": "Zobrazit autora",
+    "Nagłówek archiwum": "Nadpis archivu",
+    "Pokaż opis kategorii": "Zobrazit popis kategorie",
+    "Lista treści archiwum": "Seznam položek archivu",
+    "Kategoria": "Kategorie",
+    "Nazwa archiwum": "Název archivu",
+    "Tutaj pojawi się treść wpisu.": "Zde se zobrazí obsah položky.",
+    "Tutaj pojawi się lista treści archiwum.": "Zde se zobrazí seznam položek archivu."
 }
