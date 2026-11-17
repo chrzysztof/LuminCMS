@@ -19,7 +19,10 @@ Lumin is built on Laravel 13 with a React admin panel and server-rendered public
 
 - **Content types and taxonomies** — pages and posts out of the box, plus your own types and taxonomies.
 - **Custom fields** — a field-group builder with 35 field types (including Repeater, Group, Flexible Content, Clone, Gallery, Relationship, Link and OpenStreetMap maps), conditional logic, location rules and JSON import/export. Everything is in the core.
-- **Visual editor** — a drag-and-drop page builder (GrapesJS) that outputs clean, semantic HTML with no inline styles or generated IDs.
+- **Visual editor** — a drag-and-drop page builder (GrapesJS) that outputs clean, semantic HTML with no inline styles or generated IDs. Per-device style panel (utility classes such as `lm-pt-4`, `lm-md-cols-2`), ready-made sections and page templates, reusable saved blocks, version history with autosave and recovery, a context menu and keyboard shortcuts, and server-rendered widgets (video, tabs, counters, gallery with lightbox, logos, map).
+- **Dynamic content in the editor** — bind headings, text, buttons, links and images to custom fields or to the title, excerpt and featured image; show or hide elements by login state, field value or date period; a post list block with filters, layouts and pagination. Only shortcodes are stored, so changing a field updates the page without re-saving it.
+- **Theme Builder** — design single-content, archive and category/tag templates in the visual editor (Appearance → Templates), plus global headers and footers with ready-made designs.
+- **One-click updates** — the panel announces new releases and updates the CMS with checksum verification, a backup and automatic rollback (see below).
 - **Media library** — automatic WebP conversion, configurable image sizes, focal points, per-size crops and responsive `<picture>` output.
 - **SEO built in** — title templates, meta descriptions, canonical URLs, robots directives, Open Graph, Twitter cards, JSON-LD, `sitemap.xml`, `robots.txt` and a snippet preview with focus-keyword checks.
 - **Content lists** — status tabs, title search and filters by taxonomy term (a parent term includes its children) and author.
@@ -34,7 +37,7 @@ Lumin is built on Laravel 13 with a React admin panel and server-rendered public
 
 ## Status
 
-**v0.1.0 — first public release.** The core is feature-complete for building a brochure or blog site: content types and taxonomies, the visual editor, custom fields, media, SEO, menus, redirects, themes, users and roles, the installer and the JSON importer. Expect rough edges and API changes before 1.0. See [`CHANGELOG.md`](CHANGELOG.md) for what is in the release.
+**v0.3.0.** The core is feature-complete for building a brochure or blog site: content types and taxonomies, the visual editor with dynamic bindings and the Theme Builder, custom fields, media, SEO, menus, redirects, themes, users and roles, the installer, in-panel updates and the JSON importer. Still to come: forms, scroll effects and AI helpers. Expect rough edges and API changes before 1.0. See [`CHANGELOG.md`](CHANGELOG.md) for what is in each release.
 
 ## Admin languages
 
@@ -59,16 +62,21 @@ Handlers return trusted HTML, so escape attribute values yourself.
 A theme is a folder in `themes/{slug}/` with a `theme.json` manifest and Blade views (exposed as the `theme::` namespace). Missing views fall back to the default theme (`lumin-default`), so a theme only needs to override what it changes.
 
 - **Page templates** are declared in `theme.json` and picked per entry in the editor.
-- **Template hierarchy:** chosen template, `single-{type}`, `single`; archives use `archive-{type}` / `archive`; taxonomy terms use `taxonomy-{key}` / `taxonomy` / `archive`.
+- **Template hierarchy:** a template built in the Theme Builder (see below) or the chosen page template, then `single-{type}`, `single`; archives use `archive-{type}` / `archive`; taxonomy terms use `taxonomy-{key}` / `taxonomy` / `archive`.
 - **Public archives:** `/blog` (content type URL prefix) and `/kategoria/{term}` (taxonomy URL prefix, editable in the taxonomy panel), both with pagination, SEO and sitemap entries.
 - **Assets** live in `themes/{slug}/assets` and are served through `theme-assets/{slug}/...`.
-- **Global parts:** the theme declares slots (`parts` in `theme.json`, e.g. header and footer). Appearance → Parts assigns a part, edited in the visual editor, to each slot; an empty slot uses the theme's default markup. Parts are admin-only and never public.
+- **Global parts:** the theme declares slots (`parts` in `theme.json`, e.g. header and footer). Appearance → Parts assigns a part, edited in the visual editor, to each slot; an empty slot uses the theme's default markup. Parts are admin-only and never public. A theme can offer ready-made designs (`part_presets` in `theme.json` plus `parts/{slot}-{key}.html`); the default theme has five headers and four footers with live previews.
+- **Theme Builder:** Appearance → Templates assigns a part, designed in the visual editor, as the template for a content type (`single:{type}`), an archive (`archive:{type}`) or a taxonomy (`taxonomy:{key}`). It renders in the theme layout through the `templated` view with the current content as context; no assignment means the theme's own views. Starter designs come from `parts/template-single.html` and `parts/template-archive.html`. The default theme provides the blocks post content, date and categories, archive heading and archive items; title, excerpt and featured image come from element bindings.
 - **Menus:** Appearance → Menu builds multi-level menus (content, terms, custom links, headings) and assigns them to theme locations (`menus` in `theme.json`). A top-level item can be a **mega menu**: its children become columns, with an optional extra panel from a global part. Insert a menu with the editor's Menu block or `[menu name="slug"]` / `[menu location="primary"]`. Output is accessible (`aria-expanded`, keyboard, mobile accordion) and styled by the theme's `menu.css` / `menu.js`.
 - **Customizer:** Appearance → Customize edits the theme's design tokens (declared in `theme.json` as `tokens`: `color`, `select`, `size`) with a live preview in a device-sized frame. Values are validated, stored per theme and emitted as CSS variables in `:root` (also in the editor canvas via `/theme-vars.css`). Fonts are system stacks only, no external CDN.
-- **Theme blocks:** a theme adds editor blocks in `blocks/{name}/` with `block.json` (label, category, icon, `fields` using the same field types as custom fields), `render.blade.php` (receives `$attrs`) and optional `style.css`. In the visual editor they appear under their category, open a settings dialog built from the fields, and preview live. The page stores only the block name and validated values (as a `[block]` shortcode), so template changes apply immediately and dynamic blocks stay current.
+- **Theme blocks:** a theme adds editor blocks in `blocks/{name}/` with `block.json` (label, category, icon, `fields` using the same field types as custom fields), `render.blade.php` (receives `$attrs` and `$current`, the content being displayed), optional `style.css` and `script.js` (bundled into `/theme-blocks.css` and `/theme-blocks.js`). Fields can take their options from the site with `choices_source` (`content_types`, `taxonomies`, `terms`), and any field can be linked to a custom field of the page in the block settings. In the visual editor they appear under their category, open a settings dialog built from the fields, and preview live. The page stores only the block name and validated values (as a `[block]` shortcode), so template changes apply immediately and dynamic blocks stay current.
 - **Child themes:** add `"parent": "slug"` to `theme.json`. Views, assets, blocks and the manifest lists (`templates`, `tokens`, `parts`, `menus`) are inherited and merged by key; the child overrides only what it redeclares. Lookup order is child → parents → default theme. Missing parents and cycles are detected and block activation.
 - **Theme management:** Appearance → Themes lists installed themes (screenshot, version, author, parent), activates, exports a theme as ZIP and deletes it (not the default, the active theme or a parent of another theme). Install from a ZIP validates the archive before extracting: safe paths only (no `..`, absolute paths or symlinks), an extension whitelist (PHP allowed only as `*.blade.php`), no hidden files, file-count and size limits, a `theme.json` with a `name`, and either `views/layout.blade.php` or an installed parent. A theme is trusted code (Blade runs on the server), so set `CMS_THEME_UPLOADS=false` to disable uploads on hosts where only deploys should add themes.
 - `php artisan cms:theme` lists themes, `php artisan cms:theme {slug}` activates one.
+
+## Updates
+
+Settings → Updates (administrators only) checks GitHub Releases twice a day, shows a banner when a newer version exists and lists the release notes. Installing downloads the release ZIP, verifies its SHA-256 checksum (`.sha256` published next to the ZIP), extracts it safely, switches on maintenance mode, replaces the code keeping a backup, runs migrations and clears caches; any error restores the previous version. `.env`, `storage`, the database and custom themes are never touched. From the terminal: `php artisan cms:check-updates` and `php artisan cms:update`. Git checkouts and read-only hosts get manual instructions instead. Set `CMS_UPDATE_CHECKS=false` to disable all update requests or `CMS_SELF_UPDATE=false` to keep notifications only.
 
 ## Container fields
 
@@ -120,7 +128,7 @@ Use `--dev` to keep `APP_ENV` and `APP_DEBUG` from your `.env` instead of switch
 
 ### Building a release
 
-`scripts/build-release.sh [version]` produces `dist/lumin-cms-<version>.zip` (with `vendor/` and the built front end). Pushing a `v*` tag runs the same script in GitHub Actions and attaches the ZIP to a GitHub release.
+`scripts/build-release.sh [version]` produces `dist/lumin-cms-<version>.zip` (with `vendor/`, the built front end and a `VERSION` file) and a `.sha256` checksum. Pushing a `v*` tag runs the same script in GitHub Actions and attaches both files to a GitHub release; the in-panel updater needs the checksum.
 
 ## Requirements
 
