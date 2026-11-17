@@ -100,7 +100,54 @@ class BuilderRenderer
         return $html;
     }
 
+    /** Zagnieżdżenie warunków wyświetlania ([show], [show-1] ...). */
+    private int $conditionDepth = 0;
+
+    private const CONDITIONS = ['logged_in', 'logged_out', 'filled', 'empty', 'period'];
+
+    /** Opakowuje element w shortcode [show], jeśli ma warunek wyświetlania; atrybuty edytora nie trafiają do HTML. */
     private function renderComponent(array $component, int $depth): string
+    {
+        $attributes = (array) ($component['attributes'] ?? []);
+        $when = $attributes['data-lm-show'] ?? null;
+
+        if (! is_string($when) || ! in_array($when, self::CONDITIONS, true)) {
+            return $this->renderElement($component, $depth);
+        }
+
+        // Zbyt głębokie zagnieżdżenie warunków: bezpieczniej nie pokazać elementu wcale.
+        if ($this->conditionDepth >= 6) {
+            return '';
+        }
+
+        $name = $this->conditionDepth === 0 ? 'show' : 'show-'.($this->conditionDepth);
+        $args = ' when="'.$when.'"';
+        $field = (string) ($attributes['data-lm-show-field'] ?? '');
+
+        if (in_array($when, ['filled', 'empty'], true)) {
+            if (! preg_match('/^[a-z0-9_]{1,64}$/', $field)) {
+                return '';
+            }
+            $args .= ' field="'.$field.'"';
+        }
+
+        if ($when === 'period') {
+            foreach (['from' => 'data-lm-show-from', 'to' => 'data-lm-show-to'] as $key => $attr) {
+                $date = (string) ($attributes[$attr] ?? '');
+                if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+                    $args .= ' '.$key.'="'.$date.'"';
+                }
+            }
+        }
+
+        $this->conditionDepth++;
+        $html = $this->renderElement($component, $depth);
+        $this->conditionDepth--;
+
+        return $html === '' ? '' : "[{$name}{$args}]{$html}[/{$name}]";
+    }
+
+    private function renderElement(array $component, int $depth): string
     {
         $type = $component['type'] ?? '';
 

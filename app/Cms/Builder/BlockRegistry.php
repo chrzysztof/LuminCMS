@@ -4,6 +4,7 @@ namespace App\Cms\Builder;
 
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentType;
+use App\Cms\Fields\FieldOutput;
 use App\Cms\Fields\FieldRegistry;
 use App\Cms\Fields\FieldValidator;
 use App\Cms\Taxonomy\Taxonomy;
@@ -129,6 +130,40 @@ class BlockRegistry
         ], $this->all()));
     }
 
+    /** Podstawia wartości pól treści za pola bloku powiązane z polami własnymi; puste pole zostawia wartość z ustawień bloku. */
+    private function withBoundValues(array $block, array $attrs, ?Content $current): array
+    {
+        if (! $current) {
+            return $attrs;
+        }
+
+        foreach ($this->cleanBindings($block, $attrs['__bind'] ?? null) as $target => $source) {
+            $raw = FieldOutput::builtIn($current, $source) ?? ($current->fields[$source] ?? null);
+
+            if (FieldOutput::filled($raw)) {
+                $attrs[$target] = $raw;
+            }
+        }
+
+        return $attrs;
+    }
+
+    /** @return array<string, string> */
+    private function cleanBindings(array $block, mixed $bindings): array
+    {
+        if (! is_array($bindings)) {
+            return [];
+        }
+
+        $names = array_column($block['fields'], 'name');
+
+        return array_filter(
+            $bindings,
+            fn ($source, $target) => in_array($target, $names, true) && is_string($source) && preg_match('/^_?[a-z0-9_]{1,64}$/', $source) === 1,
+            ARRAY_FILTER_USE_BOTH,
+        );
+    }
+
     /**
      * Opcje wyboru z danych serwisu ("choices_source" w block.json): content_types, taxonomies albo terms
      * (wartość "taksonomia:slug"). Pobierane dopiero przy edycji i walidacji, więc zwykłe wyświetlanie strony nie robi zapytań.
@@ -197,6 +232,11 @@ class BlockRegistry
             }
         }
 
+        // Powiązania pól bloku z polami treści ("pole bloku" => "pole własne"); wartość jest podstawiana przy wyświetleniu.
+        if ($bind = $this->cleanBindings($block, $attrs['__bind'] ?? null)) {
+            $clean['__bind'] = $bind;
+        }
+
         return $clean;
     }
 
@@ -225,7 +265,7 @@ class BlockRegistry
 
         try {
             return trim(View::file($block['dir'].'/render.blade.php', [
-                'attrs' => $this->formatted($block, $this->normalize($name, $attrs)),
+                'attrs' => $this->formatted($block, $this->normalize($name, $this->withBoundValues($block, $attrs, $current))),
                 'block' => $block,
                 'current' => $current,
             ])->render());

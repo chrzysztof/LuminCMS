@@ -35,6 +35,12 @@ class Shortcodes
         $this->docs[$name] = ['usage' => $usage ?: '['.$name.']', 'description' => $description];
     }
 
+    /** Dodatkowa nazwa tego samego shortcode, niewidoczna w dokumentacji (np. do zagnieżdżania [show-1] w [show]). */
+    public function alias(string $alias, string $target): void
+    {
+        $this->handlers[strtolower($alias)] = $this->handlers[strtolower($target)];
+    }
+
     public function has(string $name): bool
     {
         return isset($this->handlers[strtolower($name)]);

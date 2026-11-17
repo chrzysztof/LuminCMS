@@ -1369,5 +1369,18 @@
     "Śledź także zalogowanych użytkowników": "Suivre aussi les utilisateurs connectés",
     "Średni": "Moyen",
     "— bez autora —": "— sans auteur —",
-    "— brak —": "— aucun —"
+    "— brak —": "— aucun —",
+    "Warunek wyświetlania": "Condition d'affichage",
+    "Zawsze": "Toujours",
+    "Tylko dla zalogowanych": "Visiteurs connectés uniquement",
+    "Tylko dla niezalogowanych": "Visiteurs non connectés uniquement",
+    "Gdy pole jest wypełnione": "Quand le champ est rempli",
+    "Gdy pole jest puste": "Quand le champ est vide",
+    "W wybranym okresie": "Pendant une période choisie",
+    "Wybierz pole…": "Choisir un champ…",
+    "Od": "Du",
+    "Do": "Au",
+    "W edytorze element jest zawsze widoczny; warunek działa na stronie.": "Dans l'éditeur l'élément est toujours visible ; la condition s'applique sur la page.",
+    "Pola własne tej treści": "Champs de ce contenu",
+    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Le champ choisi remplace le réglage du bloc sur la page ; s'il est vide, le réglage fixe est utilisé. L'aperçu de l'éditeur montre le réglage du bloc."
 }

@@ -1369,5 +1369,18 @@
     "Śledź także zalogowanych użytkowników": "Ook ingelogde gebruikers volgen",
     "Średni": "Gemiddeld",
     "— bez autora —": "— geen auteur —",
-    "— brak —": "— geen —"
+    "— brak —": "— geen —",
+    "Warunek wyświetlania": "Weergavevoorwaarde",
+    "Zawsze": "Altijd",
+    "Tylko dla zalogowanych": "Alleen voor ingelogde bezoekers",
+    "Tylko dla niezalogowanych": "Alleen voor niet-ingelogde bezoekers",
+    "Gdy pole jest wypełnione": "Als het veld is ingevuld",
+    "Gdy pole jest puste": "Als het veld leeg is",
+    "W wybranym okresie": "In een gekozen periode",
+    "Wybierz pole…": "Kies een veld…",
+    "Od": "Van",
+    "Do": "Tot",
+    "W edytorze element jest zawsze widoczny; warunek działa na stronie.": "In de editor is het element altijd zichtbaar; de voorwaarde geldt op de pagina.",
+    "Pola własne tej treści": "Velden van deze inhoud",
+    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Het gekozen veld vervangt de blokinstelling op de pagina; is het leeg, dan geldt de vaste instelling. In de editorvoorbeeld zie je de blokinstelling."
 }

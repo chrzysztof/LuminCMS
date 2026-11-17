@@ -1369,5 +1369,18 @@
     "Śledź także zalogowanych użytkowników": "Відстежувати також авторизованих користувачів",
     "Średni": "Середній",
     "— bez autora —": "— без автора —",
-    "— brak —": "— немає —"
+    "— brak —": "— немає —",
+    "Warunek wyświetlania": "Умова показу",
+    "Zawsze": "Завжди",
+    "Tylko dla zalogowanych": "Лише для авторизованих",
+    "Tylko dla niezalogowanych": "Лише для неавторизованих",
+    "Gdy pole jest wypełnione": "Коли поле заповнене",
+    "Gdy pole jest puste": "Коли поле порожнє",
+    "W wybranym okresie": "У вибраний період",
+    "Wybierz pole…": "Оберіть поле…",
+    "Od": "Від",
+    "Do": "До",
+    "W edytorze element jest zawsze widoczny; warunek działa na stronie.": "У редакторі елемент завжди видно; умова діє на сторінці.",
+    "Pola własne tej treści": "Поля цього вмісту",
+    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Вибране поле замінює налаштування блоку на сторінці; якщо воно порожнє, діє задане налаштування. У попередньому перегляді редактора видно налаштування блоку."
 }

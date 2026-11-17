@@ -1369,5 +1369,18 @@
     "Śledź także zalogowanych użytkowników": "Sledovat i přihlášené uživatele",
     "Średni": "Střední",
     "— bez autora —": "— bez autora —",
-    "— brak —": "— žádný —"
+    "— brak —": "— žádný —",
+    "Warunek wyświetlania": "Podmínka zobrazení",
+    "Zawsze": "Vždy",
+    "Tylko dla zalogowanych": "Jen pro přihlášené",
+    "Tylko dla niezalogowanych": "Jen pro nepřihlášené",
+    "Gdy pole jest wypełnione": "Když je pole vyplněno",
+    "Gdy pole jest puste": "Když je pole prázdné",
+    "W wybranym okresie": "V zvoleném období",
+    "Wybierz pole…": "Vyberte pole…",
+    "Od": "Od",
+    "Do": "Do",
+    "W edytorze element jest zawsze widoczny; warunek działa na stronie.": "V editoru je prvek vždy vidět; podmínka platí na stránce.",
+    "Pola własne tej treści": "Pole této položky",
+    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Vybrané pole nahradí nastavení bloku na stránce; je-li prázdné, použije se pevné nastavení. V náhledu editoru je vidět nastavení bloku."
 }

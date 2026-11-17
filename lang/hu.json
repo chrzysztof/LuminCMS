@@ -1369,5 +1369,18 @@
     "Śledź także zalogowanych użytkowników": "Bejelentkezett felhasználók követése is",
     "Średni": "Közepes",
     "— bez autora —": "— nincs szerző —",
-    "— brak —": "— nincs —"
+    "— brak —": "— nincs —",
+    "Warunek wyświetlania": "Megjelenítési feltétel",
+    "Zawsze": "Mindig",
+    "Tylko dla zalogowanych": "Csak bejelentkezetteknek",
+    "Tylko dla niezalogowanych": "Csak nem bejelentkezetteknek",
+    "Gdy pole jest wypełnione": "Ha a mező ki van töltve",
+    "Gdy pole jest puste": "Ha a mező üres",
+    "W wybranym okresie": "Kiválasztott időszakban",
+    "Wybierz pole…": "Válassz mezőt…",
+    "Od": "Tól",
+    "Do": "Ig",
+    "W edytorze element jest zawsze widoczny; warunek działa na stronie.": "A szerkesztőben az elem mindig látszik; a feltétel az oldalon érvényes.",
+    "Pola własne tej treści": "A tartalom mezői",
+    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "A kiválasztott mező felülírja a blokk beállítását az oldalon; ha üres, a rögzített beállítás marad. A szerkesztő előnézete a blokk beállítását mutatja."
 }

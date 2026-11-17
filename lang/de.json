@@ -1369,5 +1369,18 @@
     "Śledź także zalogowanych użytkowników": "Auch angemeldete Benutzer tracken",
     "Średni": "Mittel",
     "— bez autora —": "— kein Autor —",
-    "— brak —": "— keine —"
+    "— brak —": "— keine —",
+    "Warunek wyświetlania": "Anzeigebedingung",
+    "Zawsze": "Immer",
+    "Tylko dla zalogowanych": "Nur für angemeldete Nutzer",
+    "Tylko dla niezalogowanych": "Nur für nicht angemeldete Nutzer",
+    "Gdy pole jest wypełnione": "Wenn das Feld ausgefüllt ist",
+    "Gdy pole jest puste": "Wenn das Feld leer ist",
+    "W wybranym okresie": "In einem bestimmten Zeitraum",
+    "Wybierz pole…": "Feld auswählen…",
+    "Od": "Von",
+    "Do": "Bis",
+    "W edytorze element jest zawsze widoczny; warunek działa na stronie.": "Im Editor ist das Element immer sichtbar; die Bedingung gilt auf der Seite.",
+    "Pola własne tej treści": "Felder dieses Inhalts",
+    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Das gewählte Feld ersetzt die Blockeinstellung auf der Seite; ist es leer, gilt die feste Einstellung. In der Editorvorschau sieht man die Blockeinstellung."
 }

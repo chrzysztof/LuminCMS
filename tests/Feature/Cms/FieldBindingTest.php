@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Cms;
 
+use App\Cms\Builder\BlockRegistry;
 use App\Cms\Builder\BuilderRenderer;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentType;
@@ -135,5 +136,97 @@ class FieldBindingTest extends TestCase
         $this->get('/oferta')->assertOk()
             ->assertSee('Wartość', false)
             ->assertDontSee('[field', false);
+    }
+
+    private function cond(string $when, array $extra = [], string $text = 'X', array $children = []): array
+    {
+        return ['tagName' => 'p', 'attributes' => ['data-lm-show' => $when, ...$extra], 'components' => $children ?: [['type' => 'textnode', 'content' => $text]]];
+    }
+
+    private function renderProject(array $components): string
+    {
+        $stored = app(BuilderRenderer::class)->render(['pages' => [['frames' => [['component' => ['components' => $components]]]]]]);
+        $this->assertStringNotContainsString('data-lm-show', $stored);
+
+        return $this->sc($stored);
+    }
+
+    public function test_display_conditions_by_login_state(): void
+    {
+        $components = [$this->cond('logged_in', [], 'Dla zalogowanych'), $this->cond('logged_out', [], 'Dla gości')];
+
+        $guest = $this->renderProject($components);
+        $this->assertStringContainsString('<p>Dla gości</p>', $guest);
+        $this->assertStringNotContainsString('Dla zalogowanych', $guest);
+
+        $this->actingAs(User::factory()->create());
+        $member = $this->renderProject($components);
+        $this->assertStringContainsString('<p>Dla zalogowanych</p>', $member);
+        $this->assertStringNotContainsString('Dla gości', $member);
+    }
+
+    public function test_display_conditions_by_field_and_period(): void
+    {
+        $out = $this->renderProject([
+            $this->cond('filled', ['data-lm-show-field' => 'podtytul'], 'Jest podtytuł'),
+            $this->cond('empty', ['data-lm-show-field' => 'podtytul'], 'Brak podtytułu'),
+            $this->cond('filled', ['data-lm-show-field' => 'brak'], 'Brak pola - ukryte'),
+            $this->cond('empty', ['data-lm-show-field' => 'brak'], 'Puste pole - widoczne'),
+            $this->cond('filled', ['data-lm-show-field' => '_featured'], 'Obraz - ukryty'),
+            $this->cond('period', ['data-lm-show-from' => now()->subDay()->toDateString(), 'data-lm-show-to' => now()->addDay()->toDateString()], 'W okresie'),
+            $this->cond('period', ['data-lm-show-from' => now()->addDays(2)->toDateString()], 'Jeszcze nie'),
+            $this->cond('period', ['data-lm-show-to' => now()->subDays(2)->toDateString()], 'Już po'),
+            $this->cond('period', [], 'Bez dat - ukryte'),
+        ]);
+
+        foreach (['Jest podtytuł', 'Puste pole - widoczne', 'W okresie'] as $shown) {
+            $this->assertStringContainsString($shown, $out);
+        }
+        foreach (['Brak podtytułu', 'Brak pola - ukryte', 'Obraz - ukryty', 'Jeszcze nie', 'Już po', 'Bez dat'] as $hidden) {
+            $this->assertStringNotContainsString($hidden, $out);
+        }
+        $this->assertStringNotContainsString('[show', $out);
+    }
+
+    public function test_nested_conditions_and_invalid_ones_fail_closed(): void
+    {
+        $inner = $this->cond('logged_in', [], 'Wewnętrzny');
+        $outer = ['tagName' => 'div', 'attributes' => ['data-lm-show' => 'logged_out'], 'components' => [$inner, ['type' => 'textnode', 'content' => 'Zewnętrzny']]];
+
+        $guest = $this->renderProject([$outer]);
+        $this->assertStringContainsString('Zewnętrzny', $guest);
+        $this->assertStringNotContainsString('Wewnętrzny', $guest);
+
+        // Nieznany warunek jest ignorowany przez renderer (element zwykły), błędna nazwa pola ukrywa element.
+        $this->assertStringContainsString('Zwykły', $this->renderProject([$this->cond('nieznany', [], 'Zwykły')]));
+        $this->assertStringNotContainsString('Zly', $this->renderProject([$this->cond('filled', ['data-lm-show-field' => 'zła"]'], 'Zly')]));
+        $this->assertSame('', trim($this->sc('[show when="cokolwiek"]ukryte[/show]')));
+    }
+
+    public function test_theme_block_fields_can_be_bound_to_content_fields(): void
+    {
+        $registry = app(BlockRegistry::class);
+        $this->page->update(['fields' => ['www' => 'https://youtu.be/dQw4w9WgXcQ', 'podtytul' => 'Tytuł z pola']]);
+        $attrs = ['url' => 'https://vimeo.com/123456789', 'title' => 'Stary', '__bind' => ['url' => 'www', 'title' => 'podtytul', 'nie-ma-takiego' => 'www', 'ratio' => 'zła nazwa']];
+
+        // Zapis zachowuje tylko poprawne powiązania pól tego bloku.
+        $this->assertSame(['url' => 'www', 'title' => 'podtytul'], $registry->normalize('video', $attrs)['__bind']);
+
+        $bound = $registry->render('video', $attrs, $this->page);
+        $this->assertStringContainsString('youtube-nocookie.com/embed/dQw4w9WgXcQ', $bound);
+        $this->assertStringContainsString('title="Tytuł z pola"', $bound);
+
+        // Bez treści (podgląd w edytorze) i przy pustym polu obowiązuje ustawienie bloku.
+        $this->assertStringContainsString('player.vimeo.com/video/123456789', $registry->render('video', $attrs));
+        $this->page->update(['fields' => []]);
+        $this->assertStringContainsString('player.vimeo.com/video/123456789', $registry->render('video', $attrs, $this->page));
+
+        // Pola wbudowane też działają, a powiązanie przechodzi przez renderer strony.
+        $this->assertStringContainsString('title="Oferta"', $registry->render('video', ['url' => 'https://youtu.be/dQw4w9WgXcQ', '__bind' => ['title' => '_title']], $this->page));
+        $stored = app(BuilderRenderer::class)->render(['pages' => [['frames' => [['component' => ['components' => [
+            ['type' => 'lm-block', 'block' => 'video', 'attrs' => $attrs],
+        ]]]]]]]);
+        $this->assertStringContainsString('[block name="video"', $stored);
+        $this->assertStringContainsString('youtube-nocookie', $this->sc('[block name="video" data="'.BlockRegistry::encode(['url' => 'https://youtu.be/dQw4w9WgXcQ']).'"]'));
     }
 }

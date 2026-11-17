@@ -31,6 +31,17 @@ class FieldOutput
         };
     }
 
+    /** Czy pole ma wartość: niepusty tekst, lista, zaznaczony przełącznik, liczba (także 0). */
+    public static function filled(mixed $value): bool
+    {
+        return match (true) {
+            $value === null, $value === false, $value === '' => false,
+            is_array($value) => array_filter($value, fn ($v) => $v !== null && $v !== '' && $v !== []) !== [],
+            is_string($value), $value instanceof \Stringable => trim(strip_tags((string) $value)) !== '' || str_contains((string) $value, '<img'),
+            default => true,
+        };
+    }
+
     /** Tekst: wartości proste, listy po przecinku, tak/nie; HTML z pól tekstowych jest sprowadzany do tekstu. */
     public static function text(mixed $value): string
     {

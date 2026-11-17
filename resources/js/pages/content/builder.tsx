@@ -34,6 +34,7 @@ import {
     FieldBinding,
     type CustomField,
 } from '@/components/cms/builder/field-binding';
+import { DisplayConditions } from '@/components/cms/builder/display-conditions';
 import { BuilderContextMenu } from '@/components/cms/builder/context-menu';
 import { PageTemplatesDialog } from '@/components/cms/builder/page-templates-dialog';
 import {
@@ -353,7 +354,7 @@ export default function Builder({
             traitManager: { appendTo: traitsEl.current },
             styleManager: { sectors: [] },
             selectorManager: { componentFirst: true },
-            protectedCss: `body{margin:0}${HIDDEN_PREVIEW_CSS}[data-lm-field]{outline:1px dashed #7c3aed;outline-offset:2px}`,
+            protectedCss: `body{margin:0}${HIDDEN_PREVIEW_CSS}[data-lm-field]{outline:1px dashed #7c3aed;outline-offset:2px}[data-lm-show]{outline:1px dashed #d97706;outline-offset:2px}`,
             canvas: {
                 styles: [
                     '/css/lumin-blocks.css',
@@ -869,6 +870,11 @@ export default function Builder({
                                         fields={customFields}
                                         onChange={() => setDirty(true)}
                                     />
+                                    <DisplayConditions
+                                        editor={editorInst}
+                                        fields={customFields}
+                                        onChange={() => setDirty(true)}
+                                    />
                                     <div ref={traitsEl} />
                                     <StylePanel
                                         editor={editorInst}
@@ -930,6 +936,7 @@ export default function Builder({
                     <ThemeBlockDialog
                         block={blockDialog.block}
                         values={blockDialog.values}
+                        fields={customFields}
                         onApply={applyBlockSettings}
                         onClose={() => setBlockDialog(null)}
                     />

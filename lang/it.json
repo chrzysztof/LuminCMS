@@ -1369,5 +1369,18 @@
     "Śledź także zalogowanych użytkowników": "Traccia anche gli utenti connessi",
     "Średni": "Medio",
     "— bez autora —": "— nessun autore —",
-    "— brak —": "— nessuno —"
+    "— brak —": "— nessuno —",
+    "Warunek wyświetlania": "Condizione di visualizzazione",
+    "Zawsze": "Sempre",
+    "Tylko dla zalogowanych": "Solo per utenti connessi",
+    "Tylko dla niezalogowanych": "Solo per utenti non connessi",
+    "Gdy pole jest wypełnione": "Quando il campo è compilato",
+    "Gdy pole jest puste": "Quando il campo è vuoto",
+    "W wybranym okresie": "In un periodo selezionato",
+    "Wybierz pole…": "Scegli un campo…",
+    "Od": "Dal",
+    "Do": "Al",
+    "W edytorze element jest zawsze widoczny; warunek działa na stronie.": "Nell'editor l'elemento è sempre visibile; la condizione vale sulla pagina.",
+    "Pola własne tej treści": "Campi di questo contenuto",
+    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "Il campo scelto sostituisce l'impostazione del blocco nella pagina; se è vuoto resta l'impostazione fissa. L'anteprima dell'editor mostra l'impostazione del blocco."
 }

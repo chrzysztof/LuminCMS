@@ -1369,5 +1369,18 @@
     "Śledź także zalogowanych użytkowników": "Acompanhar também os usuários logados",
     "Średni": "Médio",
     "— bez autora —": "— sem autor —",
-    "— brak —": "— nenhum —"
+    "— brak —": "— nenhum —",
+    "Warunek wyświetlania": "Condição de exibição",
+    "Zawsze": "Sempre",
+    "Tylko dla zalogowanych": "Apenas para utilizadores com sessão",
+    "Tylko dla niezalogowanych": "Apenas para visitantes sem sessão",
+    "Gdy pole jest wypełnione": "Quando o campo está preenchido",
+    "Gdy pole jest puste": "Quando o campo está vazio",
+    "W wybranym okresie": "Num período selecionado",
+    "Wybierz pole…": "Escolha um campo…",
+    "Od": "De",
+    "Do": "Até",
+    "W edytorze element jest zawsze widoczny; warunek działa na stronie.": "No editor o elemento está sempre visível; a condição aplica-se na página.",
+    "Pola własne tej treści": "Campos deste conteúdo",
+    "Wybrane pole zastąpi ustawienie bloku na stronie; gdy pole jest puste, zostanie ustawienie z góry. W podglądzie edytora widać ustawienie bloku.": "O campo escolhido substitui a definição do bloco na página; se estiver vazio, aplica-se a definição fixa. A pré-visualização do editor mostra a definição do bloco."
 }

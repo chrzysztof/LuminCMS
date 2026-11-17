@@ -11,6 +11,7 @@ use App\Cms\Menus\MenuRenderer;
 use App\Cms\Settings\Settings;
 use App\Cms\Settings\SiteIdentity;
 use App\Cms\Taxonomy\Term;
+use Illuminate\Support\Carbon;
 
 /** Shortcody dostępne od razu. */
 class BuiltInShortcodes
@@ -63,6 +64,27 @@ class BuiltInShortcodes
 
             return $out !== '' ? $out : ($format === 'url' ? e($fallback) : $fallback);
         }, '[field name="telefon"] / [field name="zdjecie" format="image"] / [field name="www" format="url"]', 'Wartość pola własnego tej treści albo treści o podanym id. Formaty: text, html, url, image; zawartość między znacznikami to wartość zastępcza.');
+
+        // Warunek wyświetlania: [show when="filled" field="telefon"]...[/show]. Warunki: logged_in, logged_out,
+        // filled / empty (pole własne albo wbudowane _featured, _title, _excerpt), period (from/to jako RRRR-MM-DD).
+        $sc->add('show', function (array $a, string $content, ?Content $current) {
+            $field = fn () => $current && ($name = (string) ($a['field'] ?? '')) !== '' ? FieldOutput::builtIn($current, $name) ?? $current->field($name) : null;
+
+            $visible = match ($a['when'] ?? '') {
+                'logged_in' => auth()->check(),
+                'logged_out' => ! auth()->check(),
+                'filled' => FieldOutput::filled($field()),
+                'empty' => ! FieldOutput::filled($field()),
+                'period' => self::inPeriod($a['from'] ?? '', $a['to'] ?? ''),
+                default => false, // nieznany warunek nie ujawnia treści
+            };
+
+            return $visible ? $content : '';
+        }, '[show when="filled" field="telefon"]Zadzwoń[/show]', 'Pokazuje zawartość tylko po spełnieniu warunku: logged_in, logged_out, filled, empty (pole), period (from, to).');
+        // Zagnieżdżone warunki (edytor wizualny) używają nazw show-1 ... show-5.
+        for ($i = 1; $i <= 5; $i++) {
+            $sc->alias("show-{$i}", 'show');
+        }
 
         // Odnośnik do treści po id.
         $sc->add('link', function (array $a, string $content) {
@@ -159,5 +181,23 @@ class BuiltInShortcodes
         }
 
         return preg_match('~^(https?://|mailto:|tel:)~i', $url) ? $url : null;
+    }
+
+    private static function inPeriod(string $from, string $to): bool
+    {
+        $now = now();
+
+        try {
+            if ($from !== '' && $now->lt(Carbon::parse($from)->startOfDay())) {
+                return false;
+            }
+            if ($to !== '' && $now->gt(Carbon::parse($to)->endOfDay())) {
+                return false;
+            }
+        } catch (\Throwable) {
+            return false;
+        }
+
+        return $from !== '' || $to !== '';
     }
 }
