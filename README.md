@@ -8,12 +8,14 @@ Lumin is built on Laravel 13 with a React admin panel and server-rendered public
 
 ![The default theme: a starter home page built in the visual editor](docs/screenshots/site-home.png)
 
-|                                                                        |                                                                        |
-| ---------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| ![Dashboard](docs/screenshots/dashboard.png)                           | ![Content editor with a rich-text field](docs/screenshots/editor.png)  |
-| **Dashboard** — stats, activity, quick actions and optional GA4 report | **Content editor** — text or visual mode, SEO, custom fields, excerpt  |
-| ![Visual page builder](docs/screenshots/builder.png)                   | ![Theme customizer with live preview](docs/screenshots/customizer.png) |
-| **Visual builder** — drag-and-drop blocks that output clean HTML       | **Customizer** — design tokens with a live, device-sized preview       |
+|                                                                           |                                                                        |
+| ------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| ![Dashboard](docs/screenshots/dashboard.png)                              | ![Content editor with a rich-text field](docs/screenshots/editor.png)  |
+| **Dashboard** — stats, activity, quick actions and optional GA4 report    | **Content editor** — text or visual mode, SEO, custom fields, excerpt  |
+| ![Visual page builder](docs/screenshots/builder.png)                      | ![Theme customizer with live preview](docs/screenshots/customizer.png) |
+| **Visual builder** — drag-and-drop blocks that output clean HTML          | **Customizer** — design tokens with a live, device-sized preview       |
+| ![Theme Builder in the visual editor](docs/screenshots/theme-builder.png) | ![Templates screen](docs/screenshots/templates.png)                    |
+| **Theme Builder** — a post template with field bindings and conditions    | **Templates** — assign designs to content types, archives and terms    |
 
 ## Highlights
 

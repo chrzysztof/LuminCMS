@@ -108,7 +108,7 @@ class ThemeBuilderTest extends TestCase
         $this->assertSame($part->id, app(Templates::class)->assignedId('single:post'));
 
         $this->get("/cms/content/part/{$part->id}/builder?preset=template-single")
-            ->assertInertia(fn (Assert $p) => $p->where('seedHtml', fn ($html) => str_contains($html, 'data-lm-field="_title"') && str_contains($html, 'post-content')));
+            ->assertInertia(fn (Assert $p) => $p->where('seedHtml', fn ($html) => str_contains($html, 'data-lm-field="_title"') && str_contains($html, 'post-content') && str_contains($html, 'data-lm-show="filled"')));
 
         $this->put('/cms/templates', ['key' => 'single:post', 'content_id' => null])->assertRedirect();
         $this->assertNull(app(Templates::class)->assignedId('single:post'));
