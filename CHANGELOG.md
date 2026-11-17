@@ -4,6 +4,10 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ## [Unreleased]
 
+### Fixed
+
+- The SEO snippet preview in the content editor and the generated meta description no longer show raw `[block ...]` shortcodes for pages built from theme blocks; blocks are skipped and custom-field values are filled in, so a page made only of blocks falls back to the site description.
+
 ### Changed
 
 - The map block now uses a place picker instead of typing coordinates: search an address, click the map or drag the marker; the zoom is remembered. Existing map blocks must be set again (the old latitude/longitude settings are no longer used).

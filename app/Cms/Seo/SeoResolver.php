@@ -71,10 +71,7 @@ class SeoResolver
             return $custom;
         }
 
-        $source = trim((string) $content->excerpt) !== '' ? (string) $content->excerpt : (string) $content->html_cache;
-        // Shortcody (pola własne, bloki) zamieniamy na treść, żeby opis nie zawierał surowych [field ...].
-        $source = app(Shortcodes::class)->render($source, $content);
-        $text = trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags($source), ENT_QUOTES | ENT_HTML5, 'UTF-8')) ?? '');
+        $text = trim((string) $content->excerpt) !== '' ? $this->plainText((string) $content->excerpt, $content) : $this->plainText((string) $content->html_cache, $content);
 
         return $text !== '' ? Str::limit($text, self::DESCRIPTION_LIMIT, '…', preserveWords: true) : (string) $this->site()['description'];
     }
@@ -272,5 +269,17 @@ class SeoResolver
     private function absolute(string $url): string
     {
         return preg_match('~^https?://~i', $url) ? $url : url($url);
+    }
+
+    /**
+     * Czysty tekst treści do opisu i podglądu SEO: pola własne i warunki są podstawiane, a bloki motywu
+     * (galerie, mapy, listy, szablony) pomijane, bo nie są prozą i dawałyby surowe shortcody albo teksty zastępcze.
+     */
+    public function plainText(string $source, Content $content): string
+    {
+        $source = preg_replace('/\[block\b[^\]]*\]/u', ' ', $source) ?? $source;
+        $source = app(Shortcodes::class)->render($source, $content);
+
+        return trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags($source), ENT_QUOTES | ENT_HTML5, 'UTF-8')) ?? '');
     }
 }

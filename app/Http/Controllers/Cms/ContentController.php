@@ -11,6 +11,7 @@ use App\Cms\Fields\FieldValidator;
 use App\Cms\Media\Media;
 use App\Cms\Redirects\RedirectManager;
 use App\Cms\Roles\ContentAccess;
+use App\Cms\Seo\SeoResolver;
 use App\Cms\Settings\Settings;
 use App\Cms\Support\HtmlSanitizer;
 use App\Cms\Taxonomy\Taxonomy;
@@ -406,7 +407,7 @@ class ContentController extends Controller
     private function seoSite(ContentType $type, ?Content $content): array
     {
         $site = app(Settings::class)->group('seo');
-        $body = $content ? trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags((string) $content->html_cache), ENT_QUOTES | ENT_HTML5)) ?? '') : '';
+        $body = $content ? app(SeoResolver::class)->plainText((string) $content->html_cache, $content) : '';
 
         return [
             'site_name' => $site['site_name'],

@@ -8,6 +8,7 @@ use App\Cms\Content\Content;
 use App\Cms\Content\ContentType;
 use App\Cms\Fields\FieldGroup;
 use App\Cms\Media\Media;
+use App\Cms\Seo\SeoResolver;
 use App\Cms\Shortcodes\Shortcodes;
 use App\Models\User;
 use Database\Seeders\CmsSeeder;
@@ -228,5 +229,22 @@ class FieldBindingTest extends TestCase
         ]]]]]]]);
         $this->assertStringContainsString('[block name="video"', $stored);
         $this->assertStringContainsString('youtube-nocookie', $this->sc('[block name="video" data="'.BlockRegistry::encode(['url' => 'https://youtu.be/dQw4w9WgXcQ']).'"]'));
+    }
+
+    public function test_seo_text_skips_theme_blocks_in_description_and_panel_preview(): void
+    {
+        $block = '[block name="archive-heading" data="eyJzaG93X2Rlc2NyaXB0aW9uIjoxfQ"][block name="gallery" data="eyJjb2x1bW5zIjoiMyJ9"]';
+        $this->page->update(['html_cache' => $block.'<p>Prawdziwy akapit o stronie.</p>', 'excerpt' => '']);
+
+        $resolver = app(SeoResolver::class);
+        $this->assertSame('Prawdziwy akapit o stronie.', $resolver->description($this->page->fresh()));
+
+        // Strona złożona wyłącznie z bloków wraca do opisu serwisu zamiast pokazywać surowe shortcody.
+        $this->page->update(['html_cache' => $block]);
+        $this->assertStringNotContainsString('[block', $resolver->description($this->page->fresh()));
+
+        $this->actingAs(User::factory()->create())
+            ->get("/cms/content/page/{$this->page->id}/edit")
+            ->assertInertia(fn ($p) => $p->where('seoSite.body', ''));
     }
 }
