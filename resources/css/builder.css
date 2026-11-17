@@ -138,3 +138,37 @@
     color: #111114 !important;
     opacity: 1 !important;
 }
+
+/* Usuwanie elementu z panelu warstw */
+.lumin-builder .gjs-layer-item {
+    position: relative;
+}
+
+.lumin-builder .lm-layer-del {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    margin-left: auto;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #b42318;
+    cursor: pointer;
+}
+
+.lumin-builder .gjs-layer-item:hover .lm-layer-del,
+.lumin-builder .lm-layer-del:focus-visible {
+    display: inline-flex;
+}
+
+.lumin-builder .lm-layer-del:hover {
+    background: #fee4e2;
+}
+
+/* Grubsze obramowania elementów w płótnie (najechanie i zaznaczenie) */
+.lumin-builder .gjs-highlighter,
+.lumin-builder .gjs-highlighter-sel {
+    outline-width: 3px !important;
+}

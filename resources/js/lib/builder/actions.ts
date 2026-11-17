@@ -104,3 +104,39 @@ export function registerShortcuts(editor: Editor) {
     on('lumin-copy-style', '⌘+alt+c, ctrl+alt+c', (c) => copyStyle(c));
     on('lumin-paste-style', '⌘+alt+v, ctrl+alt+v', (c) => pasteStyle(c));
 }
+
+const TRASH =
+    '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></svg>';
+
+/** Przycisk usuwania elementu w panelu warstw (pokazuje się po najechaniu na warstwę). */
+export function registerLayerDelete(editor: Editor, label: string) {
+    editor.on(
+        'layer:render',
+        ({ component, el }: { component: Component; el: HTMLElement }) => {
+            const title = el.querySelector<HTMLElement>(
+                ':scope > .gjs-layer-item',
+            );
+            if (
+                !title ||
+                title.querySelector('.lm-layer-del') ||
+                !usable(component) ||
+                !canRemove(component)
+            )
+                return;
+
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'lm-layer-del';
+            button.title = label;
+            button.setAttribute('aria-label', label);
+            button.innerHTML = TRASH;
+            // mousedown nie może zaznaczyć ani przeciągnąć warstwy.
+            button.addEventListener('mousedown', (e) => e.stopPropagation());
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                remove(editor, component);
+            });
+            title.append(button);
+        },
+    );
+}

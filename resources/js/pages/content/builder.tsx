@@ -15,7 +15,7 @@ import {
     LayoutGrid,
     Loader2,
     Monitor,
-    PanelRight,
+    PanelLeft,
     Redo2,
     Save,
     Settings2,
@@ -47,7 +47,7 @@ import { ThemeBlockDialog } from '@/components/cms/theme-block-dialog';
 import { StatusBadge } from '@/components/cms/status-badge';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
-import { registerShortcuts } from '@/lib/builder/actions';
+import { registerLayerDelete, registerShortcuts } from '@/lib/builder/actions';
 import { registerBlocks } from '@/lib/builder/blocks';
 import {
     registerThemeBlocks,
@@ -92,7 +92,7 @@ const HIDDEN_PREVIEW_CSS = [
 ]
     .map(
         (selector) =>
-            `${selector}{display:revert!important;opacity:.35;outline:1px dashed #94a3b8}}`,
+            `${selector}{display:revert!important;opacity:.35;outline:3px dashed #94a3b8}}`,
     )
     .join('');
 
@@ -354,7 +354,7 @@ export default function Builder({
             traitManager: { appendTo: traitsEl.current },
             styleManager: { sectors: [] },
             selectorManager: { componentFirst: true },
-            protectedCss: `body{margin:0}${HIDDEN_PREVIEW_CSS}[data-lm-field]{outline:1px dashed #7c3aed;outline-offset:2px}[data-lm-show]{outline:1px dashed #d97706;outline-offset:2px}`,
+            protectedCss: `body{margin:0}${HIDDEN_PREVIEW_CSS}[data-lm-field]{outline:3px dashed #7c3aed;outline-offset:2px}[data-lm-show]{outline:3px dashed #d97706;outline-offset:2px}.gjs-dashed *[data-gjs-highlightable]{outline-width:3px!important}.gjs-selected,.gjs-selected-parent{outline-width:3px!important}`,
             canvas: {
                 styles: [
                     '/css/lumin-blocks.css',
@@ -425,6 +425,7 @@ export default function Builder({
         );
 
         registerShortcuts(editor);
+        registerLayerDelete(editor, t('Usuń element'));
 
         // Menu prawego przycisku: zaznacza element pod kursorem i otwiera własne menu zamiast przeglądarkowego.
         let frameDoc: Document | null = null;
@@ -726,8 +727,8 @@ export default function Builder({
                     </div>
 
                     {/* Panele boczne */}
-                    <div className="flex min-h-0 flex-1 items-stretch justify-end gap-3">
-                        <div className="flex min-h-0 flex-col items-end gap-2">
+                    <div className="flex min-h-0 flex-1 items-end justify-start gap-3">
+                        <div className="flex max-h-full min-h-0 flex-col items-start justify-end gap-2">
                             <Button
                                 type="button"
                                 variant="outline"
@@ -737,12 +738,12 @@ export default function Builder({
                                 className="pointer-events-auto size-9 bg-white"
                                 onClick={() => setPanelOpen((o) => !o)}
                             >
-                                <PanelRight />
+                                <PanelLeft />
                             </Button>
                             <div
                                 className={cn(
                                     panelClass,
-                                    'min-h-0 w-80 flex-1',
+                                    'h-[36rem] max-h-full min-h-0 w-80',
                                     !panelOpen && 'hidden',
                                 )}
                             >
