@@ -2,6 +2,7 @@
 
 namespace App\Cms\Fields;
 
+use App\Cms\Content\Content;
 use App\Cms\Media\Media;
 use Illuminate\Support\HtmlString;
 
@@ -12,6 +13,23 @@ use Illuminate\Support\HtmlString;
 class FieldOutput
 {
     public const FORMATS = ['text', 'html', 'url', 'image'];
+
+    /** Wbudowane pola treści dostępne w powiązaniach obok pól własnych (nazwy z podkreślnikiem na początku). */
+    public const BUILT_IN = [
+        '_featured' => ['label' => 'Obraz wyróżniający', 'type' => 'image'],
+        '_title' => ['label' => 'Tytuł', 'type' => 'text'],
+        '_excerpt' => ['label' => 'Zajawka', 'type' => 'textarea'],
+    ];
+
+    public static function builtIn(Content $content, string $name): mixed
+    {
+        return match ($name) {
+            '_featured' => $content->featured_media_id,
+            '_title' => $content->title,
+            '_excerpt' => $content->excerpt,
+            default => null,
+        };
+    }
 
     /** Tekst: wartości proste, listy po przecinku, tak/nie; HTML z pól tekstowych jest sprowadzany do tekstu. */
     public static function text(mixed $value): string

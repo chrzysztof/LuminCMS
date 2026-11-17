@@ -65,6 +65,25 @@ class FieldBindingTest extends TestCase
         $this->assertSame('Opis HTML', $this->sc('[field name="opis"]'));
     }
 
+    public function test_built_in_fields_bind_featured_image_title_and_excerpt(): void
+    {
+        $media = Media::first();
+        $this->page->update(['featured_media_id' => $media->id, 'excerpt' => 'Krótka zajawka']);
+
+        $this->assertStringContainsString('<img', $this->sc('[field name="_featured" format="image" class="lm-image" /]'));
+        $this->assertStringContainsString('alt="Foto"', $this->sc('[field name="_featured" format="image" /]'));
+        $this->assertSame('Oferta', $this->sc('[field name="_title"]'));
+        $this->assertSame('Krótka zajawka', $this->sc('[field name="_excerpt"]'));
+
+        $this->page->update(['featured_media_id' => null]);
+        $this->assertSame('', $this->sc('[field name="_featured" format="image" /]'));
+
+        $project = ['pages' => [['frames' => [['component' => ['components' => [
+            ['tagName' => 'img', 'type' => 'lm-image', 'classes' => ['lm-image'], 'attributes' => ['data-lm-field' => '_featured', 'data-lm-bind' => 'src']],
+        ]]]]]]];
+        $this->assertStringContainsString('[field name="_featured" format="image"', app(BuilderRenderer::class)->render($project));
+    }
+
     public function test_empty_fields_use_the_fallback_and_unsafe_urls_are_dropped(): void
     {
         $this->assertSame('Domyślny', $this->sc('[field name="brak"]Domyślny[/field]'));
@@ -102,9 +121,11 @@ class FieldBindingTest extends TestCase
         $this->actingAs(User::factory()->create())->get("/cms/content/page/{$this->page->id}/builder")
             ->assertOk()->assertInertia(fn (Assert $p) => $p
             ->component('content/builder')
-            ->has('customFields', 5) // bez repeatera
-            ->where('customFields.0.name', 'podtytul')
-            ->where('customFields.0.preview', 'Wartość z pola'));
+            ->has('customFields', 8) // 3 wbudowane + 5 pól własnych (bez repeatera)
+            ->where('customFields.0.name', '_featured')
+            ->where('customFields.1.preview', 'Oferta')
+            ->where('customFields.3.name', 'podtytul')
+            ->where('customFields.3.preview', 'Wartość z pola'));
     }
 
     public function test_seo_description_uses_field_values_not_raw_shortcodes(): void

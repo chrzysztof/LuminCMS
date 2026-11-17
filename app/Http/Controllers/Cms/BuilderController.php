@@ -9,6 +9,7 @@ use App\Cms\Builder\RevisionRecorder;
 use App\Cms\Builder\SavedBlock;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentType;
+use App\Cms\Fields\FieldOutput;
 use App\Cms\Fields\FieldRegistry;
 use App\Cms\Roles\ContentAccess;
 use App\Cms\Themes\Parts;
@@ -60,7 +61,14 @@ class BuilderController extends Controller
     {
         $skip = ['message', 'tab', 'accordion', 'password', 'repeater', 'flexible_content', 'group', 'clone', 'layout_element'];
 
-        return collect(app(FieldRegistry::class)->fieldsFor($content))
+        $builtIn = collect(FieldOutput::BUILT_IN)->map(fn ($f, $name) => [
+            'name' => $name,
+            'label' => __($f['label']),
+            'type' => $f['type'],
+            'preview' => $name === '_featured' ? ($content->featured_media_id ? '#'.$content->featured_media_id : '') : mb_strimwidth(strip_tags((string) ($name === '_title' ? $content->title : $content->excerpt)), 0, 60, '…'),
+        ])->values();
+
+        return $builtIn->concat(collect(app(FieldRegistry::class)->fieldsFor($content))
             ->reject(fn ($f) => in_array($f['type'], $skip, true))
             ->map(function ($f, $name) use ($content) {
                 $raw = $content->fields[$name] ?? null;
@@ -72,7 +80,7 @@ class BuilderController extends Controller
                     'preview' => is_scalar($raw) ? mb_strimwidth(strip_tags((string) $raw), 0, 60, '…') : '',
                 ];
             })
-            ->values()
+            ->values())
             ->all();
     }
 

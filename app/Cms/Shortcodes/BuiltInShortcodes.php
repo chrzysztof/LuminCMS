@@ -53,7 +53,7 @@ class BuiltInShortcodes
             $format = in_array($a['format'] ?? 'text', FieldOutput::FORMATS, true) ? ($a['format'] ?? 'text') : 'text';
             $fallback = $format === 'url' ? (FieldOutput::url($a['default'] ?? '') ?? '') : $content;
 
-            $value = $source && $name !== '' ? $source->field($name) : null;
+            $value = $source && $name !== '' ? FieldOutput::builtIn($source, $name) ?? $source->field($name) : null;
             $out = match ($format) {
                 'html' => FieldOutput::html($value),
                 'url' => FieldOutput::url($value) === null ? '' : e(FieldOutput::url($value)),
