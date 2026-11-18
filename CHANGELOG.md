@@ -6,6 +6,7 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ### Added
 
+- Visual editor: the right-click menu has a "Properties" entry that opens the properties of the clicked element.
 - Visual editor: a search box at the top of the Blocks panel filters blocks by name or category (ignores case and Polish diacritics) and expands matching categories.
 
 ## [0.4.1] - 2026-11-18

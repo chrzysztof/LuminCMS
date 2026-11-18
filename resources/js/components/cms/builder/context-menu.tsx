@@ -8,6 +8,7 @@ import {
     CornerLeftUp,
     Paintbrush,
     PaintBucket,
+    SlidersHorizontal,
     Trash2,
 } from 'lucide-react';
 import { useEffect, useRef } from 'react';
@@ -32,6 +33,7 @@ type Props = {
     x: number;
     y: number;
     onClose: () => void;
+    onOpenProperties: () => void;
 };
 
 const mod =
@@ -46,6 +48,7 @@ export function BuilderContextMenu({
     x,
     y,
     onClose,
+    onOpenProperties,
 }: Props) {
     const ref = useRef<HTMLDivElement>(null);
 
@@ -79,6 +82,15 @@ export function BuilderContextMenu({
               run: () => void;
           }
     )[] = [
+        {
+            label: t('Właściwości'),
+            icon: SlidersHorizontal,
+            run: () => {
+                editor.select(component);
+                onOpenProperties();
+            },
+        },
+        'sep',
         {
             label: t('Duplikuj'),
             icon: CopyPlus,

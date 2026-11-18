@@ -578,6 +578,10 @@ export default function Builder({
                     x={menu.x}
                     y={menu.y}
                     onClose={() => setMenu(null)}
+                    onOpenProperties={() => {
+                        setPanelOpen(true);
+                        setTab('props');
+                    }}
                 />
             )}
             <Head title={t('Edytor: {name}', { name: content.title })} />
