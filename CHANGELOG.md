@@ -14,6 +14,7 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ### Changed
 
+- Visual editor: back, title and status, device switcher, undo/redo, templates, history, preview and save/publish now share one white top bar, and the canvas starts below it so nothing covers the page being edited.
 - Visual editor: the tools panel (Blocks, Properties, Layers) sits in the bottom-left corner, and element outlines on the canvas (hover, selection, guides) are 3 px thick.
 - The map block now uses a place picker instead of typing coordinates: search an address, click the map or drag the marker; the zoom is remembered. Existing map blocks must be set again (the old latitude/longitude settings are no longer used).
 

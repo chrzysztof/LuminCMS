@@ -548,10 +548,13 @@ export default function Builder({
             )}
             <Head title={t('Edytor: {name}', { name: content.title })} />
             <div className="lumin-builder fixed inset-0 overflow-hidden bg-neutral-200">
-                <div ref={canvas} className="absolute inset-0" />
+                <div
+                    ref={canvas}
+                    className="absolute inset-x-0 top-14 bottom-0"
+                />
 
                 {empty && (
-                    <div className="pointer-events-none absolute inset-0 z-[55] flex items-center justify-center">
+                    <div className="pointer-events-none absolute inset-x-0 top-14 bottom-0 z-[55] flex items-center justify-center">
                         <div className="rounded-2xl bg-white/90 px-8 py-6 text-center shadow-lg">
                             <LayoutGrid className="mx-auto mb-2 size-8 text-brand" />
                             <p className="font-medium">
@@ -566,166 +569,148 @@ export default function Builder({
                     </div>
                 )}
 
-                <div className="pointer-events-none absolute inset-0 z-[60] flex flex-col gap-3 p-3">
-                    {/* Pasek górny */}
-                    <div className="flex items-start justify-between gap-3">
-                        <div
-                            className={cn(
-                                panelClass,
-                                'flex-row items-center gap-1 p-1.5',
-                            )}
+                {/* Pasek górny: jeden biały pasek, strona zaczyna się pod nim */}
+                <header className="absolute inset-x-0 top-0 z-[60] grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-3 border-b bg-white px-3">
+                    <div className="flex min-w-0 items-center gap-1">
+                        <Button
+                            asChild
+                            variant="ghost"
+                            size="icon"
+                            className="size-9"
                         >
-                            <Button
-                                asChild
-                                variant="ghost"
-                                size="icon"
-                                className="size-9"
+                            <Link
+                                href={cmsUrl.contentEdit(type.key, content.id)}
+                                aria-label={t('Wróć do treści')}
                             >
-                                <Link
-                                    href={cmsUrl.contentEdit(
-                                        type.key,
-                                        content.id,
-                                    )}
-                                    aria-label={t('Wróć do treści')}
+                                <ArrowLeft />
+                            </Link>
+                        </Button>
+                        <div className="flex min-w-0 items-center gap-2 px-1">
+                            <span className="max-w-48 truncate text-sm font-medium">
+                                {content.title}
+                            </span>
+                            <StatusBadge status={status} />
+                            {dirty && (
+                                <span
+                                    className="text-xs text-amber-600"
+                                    title={
+                                        autosavedAt
+                                            ? `${t('Autozapis')}: ${formatRevisionDate(autosavedAt)}`
+                                            : undefined
+                                    }
                                 >
-                                    <ArrowLeft />
-                                </Link>
-                            </Button>
-                            <div className="flex min-w-0 items-center gap-2 px-1">
-                                <span className="max-w-48 truncate text-sm font-medium">
-                                    {content.title}
+                                    {t('niezapisane')}
                                 </span>
-                                <StatusBadge status={status} />
-                                {dirty && (
-                                    <span
-                                        className="text-xs text-amber-600"
-                                        title={
-                                            autosavedAt
-                                                ? `${t('Autozapis')}: ${formatRevisionDate(autosavedAt)}`
-                                                : undefined
-                                        }
-                                    >
-                                        {t('niezapisane')}
-                                    </span>
-                                )}
-                            </div>
-                        </div>
-
-                        <div
-                            className={cn(
-                                panelClass,
-                                'flex-row items-center gap-0.5 p-1.5',
                             )}
-                        >
-                            {devices.map(({ id, label, icon: Icon }) => (
-                                <Button
-                                    key={id}
-                                    type="button"
-                                    variant="ghost"
-                                    size="icon"
-                                    aria-label={label}
-                                    title={label}
-                                    onClick={() => changeDevice(id)}
-                                    className={cn(
-                                        'size-9',
-                                        device === id &&
-                                            'bg-brand-soft text-brand-foreground',
-                                    )}
-                                >
-                                    <Icon />
-                                </Button>
-                            ))}
-                            <span className="mx-1 h-5 w-px bg-border" />
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                aria-label={t('Cofnij')}
-                                title={t('Cofnij')}
-                                className="size-9"
-                                disabled={!history.undo}
-                                onClick={() =>
-                                    editorRef.current?.UndoManager.undo()
-                                }
-                            >
-                                <Undo2 />
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                aria-label={t('Ponów')}
-                                title={t('Ponów')}
-                                className="size-9"
-                                disabled={!history.redo}
-                                onClick={() =>
-                                    editorRef.current?.UndoManager.redo()
-                                }
-                            >
-                                <Redo2 />
-                            </Button>
-                        </div>
-
-                        <div
-                            className={cn(
-                                panelClass,
-                                'flex-row items-center gap-1.5 p-1.5',
-                            )}
-                        >
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => setTemplatesOpen(true)}
-                            >
-                                <LayoutTemplate /> {t('Szablony')}
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                className="size-9"
-                                aria-label={t('Historia wersji')}
-                                title={t('Historia wersji')}
-                                onClick={() => setHistoryOpen(true)}
-                            >
-                                <History />
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => void preview()}
-                            >
-                                <Eye /> {t('Podgląd')}
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                disabled={saving}
-                                onClick={() => void save(false)}
-                            >
-                                {saving ? (
-                                    <Loader2 className="animate-spin" />
-                                ) : (
-                                    <Save />
-                                )}{' '}
-                                {t('Zapisz')}
-                            </Button>
-                            <Button
-                                type="button"
-                                size="sm"
-                                disabled={saving}
-                                onClick={() => void save(true)}
-                            >
-                                {status === 'published'
-                                    ? t('Zaktualizuj')
-                                    : t('Opublikuj')}
-                            </Button>
                         </div>
                     </div>
 
+                    <div className="flex items-center gap-0.5">
+                        {devices.map(({ id, label, icon: Icon }) => (
+                            <Button
+                                key={id}
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                aria-label={label}
+                                title={label}
+                                onClick={() => changeDevice(id)}
+                                className={cn(
+                                    'size-9',
+                                    device === id &&
+                                        'bg-brand-soft text-brand-foreground',
+                                )}
+                            >
+                                <Icon />
+                            </Button>
+                        ))}
+                        <span className="mx-1 h-5 w-px bg-border" />
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            aria-label={t('Cofnij')}
+                            title={t('Cofnij')}
+                            className="size-9"
+                            disabled={!history.undo}
+                            onClick={() =>
+                                editorRef.current?.UndoManager.undo()
+                            }
+                        >
+                            <Undo2 />
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            aria-label={t('Ponów')}
+                            title={t('Ponów')}
+                            className="size-9"
+                            disabled={!history.redo}
+                            onClick={() =>
+                                editorRef.current?.UndoManager.redo()
+                            }
+                        >
+                            <Redo2 />
+                        </Button>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-1.5">
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setTemplatesOpen(true)}
+                        >
+                            <LayoutTemplate /> {t('Szablony')}
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="size-9"
+                            aria-label={t('Historia wersji')}
+                            title={t('Historia wersji')}
+                            onClick={() => setHistoryOpen(true)}
+                        >
+                            <History />
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => void preview()}
+                        >
+                            <Eye /> {t('Podgląd')}
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            disabled={saving}
+                            onClick={() => void save(false)}
+                        >
+                            {saving ? (
+                                <Loader2 className="animate-spin" />
+                            ) : (
+                                <Save />
+                            )}{' '}
+                            {t('Zapisz')}
+                        </Button>
+                        <Button
+                            type="button"
+                            size="sm"
+                            disabled={saving}
+                            onClick={() => void save(true)}
+                        >
+                            {status === 'published'
+                                ? t('Zaktualizuj')
+                                : t('Opublikuj')}
+                        </Button>
+                    </div>
+                </header>
+
+                <div className="pointer-events-none absolute inset-x-0 top-14 bottom-0 z-[60] flex flex-col gap-3 p-3">
                     {/* Panele boczne */}
                     <div className="flex min-h-0 flex-1 items-end justify-start gap-3">
                         <div className="flex max-h-full min-h-0 flex-col items-start justify-end gap-2">
