@@ -15,6 +15,7 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ### Fixed
 
+- Logging out no longer shows the public home page inside a modal over the admin panel; it now does a full page visit.
 - The SEO snippet preview in the content editor and the generated meta description no longer show raw `[block ...]` shortcodes for pages built from theme blocks; blocks are skipped and custom-field values are filled in, so a page made only of blocks falls back to the site description.
 
 ### Changed

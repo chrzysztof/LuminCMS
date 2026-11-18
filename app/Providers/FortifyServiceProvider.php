@@ -8,12 +8,14 @@ use App\Actions\Fortify\CreateNewUser;
 /* @end-chisel-registration */
 use App\Actions\Fortify\ResetUserPassword;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
+use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
 
@@ -24,7 +26,17 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Strona publiczna nie jest odpowiedzią Inertii: bez pełnego przeładowania
+        // pokazałaby się w oknie modalnym panelu.
+        $this->app->singleton(LogoutResponse::class, fn () => new class implements LogoutResponse
+        {
+            public function toResponse($request)
+            {
+                return $request->wantsJson()
+                    ? new JsonResponse('', 204)
+                    : Inertia::location('/');
+            }
+        });
     }
 
     /**

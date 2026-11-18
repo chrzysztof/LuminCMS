@@ -78,6 +78,18 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
+    public function test_inertia_logout_forces_a_full_page_visit(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->post(route('logout'), [], ['X-Inertia' => 'true'])
+            ->assertStatus(409)
+            ->assertHeader('X-Inertia-Location');
+
+        $this->assertGuest();
+    }
+
     public function test_users_are_rate_limited()
     {
         $user = User::factory()->create();
