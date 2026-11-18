@@ -1204,5 +1204,8 @@
     "Miejsce na mapie": "Place on the map",
     "Wyszukaj adres, kliknij na mapie albo przeciągnij znacznik. Przybliżenie mapy zostanie zapamiętane.": "Search for an address, click the map or drag the marker. The map zoom is remembered.",
     "Wskaż miejsce na mapie w ustawieniach bloku.": "Pick a place on the map in the block settings.",
-    "Usuń element": "Delete element"
+    "Usuń element": "Delete element",
+    "Treść akapitu": "Paragraph content",
+    "Kliknij i wpisz treść we właściwościach.": "Click and type the content in the properties.",
+    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "New paragraph of text. Edit it in the block properties."
 }

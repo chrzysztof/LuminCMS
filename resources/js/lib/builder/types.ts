@@ -122,6 +122,42 @@ export function registerComponentTypes(editor: Editor) {
         },
     });
 
+    // Tekst sformatowany: treść edytuje się w panelu właściwości (edytor jak we wpisie), a na płótnie jest tylko podgląd.
+    // HTML trzymamy we właściwości richHtml; serwer czyści go tym samym filtrem co treść wpisów.
+    dc.addType('lm-richtext', {
+        isComponent: (el) =>
+            el.getAttribute?.('data-lm-richtext') !== null &&
+            el.getAttribute?.('data-lm-richtext') !== undefined
+                ? { type: 'lm-richtext' }
+                : false,
+        model: {
+            defaults: {
+                ...base,
+                name: t('Akapit'),
+                tagName: 'div',
+                classes: ['lm-prose'],
+                droppable: false,
+                editable: false,
+                components: [],
+                richHtml: '',
+                traits: [],
+            },
+        },
+        view: {
+            init() {
+                this.listenTo(this.model, 'change:richHtml', () =>
+                    this.render(),
+                );
+            },
+            onRender() {
+                this.el.innerHTML = String(
+                    this.model.get('richHtml') ||
+                        `<p>${t('Kliknij i wpisz treść we właściwościach.')}</p>`,
+                );
+            },
+        },
+    });
+
     const button = classGroups([variant]);
     dc.addType('lm-button', {
         extend: 'link',

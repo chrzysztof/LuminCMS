@@ -16,7 +16,7 @@ type BlockDef = {
     label: string;
     category: string;
     icon: string;
-    content: string;
+    content: string | Record<string, unknown>;
 };
 
 const blocks: BlockDef[] = [
@@ -75,7 +75,10 @@ const blocks: BlockDef[] = [
         label: t('Akapit'),
         category: t('Treść'),
         icon: icon('<path d="M4 6h16M4 11h16M4 16h10"/>'),
-        content: `<p>Nowy akapit tekstu. Kliknij dwukrotnie, aby edytować.</p>`,
+        content: {
+            type: 'lm-richtext',
+            richHtml: `<p>${t('Nowy akapit tekstu. Edytuj go we właściwościach bloku.')}</p>`,
+        },
     },
     {
         id: 'image',

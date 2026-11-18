@@ -1405,5 +1405,8 @@
     "Miejsce na mapie": "Ort auf der Karte",
     "Wyszukaj adres, kliknij na mapie albo przeciągnij znacznik. Przybliżenie mapy zostanie zapamiętane.": "Adresse suchen, auf die Karte klicken oder die Markierung ziehen. Der Zoom wird gespeichert.",
     "Wskaż miejsce na mapie w ustawieniach bloku.": "Wählen Sie in den Blockeinstellungen einen Ort auf der Karte.",
-    "Usuń element": "Element löschen"
+    "Usuń element": "Element löschen",
+    "Treść akapitu": "Absatzinhalt",
+    "Kliknij i wpisz treść we właściwościach.": "Klicken Sie und geben Sie den Inhalt in den Eigenschaften ein.",
+    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Neuer Textabsatz. Bearbeiten Sie ihn in den Blockeigenschaften."
 }

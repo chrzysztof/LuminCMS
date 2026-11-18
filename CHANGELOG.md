@@ -6,6 +6,7 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ### Added
 
+- Visual editor: the "Paragraph" block is now a rich-text block. Its content is edited in the block properties with the same rich-text editor as in posts (headings, lists, links, images, tables, alignment) and shows on the canvas live; the HTML goes through the same sanitizer as post content. Paragraphs already on a page keep their inline editing.
 - Visual editor: a delete (trash) button on every layer in the Layers panel, shown on hover.
 
 ### Fixed

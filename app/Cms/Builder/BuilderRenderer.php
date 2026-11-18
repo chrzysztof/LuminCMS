@@ -3,6 +3,7 @@
 namespace App\Cms\Builder;
 
 use App\Cms\Media\Media;
+use App\Cms\Support\HtmlSanitizer;
 use Illuminate\Support\Collection;
 
 /**
@@ -164,6 +165,10 @@ class BuilderRenderer
             return $this->themeBlock($component);
         }
 
+        if ($type === 'lm-richtext') {
+            return $this->richText($component);
+        }
+
         $tag = strtolower((string) ($component['tagName'] ?? self::TYPE_TAGS[$type] ?? 'div'));
 
         if (! in_array($tag, self::TAGS, true)) {
@@ -207,6 +212,24 @@ class BuilderRenderer
         }
 
         return $open.'>'.$this->inner($component, $depth).'</'.$tag.'>';
+    }
+
+    /** Tekst sformatowany z edytora we właściwościach: HTML przechodzi przez ten sam filtr co treść wpisów. */
+    private function richText(array $component): string
+    {
+        $html = app(HtmlSanitizer::class)->clean(is_string($component['richHtml'] ?? null) ? $component['richHtml'] : '');
+
+        if ($html === '') {
+            return '';
+        }
+
+        $classes = $this->classes($component['classes'] ?? [], '');
+
+        if (! in_array('lm-prose', $classes, true)) {
+            array_unshift($classes, 'lm-prose');
+        }
+
+        return '<div'.$this->attributeString('div', [], $classes).'>'.$html.'</div>';
     }
 
     /** @return array{name: string, bind: string}|null */

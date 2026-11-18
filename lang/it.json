@@ -1405,5 +1405,8 @@
     "Miejsce na mapie": "Luogo sulla mappa",
     "Wyszukaj adres, kliknij na mapie albo przeciągnij znacznik. Przybliżenie mapy zostanie zapamiętane.": "Cerca un indirizzo, fai clic sulla mappa o trascina il segnaposto. Lo zoom viene memorizzato.",
     "Wskaż miejsce na mapie w ustawieniach bloku.": "Scegli un luogo sulla mappa nelle impostazioni del blocco.",
-    "Usuń element": "Elimina elemento"
+    "Usuń element": "Elimina elemento",
+    "Treść akapitu": "Contenuto del paragrafo",
+    "Kliknij i wpisz treść we właściwościach.": "Fai clic e scrivi il contenuto nelle proprietà.",
+    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Nuovo paragrafo di testo. Modificalo nelle proprietà del blocco."
 }

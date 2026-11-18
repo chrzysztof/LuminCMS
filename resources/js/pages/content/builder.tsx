@@ -34,6 +34,7 @@ import {
     FieldBinding,
     type CustomField,
 } from '@/components/cms/builder/field-binding';
+import { RichTextPanel } from '@/components/cms/builder/richtext-panel';
 import { DisplayConditions } from '@/components/cms/builder/display-conditions';
 import { BuilderContextMenu } from '@/components/cms/builder/context-menu';
 import { PageTemplatesDialog } from '@/components/cms/builder/page-templates-dialog';
@@ -136,6 +137,7 @@ export default function Builder({
         name: string;
         isImage: boolean;
         isBlock: boolean;
+        isRichText: boolean;
         isWrapper: boolean;
     } | null>(null);
     const [blockDialog, setBlockDialog] = useState<{
@@ -410,6 +412,7 @@ export default function Builder({
                 name: c.getName(),
                 isImage: c.is('lm-image'),
                 isBlock: c.is('lm-block'),
+                isRichText: c.is('lm-richtext'),
                 isWrapper: c.is('wrapper'),
             });
         });
@@ -417,6 +420,8 @@ export default function Builder({
         // Po upuszczeniu bloku motywu od razu pokazujemy jego ustawienia.
         editor.on('block:drag:stop', (c) => {
             if (c?.is('lm-block')) openBlockSettings(c);
+            // Akapit edytuje się we właściwościach, więc od razu je pokazujemy.
+            if (c?.is('lm-richtext')) setTab('props');
         });
         editor.Keymaps.add(
             'lumin-save',
@@ -728,7 +733,10 @@ export default function Builder({
                             <div
                                 className={cn(
                                     panelClass,
-                                    'h-[36rem] max-h-full min-h-0 w-80',
+                                    'h-[36rem] max-h-full min-h-0',
+                                    selected?.isRichText && tab === 'props'
+                                        ? 'w-[27rem]'
+                                        : 'w-80',
                                     !panelOpen && 'hidden',
                                 )}
                             >
@@ -851,6 +859,10 @@ export default function Builder({
                                             {t('Zapisz jako blok')}
                                         </Button>
                                     )}
+                                    <RichTextPanel
+                                        editor={editorInst}
+                                        onChange={() => setDirty(true)}
+                                    />
                                     <FieldBinding
                                         editor={editorInst}
                                         fields={customFields}

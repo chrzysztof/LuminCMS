@@ -1405,5 +1405,8 @@
     "Miejsce na mapie": "Hely a térképen",
     "Wyszukaj adres, kliknij na mapie albo przeciągnij znacznik. Przybliżenie mapy zostanie zapamiętane.": "Keress címet, kattints a térképre vagy húzd el a jelölőt. A nagyítás megmarad.",
     "Wskaż miejsce na mapie w ustawieniach bloku.": "Válassz helyet a térképen a blokk beállításaiban.",
-    "Usuń element": "Elem törlése"
+    "Usuń element": "Elem törlése",
+    "Treść akapitu": "Bekezdés tartalma",
+    "Kliknij i wpisz treść we właściwościach.": "Kattints, és írd be a tartalmat a tulajdonságokban.",
+    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Új szövegbekezdés. Szerkeszd a blokk tulajdonságaiban."
 }

@@ -73,7 +73,14 @@ export function FieldBinding({
 
     const c = editor?.getSelected();
 
-    if (!editor || !c || c.is('wrapper') || c.is('lm-block')) return null;
+    if (
+        !editor ||
+        !c ||
+        c.is('wrapper') ||
+        c.is('lm-block') ||
+        c.is('lm-richtext')
+    )
+        return null;
 
     const attrs = c.getAttributes();
     const name = String(attrs['data-lm-field'] ?? '');

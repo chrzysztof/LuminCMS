@@ -1405,5 +1405,8 @@
     "Miejsce na mapie": "Local no mapa",
     "Wyszukaj adres, kliknij na mapie albo przeciągnij znacznik. Przybliżenie mapy zostanie zapamiętane.": "Pesquise uma morada, clique no mapa ou arraste o marcador. O zoom do mapa fica guardado.",
     "Wskaż miejsce na mapie w ustawieniach bloku.": "Escolha um local no mapa nas definições do bloco.",
-    "Usuń element": "Eliminar elemento"
+    "Usuń element": "Eliminar elemento",
+    "Treść akapitu": "Conteúdo do parágrafo",
+    "Kliknij i wpisz treść we właściwościach.": "Clique e escreva o conteúdo nas propriedades.",
+    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Novo parágrafo de texto. Edite-o nas propriedades do bloco."
 }

@@ -1405,5 +1405,8 @@
     "Miejsce na mapie": "Lieu sur la carte",
     "Wyszukaj adres, kliknij na mapie albo przeciągnij znacznik. Przybliżenie mapy zostanie zapamiętane.": "Cherchez une adresse, cliquez sur la carte ou faites glisser le repère. Le zoom est mémorisé.",
     "Wskaż miejsce na mapie w ustawieniach bloku.": "Choisissez un lieu sur la carte dans les réglages du bloc.",
-    "Usuń element": "Supprimer l'élément"
+    "Usuń element": "Supprimer l'élément",
+    "Treść akapitu": "Contenu du paragraphe",
+    "Kliknij i wpisz treść we właściwościach.": "Cliquez et saisissez le contenu dans les propriétés.",
+    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Nouveau paragraphe de texte. Modifiez-le dans les propriétés du bloc."
 }

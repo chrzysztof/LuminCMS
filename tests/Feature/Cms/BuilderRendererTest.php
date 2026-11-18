@@ -135,4 +135,21 @@ class BuilderRendererTest extends TestCase
 
         $this->assertLessThanOrEqual(41, substr_count($this->render([$node]), '<div'));
     }
+
+    public function test_rich_text_block_keeps_formatting_and_is_sanitized(): void
+    {
+        $html = $this->render([
+            ['type' => 'lm-richtext', 'classes' => ['lm-prose', 'lm-pt-4'], 'richHtml' => '<h2>Tytuł</h2><p class="lm-center">Tekst <strong>ważny</strong> <script>alert(1)</script><a href="javascript:alert(1)">x</a></p><ul><li>Jeden</li></ul><p onclick="x()" style="color:red">Drugi</p>'],
+            ['type' => 'lm-richtext', 'richHtml' => '<p>Bez klas</p>'],
+            ['type' => 'lm-richtext', 'richHtml' => ''],
+        ]);
+
+        $this->assertStringContainsString('<div class="lm-prose lm-pt-4"><h2>Tytuł</h2><p class="lm-center">Tekst <strong>ważny</strong>', $html);
+        $this->assertStringContainsString('<ul><li>Jeden</li></ul><p>Drugi</p></div>', $html);
+        $this->assertStringContainsString('<div class="lm-prose"><p>Bez klas</p></div>', $html);
+        $this->assertStringNotContainsString('script', $html);
+        $this->assertStringNotContainsString('javascript', $html);
+        $this->assertStringNotContainsString('style=', $html);
+        $this->assertSame(2, substr_count($html, 'lm-prose'));
+    }
 }
