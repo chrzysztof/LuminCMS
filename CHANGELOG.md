@@ -4,6 +4,8 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-18
+
 ### Added
 
 - Visual editor: the "Paragraph" block is now a rich-text block. Its content is edited in the block properties with the same rich-text editor as in posts (headings, lists, links, images, tables, alignment) and shows on the canvas live; the HTML goes through the same sanitizer as post content. Paragraphs already on a page keep their inline editing.
@@ -136,6 +138,7 @@ First public release. Download `lumin-cms-0.1.0.zip` from the GitHub release: it
 - Google Analytics 4, Tag Manager and Meta Pixel with a cookie-consent banner.
 - Optional dashboard widget with visits, sessions and top pages from the Google Analytics 4 Data API. It uses a Google service account whose key is stored encrypted.
 
+[0.4.0]: https://github.com/chrzysztof/lumincms/releases/tag/v0.4.0
 [0.3.1]: https://github.com/chrzysztof/lumincms/releases/tag/v0.3.1
 [0.3.0]: https://github.com/chrzysztof/lumincms/releases/tag/v0.3.0
 [0.2.0]: https://github.com/chrzysztof/lumincms/releases/tag/v0.2.0
