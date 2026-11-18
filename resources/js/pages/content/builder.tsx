@@ -18,6 +18,7 @@ import {
     PanelLeft,
     Redo2,
     Save,
+    Search,
     Settings2,
     SlidersHorizontal,
     Smartphone,
@@ -51,6 +52,7 @@ import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
 import { registerLayerDelete, registerShortcuts } from '@/lib/builder/actions';
 import { registerBlocks } from '@/lib/builder/blocks';
+import { filterBlocks } from '@/lib/builder/block-search';
 import {
     registerThemeBlocks,
     type ThemeBlock,
@@ -134,7 +136,20 @@ export default function Builder({
     const [device, setDevice] = useState('Desktop');
     const [panelOpen, setPanelOpen] = useState(true);
     const [tab, setTab] = useState<'blocks' | 'props' | 'layers'>('blocks');
+    const [blockQuery, setBlockQuery] = useState('');
     const tabRef = useRef(tab);
+
+    // Filtr listy bloków; ponawiany, gdy GrapesJS przerysuje listę (np. po zmianie "Moich bloków").
+    useEffect(() => {
+        const el = blocksEl.current;
+        if (!el) return;
+        const apply = () => filterBlocks(el, blockQuery);
+        apply();
+        const observer = new MutationObserver(apply);
+        observer.observe(el, { childList: true, subtree: true });
+
+        return () => observer.disconnect();
+    }, [blockQuery, editorInst]);
     // Wstawienie bloku też zaznacza element - wtedy panel zostaje na liście bloków.
     const adding = useRef(false);
     const [saving, setSaving] = useState(false);
@@ -798,7 +813,26 @@ export default function Builder({
                                         tab !== 'blocks' && 'hidden',
                                     )}
                                 >
-                                    <div className="flex justify-end border-b px-1.5 py-1">
+                                    <div className="flex items-center gap-1.5 border-b px-1.5 py-1">
+                                        <div className="relative min-w-0 flex-1">
+                                            <Search className="pointer-events-none absolute top-1/2 left-2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                                            <input
+                                                type="search"
+                                                value={blockQuery}
+                                                onChange={(e) =>
+                                                    setBlockQuery(
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                placeholder={t(
+                                                    'Szukaj bloków...',
+                                                )}
+                                                aria-label={t(
+                                                    'Szukaj bloków...',
+                                                )}
+                                                className="h-8 w-full rounded-md border border-input bg-transparent pr-2 pl-7 text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/30"
+                                            />
+                                        </div>
                                         <Button
                                             type="button"
                                             variant="ghost"
