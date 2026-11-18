@@ -4,6 +4,12 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-11-18
+
+### Fixed
+
+- Logging out no longer shows the public home page inside a modal over the admin panel; it now does a full page visit.
+
 ## [0.4.0] - 2026-11-18
 
 ### Added
@@ -15,7 +21,6 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ### Fixed
 
-- Logging out no longer shows the public home page inside a modal over the admin panel; it now does a full page visit.
 - The SEO snippet preview in the content editor and the generated meta description no longer show raw `[block ...]` shortcodes for pages built from theme blocks; blocks are skipped and custom-field values are filled in, so a page made only of blocks falls back to the site description.
 
 ### Changed
@@ -139,6 +144,7 @@ First public release. Download `lumin-cms-0.1.0.zip` from the GitHub release: it
 - Google Analytics 4, Tag Manager and Meta Pixel with a cookie-consent banner.
 - Optional dashboard widget with visits, sessions and top pages from the Google Analytics 4 Data API. It uses a Google service account whose key is stored encrypted.
 
+[0.4.1]: https://github.com/chrzysztof/lumincms/releases/tag/v0.4.1
 [0.4.0]: https://github.com/chrzysztof/lumincms/releases/tag/v0.4.0
 [0.3.1]: https://github.com/chrzysztof/lumincms/releases/tag/v0.3.1
 [0.3.0]: https://github.com/chrzysztof/lumincms/releases/tag/v0.3.0
