@@ -7,6 +7,10 @@
     $parts = app(\App\Cms\Themes\Parts::class);
     $menus = app(\App\Cms\Menus\MenuRenderer::class);
     $trackOn = ! $preview && ($siteSettings['track_logged_in'] || ! auth()->check());
+    // Części liczymy przed <head>, żeby ich własne style trafiły do jednego bloku <style>.
+    $headerHtml = $chrome ? $parts->html('header') : null;
+    $footerHtml = $chrome ? $parts->html('footer') : null;
+    $localCss = app(\App\Cms\Builder\LocalCss::class)->css();
     $hasTracking = $siteSettings['ga_id'] !== '' || $siteSettings['gtm_id'] !== '' || $siteSettings['pixel_id'] !== '';
 @endphp
 <!doctype html>
@@ -33,13 +37,13 @@
         <link rel="stylesheet" href="{{ url('theme-blocks.css') }}?v={{ substr(md5($blockCss), 0, 8) }}">
     @endif
     <style id="lm-theme-vars">{!! str_replace('</', '<\/', app(\App\Cms\Themes\Customizer::class)->css()) !!}</style>
+    @if ($localCss !== '')
+        <style id="lm-local-styles">{!! str_replace('</', '<\/', $localCss) !!}</style>
+    @endif
     @stack('head')
 </head>
 <body>
     @if ($chrome)
-        @php
-            $headerHtml = $parts->html('header');
-        @endphp
         {{-- Gotowy projekt (z edytora) ma własny element <header>; własna część bez niego dostaje opakowanie. --}}
         @if ($headerHtml !== null && str_starts_with(ltrim($headerHtml), '<header'))
             {!! $headerHtml !!}
@@ -61,7 +65,6 @@
     </main>
     @if ($chrome)
         @php
-            $footerHtml = $parts->html('footer');
             $cookieLink = $trackOn && $hasTracking && $siteSettings['consent_required'];
         @endphp
         @if ($footerHtml !== null && str_starts_with(ltrim($footerHtml), '<footer'))

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Cms\Builder\BlockRegistry;
+use App\Cms\Builder\LocalCss;
 use App\Cms\Fields\ConditionalLogic;
 use App\Cms\Fields\FieldRegistry;
 use App\Cms\Fields\FieldValidator;
@@ -97,6 +98,7 @@ class CmsServiceProvider extends ServiceProvider
         $this->app->singleton(Parts::class);
         $this->app->singleton(Templates::class);
         $this->app->scoped(Listing::class);
+        $this->app->scoped(LocalCss::class);
         $this->app->singleton(Customizer::class);
         $this->app->singleton(MenuRenderer::class);
         $this->app->singleton(ConditionalLogic::class);

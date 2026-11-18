@@ -1408,5 +1408,22 @@
     "Usuń element": "Elimina elemento",
     "Treść akapitu": "Contenuto del paragrafo",
     "Kliknij i wpisz treść we właściwościach.": "Fai clic e scrivi il contenuto nelle proprietà.",
-    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Nuovo paragrafo di testo. Modificalo nelle proprietà del blocco."
+    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Nuovo paragrafo di testo. Modificalo nelle proprietà del blocco.",
+    "Góra": "Alto",
+    "Prawo": "Destra",
+    "Dół": "Basso",
+    "Lewo": "Sinistra",
+    "Własne style (zaawansowane)": "Stili personalizzati (avanzato)",
+    "Własne style mogą spowolnić ładowanie strony i sprawić, że wygląd będzie niespójny z motywem. Jeśli to możliwe, używaj gotowych opcji powyżej.": "Gli stili personalizzati possono rallentare il caricamento della pagina e rendere l'aspetto incoerente con il tema. Se possibile, usa le opzioni predefinite qui sopra.",
+    "Dotyczy urządzenia: {name}": "Si applica al dispositivo: {name}",
+    "Kolor tła": "Colore di sfondo",
+    "Kolor tekstu": "Colore del testo",
+    "Usuń obraz w tle": "Rimuovi immagine di sfondo",
+    "Odstęp wewnętrzny": "Spaziatura interna",
+    "Margines": "Margine",
+    "Zaokrąglenie": "Arrotondamento",
+    "Maks. szerokość": "Larghezza max.",
+    "Min. wysokość": "Altezza min.",
+    "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Valori con unità, ad es. 1.5rem, 24px, 50%, auto.",
+    "Wyczyść własne style": "Cancella stili personalizzati"
 }

@@ -8,6 +8,8 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 - Visual editor: the "Paragraph" block is now a rich-text block. Its content is edited in the block properties with the same rich-text editor as in posts (headings, lists, links, images, tables, alignment) and shows on the canvas live; the HTML goes through the same sanitizer as post content. Paragraphs already on a page keep their inline editing.
 - Visual editor: a delete (trash) button on every layer in the Layers panel, shown on hover.
+- Visual editor: optional "Custom styles (advanced)" for any selected element — background color/image, text color, padding, margin, radius, max-width, min-height, per device (desktop/tablet/phone) — with a warning that they can slow down loading and make the look inconsistent with the theme. Presets stay the default path. Styles are validated against a whitelist and output as shared `lm-x-*` classes in a single `<style id="lm-local-styles">` (no inline `style` attributes). New `css_cache` column on contents (run `php artisan migrate`).
+- Theme authors: layouts of custom themes should print `app(\App\Cms\Builder\LocalCss::class)->css()` in `<head>` to support custom styles.
 
 ### Fixed
 

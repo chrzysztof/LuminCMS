@@ -1408,5 +1408,22 @@
     "Usuń element": "Видалити елемент",
     "Treść akapitu": "Вміст абзацу",
     "Kliknij i wpisz treść we właściwościach.": "Клацніть і введіть вміст у властивостях.",
-    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Новий абзац тексту. Редагуйте його у властивостях блоку."
+    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Новий абзац тексту. Редагуйте його у властивостях блоку.",
+    "Góra": "Верх",
+    "Prawo": "Право",
+    "Dół": "Низ",
+    "Lewo": "Ліво",
+    "Własne style (zaawansowane)": "Власні стилі (розширені)",
+    "Własne style mogą spowolnić ładowanie strony i sprawić, że wygląd będzie niespójny z motywem. Jeśli to możliwe, używaj gotowych opcji powyżej.": "Власні стилі можуть уповільнити завантаження сторінки та зробити вигляд неузгодженим із темою. Якщо можливо, користуйтеся готовими параметрами вище.",
+    "Dotyczy urządzenia: {name}": "Стосується пристрою: {name}",
+    "Kolor tła": "Колір фону",
+    "Kolor tekstu": "Колір тексту",
+    "Usuń obraz w tle": "Видалити фонове зображення",
+    "Odstęp wewnętrzny": "Внутрішній відступ",
+    "Margines": "Зовнішній відступ",
+    "Zaokrąglenie": "Заокруглення",
+    "Maks. szerokość": "Макс. ширина",
+    "Min. wysokość": "Мін. висота",
+    "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Значення з одиницею, напр. 1.5rem, 24px, 50%, auto.",
+    "Wyczyść własne style": "Очистити власні стилі"
 }

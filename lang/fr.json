@@ -1408,5 +1408,22 @@
     "Usuń element": "Supprimer l'élément",
     "Treść akapitu": "Contenu du paragraphe",
     "Kliknij i wpisz treść we właściwościach.": "Cliquez et saisissez le contenu dans les propriétés.",
-    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Nouveau paragraphe de texte. Modifiez-le dans les propriétés du bloc."
+    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Nouveau paragraphe de texte. Modifiez-le dans les propriétés du bloc.",
+    "Góra": "Haut",
+    "Prawo": "Droite",
+    "Dół": "Bas",
+    "Lewo": "Gauche",
+    "Własne style (zaawansowane)": "Styles personnalisés (avancé)",
+    "Własne style mogą spowolnić ładowanie strony i sprawić, że wygląd będzie niespójny z motywem. Jeśli to możliwe, używaj gotowych opcji powyżej.": "Les styles personnalisés peuvent ralentir le chargement de la page et rendre l'apparence incohérente avec le thème. Si possible, utilisez les options prédéfinies ci-dessus.",
+    "Dotyczy urządzenia: {name}": "S'applique à l'appareil : {name}",
+    "Kolor tła": "Couleur de fond",
+    "Kolor tekstu": "Couleur du texte",
+    "Usuń obraz w tle": "Supprimer l'image de fond",
+    "Odstęp wewnętrzny": "Marge intérieure",
+    "Margines": "Marge",
+    "Zaokrąglenie": "Arrondi",
+    "Maks. szerokość": "Largeur max.",
+    "Min. wysokość": "Hauteur min.",
+    "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Valeurs avec unité, p. ex. 1.5rem, 24px, 50 %, auto.",
+    "Wyczyść własne style": "Effacer les styles personnalisés"
 }

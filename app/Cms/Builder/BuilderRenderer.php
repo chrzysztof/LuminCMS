@@ -40,12 +40,28 @@ class BuilderRenderer
 
     private const MAX_DEPTH = 40;
 
+    private LocalStyles $local;
+
+    public function __construct()
+    {
+        $this->local = new LocalStyles;
+    }
+
+    /** CSS własnych stylów elementów z ostatnio wyrenderowanego projektu (zapisywany w css_cache). */
+    public function css(): string
+    {
+        return $this->local->css();
+    }
+
     /** @var Collection<int, Media> */
     private Collection $media;
 
     /** @param  array<string, mixed>  $project  wynik editor.getProjectData() */
     public function render(array $project): string
     {
+        $this->local = new LocalStyles;
+        $this->local->load(is_array($project['styles'] ?? null) ? $project['styles'] : []);
+
         $root = $project['pages'][0]['frames'][0]['component'] ?? null;
 
         if (! is_array($root)) {
@@ -179,6 +195,10 @@ class BuilderRenderer
         $attributes = (array) ($component['attributes'] ?? []);
         $classes = $this->classes($component['classes'] ?? [], $attributes['class'] ?? '');
 
+        if ($local = $this->local->classFor($this->idOf($attributes))) {
+            $classes[] = $local;
+        }
+
         $field = $this->binding($attributes);
 
         // Powiązanie z polem własnym: wartość pojawia się przy wyświetleniu, więc zmiana pola działa bez ponownego zapisu strony.
@@ -223,13 +243,23 @@ class BuilderRenderer
             return '';
         }
 
+        $attributes = (array) ($component['attributes'] ?? []);
         $classes = $this->classes($component['classes'] ?? [], '');
+
+        if ($local = $this->local->classFor($this->idOf($attributes))) {
+            $classes[] = $local;
+        }
 
         if (! in_array('lm-prose', $classes, true)) {
             array_unshift($classes, 'lm-prose');
         }
 
         return '<div'.$this->attributeString('div', [], $classes).'>'.$html.'</div>';
+    }
+
+    private function idOf(array $attributes): ?string
+    {
+        return is_string($attributes['id'] ?? null) ? $attributes['id'] : null;
     }
 
     /** @return array{name: string, bind: string}|null */

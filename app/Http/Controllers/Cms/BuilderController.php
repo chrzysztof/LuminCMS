@@ -98,6 +98,7 @@ class BuilderController extends Controller
 
         $content->builder_data = $data['project'];
         $content->html_cache = $this->renderer->render($data['project']);
+        $content->css_cache = $this->renderer->css() ?: null;
 
         // Bez uprawnienia publish_* builder zapisuje tylko wersję roboczą / do recenzji.
         if (isset($data['status']) && $data['status'] === Content::STATUS_PUBLISHED && ! $this->access->canPublish($request->user(), $type)) {

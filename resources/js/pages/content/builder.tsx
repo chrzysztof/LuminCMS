@@ -34,6 +34,7 @@ import {
     FieldBinding,
     type CustomField,
 } from '@/components/cms/builder/field-binding';
+import { LocalStylesPanel } from '@/components/cms/builder/local-styles-panel';
 import { RichTextPanel } from '@/components/cms/builder/richtext-panel';
 import { DisplayConditions } from '@/components/cms/builder/display-conditions';
 import { BuilderContextMenu } from '@/components/cms/builder/context-menu';
@@ -81,8 +82,20 @@ const AUTOSAVE_MS = 30_000;
 
 const devices = [
     { id: 'Desktop', label: t('Komputer'), icon: Monitor, width: '' },
-    { id: 'Tablet', label: t('Tablet'), icon: Tablet, width: '768px' },
-    { id: 'Mobile', label: t('Telefon'), icon: Smartphone, width: '375px' },
+    {
+        id: 'Tablet',
+        label: t('Tablet'),
+        icon: Tablet,
+        width: '768px',
+        media: '900px',
+    },
+    {
+        id: 'Mobile',
+        label: t('Telefon'),
+        icon: Smartphone,
+        width: '375px',
+        media: '640px',
+    },
 ];
 
 /** W edytorze elementy ukryte na danym urządzeniu zostają widoczne (przygaszone), żeby dało się je zaznaczyć. */
@@ -370,6 +383,7 @@ export default function Builder({
                     id: d.id,
                     name: d.label,
                     width: d.width || null,
+                    widthMedia: d.media || null,
                 })),
             },
         });
@@ -877,6 +891,14 @@ export default function Builder({
                                     <StylePanel
                                         editor={editorInst}
                                         device={device as Device}
+                                        onChange={() => setDirty(true)}
+                                    />
+                                    <LocalStylesPanel
+                                        editor={editorInst}
+                                        deviceLabel={
+                                            devices.find((d) => d.id === device)
+                                                ?.label ?? ''
+                                        }
                                         onChange={() => setDirty(true)}
                                     />
                                 </div>

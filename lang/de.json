@@ -1408,5 +1408,22 @@
     "Usuń element": "Element löschen",
     "Treść akapitu": "Absatzinhalt",
     "Kliknij i wpisz treść we właściwościach.": "Klicken Sie und geben Sie den Inhalt in den Eigenschaften ein.",
-    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Neuer Textabsatz. Bearbeiten Sie ihn in den Blockeigenschaften."
+    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Neuer Textabsatz. Bearbeiten Sie ihn in den Blockeigenschaften.",
+    "Góra": "Oben",
+    "Prawo": "Rechts",
+    "Dół": "Unten",
+    "Lewo": "Links",
+    "Własne style (zaawansowane)": "Eigene Stile (erweitert)",
+    "Własne style mogą spowolnić ładowanie strony i sprawić, że wygląd będzie niespójny z motywem. Jeśli to możliwe, używaj gotowych opcji powyżej.": "Eigene Stile können das Laden der Seite verlangsamen und dazu führen, dass das Erscheinungsbild nicht zum Theme passt. Nutzen Sie nach Möglichkeit die fertigen Optionen oben.",
+    "Dotyczy urządzenia: {name}": "Gilt für Gerät: {name}",
+    "Kolor tła": "Hintergrundfarbe",
+    "Kolor tekstu": "Textfarbe",
+    "Usuń obraz w tle": "Hintergrundbild entfernen",
+    "Odstęp wewnętrzny": "Innenabstand",
+    "Margines": "Außenabstand",
+    "Zaokrąglenie": "Rundung",
+    "Maks. szerokość": "Max. Breite",
+    "Min. wysokość": "Min. Höhe",
+    "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Werte mit Einheit, z. B. 1.5rem, 24px, 50 %, auto.",
+    "Wyczyść własne style": "Eigene Stile löschen"
 }

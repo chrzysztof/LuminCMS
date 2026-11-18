@@ -1408,5 +1408,22 @@
     "Usuń element": "Element verwijderen",
     "Treść akapitu": "Inhoud van de alinea",
     "Kliknij i wpisz treść we właściwościach.": "Klik en typ de inhoud in de eigenschappen.",
-    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Nieuwe alinea tekst. Bewerk deze in de blokeigenschappen."
+    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Nieuwe alinea tekst. Bewerk deze in de blokeigenschappen.",
+    "Góra": "Boven",
+    "Prawo": "Rechts",
+    "Dół": "Onder",
+    "Lewo": "Links",
+    "Własne style (zaawansowane)": "Eigen stijlen (geavanceerd)",
+    "Własne style mogą spowolnić ładowanie strony i sprawić, że wygląd będzie niespójny z motywem. Jeśli to możliwe, używaj gotowych opcji powyżej.": "Eigen stijlen kunnen het laden van de pagina vertragen en het uiterlijk onsamenhangend maken met het thema. Gebruik indien mogelijk de kant-en-klare opties hierboven.",
+    "Dotyczy urządzenia: {name}": "Geldt voor apparaat: {name}",
+    "Kolor tła": "Achtergrondkleur",
+    "Kolor tekstu": "Tekstkleur",
+    "Usuń obraz w tle": "Achtergrondafbeelding verwijderen",
+    "Odstęp wewnętrzny": "Binnenmarge",
+    "Margines": "Buitenmarge",
+    "Zaokrąglenie": "Afronding",
+    "Maks. szerokość": "Max. breedte",
+    "Min. wysokość": "Min. hoogte",
+    "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Waarden met eenheid, bijv. 1.5rem, 24px, 50%, auto.",
+    "Wyczyść własne style": "Eigen stijlen wissen"
 }

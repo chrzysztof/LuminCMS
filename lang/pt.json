@@ -1408,5 +1408,22 @@
     "Usuń element": "Eliminar elemento",
     "Treść akapitu": "Conteúdo do parágrafo",
     "Kliknij i wpisz treść we właściwościach.": "Clique e escreva o conteúdo nas propriedades.",
-    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Novo parágrafo de texto. Edite-o nas propriedades do bloco."
+    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Novo parágrafo de texto. Edite-o nas propriedades do bloco.",
+    "Góra": "Topo",
+    "Prawo": "Direita",
+    "Dół": "Base",
+    "Lewo": "Esquerda",
+    "Własne style (zaawansowane)": "Estilos próprios (avançado)",
+    "Własne style mogą spowolnić ładowanie strony i sprawić, że wygląd będzie niespójny z motywem. Jeśli to możliwe, używaj gotowych opcji powyżej.": "Estilos próprios podem tornar o carregamento da página mais lento e deixar o aspeto incoerente com o tema. Sempre que possível, use as opções prontas acima.",
+    "Dotyczy urządzenia: {name}": "Aplica-se ao dispositivo: {name}",
+    "Kolor tła": "Cor de fundo",
+    "Kolor tekstu": "Cor do texto",
+    "Usuń obraz w tle": "Remover imagem de fundo",
+    "Odstęp wewnętrzny": "Espaçamento interno",
+    "Margines": "Margem",
+    "Zaokrąglenie": "Arredondamento",
+    "Maks. szerokość": "Largura máx.",
+    "Min. wysokość": "Altura mín.",
+    "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Valores com unidade, p. ex. 1.5rem, 24px, 50%, auto.",
+    "Wyczyść własne style": "Limpar estilos próprios"
 }

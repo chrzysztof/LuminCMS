@@ -3,6 +3,7 @@
 namespace App\Cms\Themes;
 
 use App\Cms\Builder\BlockRegistry;
+use App\Cms\Builder\LocalCss;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentType;
 use App\Cms\Settings\Settings;
@@ -74,6 +75,8 @@ class Parts
         if (! $part || trim((string) $part->html_cache) === '') {
             return null;
         }
+
+        app(LocalCss::class)->add($part->css_cache);
 
         return $this->shortcodes->render($part->html_cache, $current ?? $part);
     }

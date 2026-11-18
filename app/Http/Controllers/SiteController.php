@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cms\Builder\LocalCss;
 use App\Cms\Content\ArchiveResolver;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentResolver;
@@ -36,6 +37,9 @@ class SiteController extends Controller
 
     public function show(Request $request): View|RedirectResponse
     {
+        // Własne style zbieramy od zera dla każdego żądania (też przy długo żyjącym procesie).
+        app(LocalCss::class)->reset();
+
         if ($match = $this->redirects->match($request)) {
             abort_if($match['code'] === 410, 410);
 
@@ -58,6 +62,8 @@ class SiteController extends Controller
     /** Odpowiedź 404: wybrana w ustawieniach strona albo domyślny widok. Zapisuje adres w monitorze 404. */
     public function notFound(Request $request): HttpResponse|View
     {
+        app(LocalCss::class)->reset();
+
         rescue(fn () => $this->redirects->logNotFound($request), report: true);
 
         $id = $this->settings->get('pages', 'not_found_content_id');
@@ -74,6 +80,8 @@ class SiteController extends Controller
     /** Podgląd dla zalogowanych, także szkiców. */
     public function preview(Request $request, ContentType $type, Content $content): View
     {
+        app(LocalCss::class)->reset();
+
         abort_unless($content->content_type_id === $type->id, 404);
         abort_unless(app(ContentAccess::class)->canEdit($request->user(), $content->setRelation('type', $type)), 403);
 
@@ -83,6 +91,8 @@ class SiteController extends Controller
     /** Strona główna: opublikowana strona o adresie "home", a bez niej ekran powitalny. */
     public function home(): View|Response
     {
+        app(LocalCss::class)->reset();
+
         $home = Content::published()->whereHas('type', fn ($q) => $q->where('key', 'page'))->where('slug', 'home')->first();
 
         return $home ? $this->view($home, preview: false) : Inertia::render('welcome');
@@ -104,6 +114,8 @@ class SiteController extends Controller
 
         // Szablon zbudowany w Theme Builderze obowiązuje, gdy treść nie ma własnego szablonu strony z motywu.
         $built = $chosen === 'default' ? app(Templates::class)->html("single:{$content->type->key}", $content) : null;
+
+        app(LocalCss::class)->add($content->css_cache);
 
         $candidates = [
             ...($built !== null ? ['templated'] : []),

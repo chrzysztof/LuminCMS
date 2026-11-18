@@ -1408,5 +1408,22 @@
     "Usuń element": "Odstranit prvek",
     "Treść akapitu": "Obsah odstavce",
     "Kliknij i wpisz treść we właściwościach.": "Klikněte a napište obsah ve vlastnostech.",
-    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Nový odstavec textu. Upravte ho ve vlastnostech bloku."
+    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Nový odstavec textu. Upravte ho ve vlastnostech bloku.",
+    "Góra": "Nahoře",
+    "Prawo": "Vpravo",
+    "Dół": "Dole",
+    "Lewo": "Vlevo",
+    "Własne style (zaawansowane)": "Vlastní styly (pokročilé)",
+    "Własne style mogą spowolnić ładowanie strony i sprawić, że wygląd będzie niespójny z motywem. Jeśli to możliwe, używaj gotowych opcji powyżej.": "Vlastní styly mohou zpomalit načítání stránky a způsobit, že vzhled nebude odpovídat motivu. Pokud je to možné, používejte hotové volby výše.",
+    "Dotyczy urządzenia: {name}": "Platí pro zařízení: {name}",
+    "Kolor tła": "Barva pozadí",
+    "Kolor tekstu": "Barva textu",
+    "Usuń obraz w tle": "Odebrat obrázek na pozadí",
+    "Odstęp wewnętrzny": "Vnitřní odsazení",
+    "Margines": "Okraj",
+    "Zaokrąglenie": "Zaoblení",
+    "Maks. szerokość": "Max. šířka",
+    "Min. wysokość": "Min. výška",
+    "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Hodnoty s jednotkou, např. 1.5rem, 24px, 50%, auto.",
+    "Wyczyść własne style": "Vymazat vlastní styly"
 }

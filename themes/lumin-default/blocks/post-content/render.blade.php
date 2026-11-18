@@ -4,6 +4,7 @@
 
     if (! $inside && ! empty($current)) {
         config(['cms.runtime.in_post_content' => true]);
+        app(\App\Cms\Builder\LocalCss::class)->add($current->css_cache);
 
         try {
             $body = app(\App\Cms\Shortcodes\Shortcodes::class)->render((string) $current->html_cache, $current);

@@ -1408,5 +1408,22 @@
     "Usuń element": "Elem törlése",
     "Treść akapitu": "Bekezdés tartalma",
     "Kliknij i wpisz treść we właściwościach.": "Kattints, és írd be a tartalmat a tulajdonságokban.",
-    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Új szövegbekezdés. Szerkeszd a blokk tulajdonságaiban."
+    "Nowy akapit tekstu. Edytuj go we właściwościach bloku.": "Új szövegbekezdés. Szerkeszd a blokk tulajdonságaiban.",
+    "Góra": "Felül",
+    "Prawo": "Jobb",
+    "Dół": "Alul",
+    "Lewo": "Bal",
+    "Własne style (zaawansowane)": "Egyéni stílusok (haladó)",
+    "Własne style mogą spowolnić ładowanie strony i sprawić, że wygląd będzie niespójny z motywem. Jeśli to możliwe, używaj gotowych opcji powyżej.": "Az egyéni stílusok lassíthatják az oldal betöltését, és a megjelenés nem lesz összhangban a témával. Ha lehet, használja a fenti kész beállításokat.",
+    "Dotyczy urządzenia: {name}": "Érvényes eszköz: {name}",
+    "Kolor tła": "Háttérszín",
+    "Kolor tekstu": "Szövegszín",
+    "Usuń obraz w tle": "Háttérkép eltávolítása",
+    "Odstęp wewnętrzny": "Belső margó",
+    "Margines": "Külső margó",
+    "Zaokrąglenie": "Lekerekítés",
+    "Maks. szerokość": "Max. szélesség",
+    "Min. wysokość": "Min. magasság",
+    "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Mértékegységgel, pl. 1.5rem, 24px, 50%, auto.",
+    "Wyczyść własne style": "Egyéni stílusok törlése"
 }

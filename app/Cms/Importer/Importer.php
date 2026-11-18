@@ -487,6 +487,7 @@ class Importer
             if (! empty($d['builder_data'])) {
                 $attributes['builder_data'] = $d['builder_data'];
                 $attributes['html_cache'] = $this->renderer->render($d['builder_data']);
+                $attributes['css_cache'] = $this->renderer->css() ?: null;
             }
 
             if ($content) {
