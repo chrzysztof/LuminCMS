@@ -3,6 +3,8 @@
 namespace Tests\Feature\Cms;
 
 use App\Cms\Builder\BlockRegistry;
+use App\Cms\Content\Content;
+use App\Cms\Content\ContentType;
 use App\Cms\Media\Media;
 use Database\Seeders\CmsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -108,5 +110,33 @@ class WidgetBlocksTest extends TestCase
 
         $this->get('/theme-blocks.js')->assertOk()->assertHeader('Content-Type', 'text/javascript; charset=UTF-8');
         $this->assertStringContainsString('.lm-lightbox', app(BlockRegistry::class)->css());
+    }
+
+    public function test_page_header_shows_title_excerpt_breadcrumbs_and_featured_image(): void
+    {
+        $type = ContentType::where('key', 'page')->first();
+        $media = Media::create(['disk' => 'public', 'path' => 'x/h.jpg', 'filename' => 'h.jpg', 'mime' => 'image/jpeg', 'size' => 1, 'width' => 1600, 'height' => 600, 'alt' => '']);
+        $parent = Content::create(['content_type_id' => $type->id, 'title' => 'Oferta', 'slug' => 'oferta', 'status' => 'published', 'published_at' => now()]);
+        $page = Content::create(['content_type_id' => $type->id, 'parent_id' => $parent->id, 'title' => 'Korepetycje <b>', 'slug' => 'korepetycje', 'excerpt' => 'Krótki opis', 'featured_media_id' => $media->id, 'status' => 'published', 'published_at' => now()]);
+
+        $out = app(BlockRegistry::class)->render('page-header', ['breadcrumbs' => 1, 'background' => 'featured', 'align' => 'center', 'size' => 'large'], $page);
+
+        $this->assertStringContainsString('<h1>Korepetycje &lt;b&gt;</h1>', $out);
+        $this->assertStringContainsString('Krótki opis', $out);
+        $this->assertStringContainsString('lm-page-header--center', $out);
+        $this->assertStringContainsString('lm-page-header--image', $out);
+        $this->assertStringContainsString('lm-page-header__bg', $out);
+        $this->assertStringContainsString('>Oferta</a>', $out);
+        $this->assertStringContainsString('aria-current="page"', $out);
+        $this->assertStringNotContainsString('style=', $out);
+
+        // Własny tytuł i bez ścieżki, bez obrazu.
+        $plain = app(BlockRegistry::class)->render('page-header', ['title' => 'Mój tytuł', 'breadcrumbs' => 0], $page);
+        $this->assertStringContainsString('<h1>Mój tytuł</h1>', $plain);
+        $this->assertStringNotContainsString('lm-page-header__crumbs', $plain);
+        $this->assertStringNotContainsString('lm-page-header--image', $plain);
+
+        // W edytorze (bez bieżącej treści) pokazuje tytuł zastępczy.
+        $this->assertStringContainsString('<h1>', app(BlockRegistry::class)->render('page-header', []));
     }
 }

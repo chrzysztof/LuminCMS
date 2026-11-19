@@ -1443,5 +1443,20 @@
     "Dodaj kursywę": "Kursiv hinzufügen",
     "kursywa": "kursiv",
     "Krój nagłówków": "Schriftart der Überschriften",
-    "Taki sam jak tekst": "Wie der Text"
+    "Taki sam jak tekst": "Wie der Text",
+    "Nagłówek podstrony": "Seitenkopf",
+    "Tytuł (puste = tytuł bieżącej treści)": "Titel (leer = Titel des aktuellen Inhalts)",
+    "Podtytuł (puste = zajawka bieżącej treści)": "Untertitel (leer = Auszug des aktuellen Inhalts)",
+    "Pokaż ścieżkę nawigacji": "Brotkrumen-Navigation anzeigen",
+    "Jednolite": "Einfarbig",
+    "Obraz wyróżniający treści": "Beitragsbild des Inhalts",
+    "Własny obraz": "Eigenes Bild",
+    "Własny obraz tła": "Eigenes Hintergrundbild",
+    "Wysokość": "Höhe",
+    "Niska": "Niedrig",
+    "Średnia": "Mittel",
+    "Wysoka": "Hoch",
+    "Tytuł podstrony": "Seitentitel",
+    "Ścieżka nawigacji": "Brotkrumen-Navigation",
+    "Strona główna": "Startseite"
 }

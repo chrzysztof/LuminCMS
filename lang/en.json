@@ -1242,5 +1242,20 @@
     "Dodaj kursywę": "Add italic",
     "kursywa": "italic",
     "Krój nagłówków": "Heading typeface",
-    "Taki sam jak tekst": "Same as text"
+    "Taki sam jak tekst": "Same as text",
+    "Nagłówek podstrony": "Page header",
+    "Tytuł (puste = tytuł bieżącej treści)": "Title (empty = title of the current content)",
+    "Podtytuł (puste = zajawka bieżącej treści)": "Subtitle (empty = excerpt of the current content)",
+    "Pokaż ścieżkę nawigacji": "Show breadcrumbs",
+    "Jednolite": "Solid",
+    "Obraz wyróżniający treści": "Featured image of the content",
+    "Własny obraz": "Custom image",
+    "Własny obraz tła": "Custom background image",
+    "Wysokość": "Height",
+    "Niska": "Low",
+    "Średnia": "Medium",
+    "Wysoka": "Tall",
+    "Tytuł podstrony": "Page title",
+    "Ścieżka nawigacji": "Breadcrumbs",
+    "Strona główna": "Home"
 }

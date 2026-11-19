@@ -1443,5 +1443,20 @@
     "Dodaj kursywę": "Ajouter l'italique",
     "kursywa": "italique",
     "Krój nagłówków": "Police des titres",
-    "Taki sam jak tekst": "Comme le texte"
+    "Taki sam jak tekst": "Comme le texte",
+    "Nagłówek podstrony": "En-tête de page",
+    "Tytuł (puste = tytuł bieżącej treści)": "Titre (vide = titre du contenu actuel)",
+    "Podtytuł (puste = zajawka bieżącej treści)": "Sous-titre (vide = extrait du contenu actuel)",
+    "Pokaż ścieżkę nawigacji": "Afficher le fil d'Ariane",
+    "Jednolite": "Uni",
+    "Obraz wyróżniający treści": "Image mise en avant du contenu",
+    "Własny obraz": "Image personnalisée",
+    "Własny obraz tła": "Image de fond personnalisée",
+    "Wysokość": "Hauteur",
+    "Niska": "Basse",
+    "Średnia": "Moyenne",
+    "Wysoka": "Haute",
+    "Tytuł podstrony": "Titre de la page",
+    "Ścieżka nawigacji": "Fil d'Ariane",
+    "Strona główna": "Accueil"
 }

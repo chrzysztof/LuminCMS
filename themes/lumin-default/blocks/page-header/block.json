@@ -1,0 +1,58 @@
+{
+    "label": "Nagłówek podstrony",
+    "category": "Sekcje motywu",
+    "icon": "<rect x=\"3\" y=\"4\" width=\"18\" height=\"10\" rx=\"2\"/><path d=\"M7 9h10M3 19h8\"/>",
+    "fields": [
+        {
+            "type": "text",
+            "name": "title",
+            "label": "Tytuł (puste = tytuł bieżącej treści)"
+        },
+        {
+            "type": "text",
+            "name": "subtitle",
+            "label": "Podtytuł (puste = zajawka bieżącej treści)"
+        },
+        {
+            "type": "true_false",
+            "name": "breadcrumbs",
+            "label": "Pokaż ścieżkę nawigacji",
+            "default_value": 1
+        },
+        {
+            "type": "select",
+            "name": "background",
+            "label": "Tło",
+            "choices": {
+                "none": "Jednolite",
+                "featured": "Obraz wyróżniający treści",
+                "custom": "Własny obraz"
+            },
+            "default_value": "none"
+        },
+        {
+            "type": "image",
+            "name": "image",
+            "label": "Własny obraz tła",
+            "return_format": "array"
+        },
+        {
+            "type": "select",
+            "name": "align",
+            "label": "Wyrównanie",
+            "choices": { "left": "Do lewej", "center": "Do środka" },
+            "default_value": "left"
+        },
+        {
+            "type": "select",
+            "name": "size",
+            "label": "Wysokość",
+            "choices": {
+                "small": "Niska",
+                "medium": "Średnia",
+                "large": "Wysoka"
+            },
+            "default_value": "medium"
+        }
+    ]
+}

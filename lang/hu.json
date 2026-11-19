@@ -1443,5 +1443,20 @@
     "Dodaj kursywę": "Dőlt hozzáadása",
     "kursywa": "dőlt",
     "Krój nagłówków": "Címsorok betűtípusa",
-    "Taki sam jak tekst": "Mint a szöveg"
+    "Taki sam jak tekst": "Mint a szöveg",
+    "Nagłówek podstrony": "Aloldal fejléce",
+    "Tytuł (puste = tytuł bieżącej treści)": "Cím (üres = az aktuális tartalom címe)",
+    "Podtytuł (puste = zajawka bieżącej treści)": "Alcím (üres = az aktuális tartalom kivonata)",
+    "Pokaż ścieżkę nawigacji": "Morzsamenü megjelenítése",
+    "Jednolite": "Egyszínű",
+    "Obraz wyróżniający treści": "A tartalom kiemelt képe",
+    "Własny obraz": "Egyéni kép",
+    "Własny obraz tła": "Egyéni háttérkép",
+    "Wysokość": "Magasság",
+    "Niska": "Alacsony",
+    "Średnia": "Közepes",
+    "Wysoka": "Magas",
+    "Tytuł podstrony": "Aloldal címe",
+    "Ścieżka nawigacji": "Morzsamenü",
+    "Strona główna": "Kezdőlap"
 }

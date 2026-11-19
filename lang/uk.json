@@ -1443,5 +1443,20 @@
     "Dodaj kursywę": "Додати курсив",
     "kursywa": "курсив",
     "Krój nagłówków": "Шрифт заголовків",
-    "Taki sam jak tekst": "Такий самий, як текст"
+    "Taki sam jak tekst": "Такий самий, як текст",
+    "Nagłówek podstrony": "Заголовок підсторінки",
+    "Tytuł (puste = tytuł bieżącej treści)": "Заголовок (порожнє = заголовок поточного вмісту)",
+    "Podtytuł (puste = zajawka bieżącej treści)": "Підзаголовок (порожнє = уривок поточного вмісту)",
+    "Pokaż ścieżkę nawigacji": "Показати навігаційний ланцюжок",
+    "Jednolite": "Однотонний",
+    "Obraz wyróżniający treści": "Головне зображення вмісту",
+    "Własny obraz": "Власне зображення",
+    "Własny obraz tła": "Власне фонове зображення",
+    "Wysokość": "Висота",
+    "Niska": "Низька",
+    "Średnia": "Середня",
+    "Wysoka": "Висока",
+    "Tytuł podstrony": "Заголовок сторінки",
+    "Ścieżka nawigacji": "Навігаційний ланцюжок",
+    "Strona główna": "Головна"
 }

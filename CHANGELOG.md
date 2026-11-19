@@ -12,6 +12,7 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 - Appearance → Fonts: import a font from Google Fonts by name and weights. The woff2 files (latin and latin-ext, so Polish characters work) are downloaded to `storage/app/public/fonts` and served locally, so visitors never connect to Google. Imported fonts show up in Appearance → Customize → Typeface (theme tokens opt in with `"fonts": true`); `@font-face` rules are printed with the theme variables. Requires the `storage:link`.
 - Fonts: optional italic styles on import, and a separate "Heading typeface" theme option (`--lm-heading-font`, defaults to the body typeface) that imported fonts can also be picked for.
+- New theme block "Page header" (Nagłówek podstrony): the title of the current content (or your own), subtitle from the excerpt, breadcrumbs including parent pages, solid or image background (featured image or your own, with a dark overlay), left/center alignment and three heights. Clean markup (`<header>`, `<h1>`, `<nav>` breadcrumbs, no inline styles), works in templates and on pages.
 - Visual editor: the right-click menu has a "Properties" entry that opens the properties of the clicked element.
 - Visual editor: a search box at the top of the Blocks panel filters blocks by name or category (ignores case and Polish diacritics) and expands matching categories.
 
