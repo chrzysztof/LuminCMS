@@ -1,9 +1,12 @@
 @php
     $paths = app(\App\Cms\Content\ContentResolver::class);
     $current = $current ?? null;
+    // W szablonie archiwum (bez bieżącej treści) tytuł i opis pochodzą z archiwum, np. z nazwy kategorii.
+    $listing = app(\App\Cms\Themes\Listing::class);
+    $archive = ! $current && $listing->active();
 
-    $title = trim((string) ($attrs['title'] ?? '')) !== '' ? $attrs['title'] : ($current?->title ?? __('Tytuł podstrony'));
-    $subtitle = trim((string) ($attrs['subtitle'] ?? '')) !== '' ? $attrs['subtitle'] : trim((string) ($current?->excerpt ?? ''));
+    $title = trim((string) ($attrs['title'] ?? '')) !== '' ? $attrs['title'] : ($archive ? $listing->heading : ($current?->title ?? __('Tytuł podstrony')));
+    $subtitle = trim((string) ($attrs['subtitle'] ?? '')) !== '' ? $attrs['subtitle'] : ($archive ? trim($listing->description) : trim((string) ($current?->excerpt ?? '')));
     $align = ($attrs['align'] ?? 'left') === 'center' ? 'center' : 'left';
     $size = in_array($attrs['size'] ?? 'medium', ['small', 'medium', 'large'], true) ? $attrs['size'] : 'medium';
 

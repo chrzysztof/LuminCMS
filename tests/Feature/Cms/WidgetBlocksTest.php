@@ -6,8 +6,10 @@ use App\Cms\Builder\BlockRegistry;
 use App\Cms\Content\Content;
 use App\Cms\Content\ContentType;
 use App\Cms\Media\Media;
+use App\Cms\Themes\Listing;
 use Database\Seeders\CmsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Tests\TestCase;
 
 class WidgetBlocksTest extends TestCase
@@ -138,5 +140,16 @@ class WidgetBlocksTest extends TestCase
 
         // W edytorze (bez bieżącej treści) pokazuje tytuł zastępczy.
         $this->assertStringContainsString('<h1>', app(BlockRegistry::class)->render('page-header', []));
+    }
+
+    public function test_page_header_uses_archive_heading_and_description_in_archive_templates(): void
+    {
+        app(Listing::class)->set('Kategoria: Matura', 'Wszystko o maturze.', new LengthAwarePaginator([], 0, 10));
+
+        $out = app(BlockRegistry::class)->render('page-header', ['breadcrumbs' => 1]);
+
+        $this->assertStringContainsString('<h1>Kategoria: Matura</h1>', $out);
+        $this->assertStringContainsString('Wszystko o maturze.', $out);
+        $this->assertStringContainsString('aria-current="page"', $out);
     }
 }
