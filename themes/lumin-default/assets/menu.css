@@ -61,30 +61,57 @@
 }
 .lm-menu__burger {
     display: none;
+    place-items: center;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
     background: none;
-    border: 1px solid currentColor;
-    border-radius: 0.375rem;
-    padding: 0.5rem 0.6rem;
+    border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+    border-radius: 0.5rem;
     cursor: pointer;
     color: inherit;
+}
+.lm-menu__burger:hover,
+.lm-menu__burger[aria-expanded='true'] {
+    background: color-mix(in srgb, currentColor 8%, transparent);
 }
 .lm-menu__burger span,
 .lm-menu__burger span::before,
 .lm-menu__burger span::after {
     display: block;
-    width: 1.1rem;
+    width: 1.25rem;
     height: 2px;
+    border-radius: 1px;
     background: currentColor;
     content: '';
+    transition:
+        transform 0.2s,
+        background-color 0.2s;
+}
+.lm-menu__burger span {
     position: relative;
 }
-.lm-menu__burger span::before {
-    position: absolute;
-    top: -0.35rem;
-}
+.lm-menu__burger span::before,
 .lm-menu__burger span::after {
     position: absolute;
-    top: 0.35rem;
+    left: 0;
+}
+.lm-menu__burger span::before {
+    top: -0.4rem;
+}
+.lm-menu__burger span::after {
+    top: 0.4rem;
+}
+/* Otwarte menu: hamburger zamienia się w krzyżyk. */
+.lm-menu__burger[aria-expanded='true'] span {
+    background: transparent;
+}
+.lm-menu__burger[aria-expanded='true'] span::before {
+    transform: translateY(0.4rem) rotate(45deg);
+}
+.lm-menu__burger[aria-expanded='true'] span::after {
+    transform: translateY(-0.4rem) rotate(-45deg);
 }
 
 .lm-menu__sub,
@@ -182,14 +209,61 @@
         right: 0;
     }
     .lm-menu__burger {
-        display: inline-block;
+        display: inline-grid;
     }
+
+    /* Nagłówek z motywu: logo i hamburger w jednym rzędzie, rozwinięte menu i przycisk pod spodem na całą szerokość. */
+    .lm-header {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 0.5rem 1rem;
+        padding-block: 0.6rem;
+    }
+    .lm-header .lm-menu {
+        display: contents;
+    }
+    .lm-header .lm-menu__burger {
+        order: 2;
+        margin-left: auto;
+    }
+    .lm-header .lm-menu__list {
+        order: 3;
+        flex-basis: 100%;
+    }
+    .lm-header:has(.lm-menu) > .lm-btn {
+        display: none;
+        order: 4;
+        flex-basis: 100%;
+        justify-content: center;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    .lm-header .lm-menu.is-open ~ .lm-btn {
+        display: inline-flex;
+    }
+
     .lm-menu__list {
         display: none;
         flex-direction: column;
         align-items: stretch;
         gap: 0;
-        margin-top: 0.5rem;
+        margin-top: 0.25rem;
+        border-top: 1px solid var(--lm-border, #e5e7eb);
+    }
+    .lm-menu__list > .lm-menu__item {
+        border-bottom: 1px solid var(--lm-border, #e5e7eb);
+    }
+    .lm-menu__link,
+    .lm-menu__text {
+        padding: 0.8rem 0;
+    }
+    .lm-menu__toggle {
+        display: grid;
+        place-items: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        padding: 0;
     }
     .lm-menu.is-open .lm-menu__list {
         display: flex;
@@ -230,6 +304,24 @@
     }
     .lm-menu__cols {
         grid-template-columns: 1fr;
-        gap: 0.75rem;
+        gap: 0.5rem;
+    }
+    .lm-menu__sub,
+    .lm-menu__mega,
+    .lm-menu__mega--container {
+        padding: 0 0 0.5rem 0.75rem;
+        border-left: 2px solid var(--lm-border, #e5e7eb);
+        border-radius: 0;
+        margin-bottom: 0.5rem;
+    }
+    .lm-menu__col-title {
+        margin: 0.5rem 0 0;
+        font-size: 0.8rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        opacity: 0.65;
+    }
+    .lm-menu__sub .lm-menu__link {
+        padding: 0.6rem 0;
     }
 }

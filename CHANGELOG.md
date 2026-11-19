@@ -4,6 +4,10 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 
 ## [Unreleased]
 
+### Changed
+
+- Default theme mobile menu: a square hamburger button that turns into a close icon, logo and button in one row, the opened menu (and the header button) spans the full width below with separated items, larger tap targets and tidier submenus.
+
 ### Added
 
 - Appearance → Fonts: import a font from Google Fonts by name and weights. The woff2 files (latin and latin-ext, so Polish characters work) are downloaded to `storage/app/public/fonts` and served locally, so visitors never connect to Google. Imported fonts show up in Appearance → Customize → Typeface (theme tokens opt in with `"fonts": true`); `@font-face` rules are printed with the theme variables. Requires the `storage:link`.
