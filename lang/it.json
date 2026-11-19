@@ -1439,5 +1439,9 @@
     "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Inserisci il nome di un carattere di Google Fonts, ad es. Poppins.",
     "Nie znaleziono w Google Fonts czcionki „:name”.": "Il carattere «:name» non è stato trovato in Google Fonts.",
     "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "Impossibile scaricare il carattere «:name» da Google Fonts. Controlla il nome e l'accesso a internet del server.",
-    "Nie udało się pobrać pliku czcionki.": "Impossibile scaricare il file del carattere."
+    "Nie udało się pobrać pliku czcionki.": "Impossibile scaricare il file del carattere.",
+    "Dodaj kursywę": "Aggiungi corsivo",
+    "kursywa": "corsivo",
+    "Krój nagłówków": "Carattere dei titoli",
+    "Taki sam jak tekst": "Come il testo"
 }

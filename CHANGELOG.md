@@ -7,6 +7,7 @@ All notable changes to Lumin CMS are documented here. The format follows [Keep a
 ### Added
 
 - Appearance → Fonts: import a font from Google Fonts by name and weights. The woff2 files (latin and latin-ext, so Polish characters work) are downloaded to `storage/app/public/fonts` and served locally, so visitors never connect to Google. Imported fonts show up in Appearance → Customize → Typeface (theme tokens opt in with `"fonts": true`); `@font-face` rules are printed with the theme variables. Requires the `storage:link`.
+- Fonts: optional italic styles on import, and a separate "Heading typeface" theme option (`--lm-heading-font`, defaults to the body typeface) that imported fonts can also be picked for.
 - Visual editor: the right-click menu has a "Properties" entry that opens the properties of the clicked element.
 - Visual editor: a search box at the top of the Blocks panel filters blocks by name or category (ignores case and Polish diacritics) and expands matching categories.
 

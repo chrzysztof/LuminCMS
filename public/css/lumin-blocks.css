@@ -20,6 +20,7 @@
     --lm-font:
         'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI',
         sans-serif;
+    --lm-heading-font: var(--lm-font);
 }
 
 *,
@@ -50,6 +51,7 @@ h3,
 h4,
 h5,
 h6 {
+    font-family: var(--lm-heading-font);
     line-height: 1.2;
     margin: 0 0 0.6em;
     letter-spacing: -0.02em;

@@ -1439,5 +1439,9 @@
     "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Introduce el nombre de una fuente de Google Fonts, p. ej. Poppins.",
     "Nie znaleziono w Google Fonts czcionki „:name”.": "No se encontró la fuente «:name» en Google Fonts.",
     "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "No se pudo descargar la fuente «:name» de Google Fonts. Comprueba el nombre y el acceso a internet del servidor.",
-    "Nie udało się pobrać pliku czcionki.": "No se pudo descargar el archivo de la fuente."
+    "Nie udało się pobrać pliku czcionki.": "No se pudo descargar el archivo de la fuente.",
+    "Dodaj kursywę": "Añadir cursiva",
+    "kursywa": "cursiva",
+    "Krój nagłówków": "Tipo de letra de los títulos",
+    "Taki sam jak tekst": "Igual que el texto"
 }

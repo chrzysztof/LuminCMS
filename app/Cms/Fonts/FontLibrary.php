@@ -27,7 +27,7 @@ class FontLibrary
         $settings->define('fonts', ['items' => []]);
     }
 
-    /** @return list<array{family: string, slug: string, weights: list<int>, css: string, stack: string}> */
+    /** @return list<array{family: string, slug: string, weights: list<int>, italic: bool, css: string, stack: string}> */
     public function all(): array
     {
         $items = [];
@@ -38,6 +38,7 @@ class FontLibrary
                     'family' => (string) $item['family'],
                     'slug' => (string) $item['slug'],
                     'weights' => array_values(array_map('intval', (array) ($item['weights'] ?? []))),
+                    'italic' => (bool) ($item['italic'] ?? false),
                     'css' => (string) $item['css'],
                     'stack' => $this->stack((string) $item['family']),
                 ];
@@ -73,7 +74,7 @@ class FontLibrary
      * @param  list<int|string>  $weights
      * @return array{family: string, slug: string, weights: list<int>, css: string, stack: string}
      */
-    public function import(string $family, array $weights): array
+    public function import(string $family, array $weights, bool $italic = false): array
     {
         $family = trim(preg_replace('/\s+/', ' ', $family) ?? '');
 
@@ -83,7 +84,7 @@ class FontLibrary
 
         $weights = collect($weights)->map(fn ($w) => (int) $w)->filter(fn ($w) => in_array($w, self::WEIGHTS, true))->unique()->sort()->values()->all() ?: [400, 700];
 
-        [$sheet, $weights] = $this->fetchSheet($family, $weights);
+        [$sheet, $weights, $italic] = $this->fetchSheet($family, $weights, $italic);
         $faces = $this->parse($sheet);
 
         if ($faces === []) {
@@ -101,11 +102,11 @@ class FontLibrary
                 $disk->put($file, $this->download($face['url']));
             }
 
-            $css .= "@font-face{font-family:'{$family}';font-style:normal;font-weight:{$face['weight']};font-display:swap;src:url('/storage/{$file}') format('woff2');"
+            $css .= "@font-face{font-family:'{$family}';font-style:{$face['style']};font-weight:{$face['weight']};font-display:swap;src:url('/storage/{$file}') format('woff2');"
                 .($face['range'] !== '' ? "unicode-range:{$face['range']};" : '').'}';
         }
 
-        $item = ['family' => $family, 'slug' => $slug, 'weights' => $weights, 'css' => $css];
+        $item = ['family' => $family, 'slug' => $slug, 'weights' => $weights, 'italic' => $italic, 'css' => $css];
         $items = array_values(array_filter((array) $this->settings->get('fonts', 'items', []), fn ($i) => ($i['slug'] ?? null) !== $slug));
         $items[] = $item;
         $this->settings->save('fonts', ['items' => $items]);
@@ -127,22 +128,26 @@ class FontLibrary
      * Arkusz CSS z Google Fonts (z nagłówkiem nowoczesnej przeglądarki, żeby dostać woff2).
      *
      * @param  list<int>  $weights
-     * @return array{0: string, 1: list<int>}
+     * @return array{0: string, 1: list<int>, 2: bool}
      */
-    private function fetchSheet(string $family, array $weights): array
+    private function fetchSheet(string $family, array $weights, bool $italic): array
     {
         $name = str_replace(' ', '+', $family);
+        $spec = $italic
+            ? 'ital,wght@'.implode(';', [...array_map(fn ($w) => "0,{$w}", $weights), ...array_map(fn ($w) => "1,{$w}", $weights)])
+            : 'wght@'.implode(';', $weights);
         $attempts = [
-            ["https://fonts.googleapis.com/css2?family={$name}:wght@".implode(';', $weights).'&display=swap', $weights],
-            ["https://fonts.googleapis.com/css2?family={$name}&display=swap", [400]],
+            ["https://fonts.googleapis.com/css2?family={$name}:{$spec}&display=swap", $weights, $italic],
+            // Czcionka bez wybranych grubości lub kursywy: bierzemy to, co ma domyślnie.
+            ["https://fonts.googleapis.com/css2?family={$name}&display=swap", [400], false],
         ];
 
-        foreach ($attempts as [$url, $used]) {
+        foreach ($attempts as [$url, $used, $usedItalic]) {
             $response = Http::withHeaders(['User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'])
                 ->timeout(15)->get($url);
 
             if ($response->successful()) {
-                return [$response->body(), $used];
+                return [$response->body(), $used, $usedItalic];
             }
 
             if ($response->serverError()) {
@@ -153,7 +158,7 @@ class FontLibrary
         throw new FontException(__('Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.', ['name' => $family]));
     }
 
-    /** @return list<array{url: string, weight: string, range: string}> */
+    /** @return list<array{url: string, weight: string, style: string, range: string}> */
     private function parse(string $sheet): array
     {
         preg_match_all('/\/\*\s*([a-z0-9-]+)\s*\*\/\s*@font-face\s*\{([^}]*)\}/i', $sheet, $blocks, PREG_SET_ORDER);
@@ -161,14 +166,14 @@ class FontLibrary
 
         foreach ($blocks as [, $subset, $body]) {
             if (! in_array(strtolower($subset), self::SUBSETS, true)
-                || ! preg_match('/font-style:\s*normal/i', $body)
+                || ! preg_match('/font-style:\s*(normal|italic)/i', $body, $st)
                 || ! preg_match('/font-weight:\s*(\d{3}(?:\s+\d{3})?)/', $body, $w)
                 || ! preg_match('/url\((https:\/\/fonts\.gstatic\.com\/[A-Za-z0-9_\-\/.]+\.woff2)\)/', $body, $u)) {
                 continue;
             }
 
             $range = preg_match('/unicode-range:\s*([^;]+);/', $body, $r) && preg_match('/^[U+0-9A-Fa-f,\s?-]+$/', $r[1]) ? trim($r[1]) : '';
-            $faces[] = ['url' => $u[1], 'weight' => $w[1], 'range' => $range];
+            $faces[] = ['url' => $u[1], 'weight' => $w[1], 'style' => strtolower($st[1]), 'range' => $range];
         }
 
         return $faces;

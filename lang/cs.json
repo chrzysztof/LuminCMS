@@ -1439,5 +1439,9 @@
     "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Zadejte název písma z Google Fonts, např. Poppins.",
     "Nie znaleziono w Google Fonts czcionki „:name”.": "V Google Fonts nebylo nalezeno písmo „:name“.",
     "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "Písmo „:name“ se nepodařilo stáhnout z Google Fonts. Zkontrolujte název a přístup serveru k internetu.",
-    "Nie udało się pobrać pliku czcionki.": "Soubor písma se nepodařilo stáhnout."
+    "Nie udało się pobrać pliku czcionki.": "Soubor písma se nepodařilo stáhnout.",
+    "Dodaj kursywę": "Přidat kurzívu",
+    "kursywa": "kurzíva",
+    "Krój nagłówków": "Typ písma nadpisů",
+    "Taki sam jak tekst": "Stejný jako text"
 }

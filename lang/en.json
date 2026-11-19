@@ -1238,5 +1238,9 @@
     "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Enter a Google Fonts font name, e.g. Poppins.",
     "Nie znaleziono w Google Fonts czcionki „:name”.": "The font “:name” was not found in Google Fonts.",
     "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "Could not download the font “:name” from Google Fonts. Check the name and the server's internet access.",
-    "Nie udało się pobrać pliku czcionki.": "Could not download the font file."
+    "Nie udało się pobrać pliku czcionki.": "Could not download the font file.",
+    "Dodaj kursywę": "Add italic",
+    "kursywa": "italic",
+    "Krój nagłówków": "Heading typeface",
+    "Taki sam jak tekst": "Same as text"
 }

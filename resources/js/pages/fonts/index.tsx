@@ -6,7 +6,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cmsUrl } from '@/lib/cms-urls';
 import { t } from '@/lib/i18n';
 
-type FontRow = { family: string; slug: string; weights: number[] };
+type FontRow = {
+    family: string;
+    slug: string;
+    weights: number[];
+    italic: boolean;
+};
 
 const inputClass =
     'border-input bg-transparent flex h-9 w-full rounded-md border px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/30';
@@ -23,6 +28,7 @@ export default function FontsIndex({
     const { errors } = usePage<{ errors: Record<string, string> }>().props;
     const [family, setFamily] = useState('');
     const [selected, setSelected] = useState<number[]>([400, 700]);
+    const [italic, setItalic] = useState(false);
     const [busy, setBusy] = useState(false);
 
     const toggle = (w: number) =>
@@ -35,7 +41,7 @@ export default function FontsIndex({
         setBusy(true);
         router.post(
             cmsUrl.fonts,
-            { family, weights: selected },
+            { family, weights: selected, italic },
             {
                 preserveScroll: true,
                 onSuccess: () => setFamily(''),
@@ -114,6 +120,16 @@ export default function FontsIndex({
                                             {w}
                                         </label>
                                     ))}
+                                    <label className="flex items-center gap-1.5 border-l pl-3 text-sm">
+                                        <input
+                                            type="checkbox"
+                                            checked={italic}
+                                            onChange={(e) =>
+                                                setItalic(e.target.checked)
+                                            }
+                                        />
+                                        {t('Dodaj kursywę')}
+                                    </label>
                                 </div>
                             </fieldset>
                             <Button
@@ -152,6 +168,7 @@ export default function FontsIndex({
                                         {f.family}
                                         <span className="ml-2 text-xs font-normal text-muted-foreground">
                                             {f.weights.join(', ')}
+                                            {f.italic && ` · ${t('kursywa')}`}
                                         </span>
                                     </CardTitle>
                                     <Button
@@ -187,6 +204,16 @@ export default function FontsIndex({
                                     >
                                         Zażółć gęślą jaźń 0123
                                     </p>
+                                    {f.italic && (
+                                        <p
+                                            className="text-lg italic"
+                                            style={{
+                                                fontFamily: `'${f.family}', system-ui, sans-serif`,
+                                            }}
+                                        >
+                                            Zażółć gęślą jaźń 0123
+                                        </p>
+                                    )}
                                 </CardContent>
                             </Card>
                         ))}

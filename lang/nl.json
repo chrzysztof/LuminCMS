@@ -1439,5 +1439,9 @@
     "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Voer de naam van een Google Fonts-lettertype in, bijv. Poppins.",
     "Nie znaleziono w Google Fonts czcionki „:name”.": "Het lettertype ‘:name’ is niet gevonden in Google Fonts.",
     "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "Het lettertype ‘:name’ kon niet worden gedownload van Google Fonts. Controleer de naam en de internettoegang van de server.",
-    "Nie udało się pobrać pliku czcionki.": "Het lettertypebestand kon niet worden gedownload."
+    "Nie udało się pobrać pliku czcionki.": "Het lettertypebestand kon niet worden gedownload.",
+    "Dodaj kursywę": "Cursief toevoegen",
+    "kursywa": "cursief",
+    "Krój nagłówków": "Lettertype van koppen",
+    "Taki sam jak tekst": "Zelfde als tekst"
 }

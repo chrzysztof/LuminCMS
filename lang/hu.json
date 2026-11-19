@@ -1439,5 +1439,9 @@
     "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Adja meg egy Google Fonts betűtípus nevét, pl. Poppins.",
     "Nie znaleziono w Google Fonts czcionki „:name”.": "A(z) „:name” betűtípus nem található a Google Fontsban.",
     "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "A(z) „:name” betűtípust nem sikerült letölteni a Google Fontsból. Ellenőrizze a nevet és a szerver internet-hozzáférését.",
-    "Nie udało się pobrać pliku czcionki.": "A betűtípusfájlt nem sikerült letölteni."
+    "Nie udało się pobrać pliku czcionki.": "A betűtípusfájlt nem sikerült letölteni.",
+    "Dodaj kursywę": "Dőlt hozzáadása",
+    "kursywa": "dőlt",
+    "Krój nagłówków": "Címsorok betűtípusa",
+    "Taki sam jak tekst": "Mint a szöveg"
 }

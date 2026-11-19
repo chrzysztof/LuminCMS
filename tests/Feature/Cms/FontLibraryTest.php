@@ -119,4 +119,32 @@ CSS;
 
         $this->post('/cms/fonts', ['family' => 'Nie Ma Takiej'])->assertSessionHasErrors('family');
     }
+
+    public function test_italic_import_requests_ital_axis_and_keeps_style(): void
+    {
+        Storage::fake('public');
+        Http::fake([
+            'fonts.googleapis.com/*' => Http::response(str_replace('font-style: normal;', 'font-style: italic;', self::SHEET)),
+            'fonts.gstatic.com/*' => Http::response('wOF2'.str_repeat('x', 100)),
+        ]);
+
+        $font = app(FontLibrary::class)->import('Poppins', [400], true);
+
+        Http::assertSent(fn ($r) => str_contains($r->url(), 'ital,wght@0,400;1,400'));
+        $this->assertTrue($font['italic']);
+        $this->assertStringContainsString('font-style:italic;font-weight:400', $font['css']);
+    }
+
+    public function test_heading_font_is_a_separate_theme_option(): void
+    {
+        $this->fakeGoogle();
+        $font = app(FontLibrary::class)->import('Poppins', [400]);
+
+        $customizer = app(Customizer::class);
+        $token = collect($customizer->tokens())->firstWhere('key', 'heading_font');
+        $this->assertContains($font['stack'], array_column($token['options'], 'value'));
+
+        $customizer->save(['heading_font' => $font['stack']]);
+        $this->assertStringContainsString('--lm-heading-font:', $customizer->css());
+    }
 }

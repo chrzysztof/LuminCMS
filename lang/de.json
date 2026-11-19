@@ -1439,5 +1439,9 @@
     "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Geben Sie den Namen einer Google-Fonts-Schriftart an, z. B. Poppins.",
     "Nie znaleziono w Google Fonts czcionki „:name”.": "Die Schriftart „:name“ wurde in Google Fonts nicht gefunden.",
     "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "Die Schriftart „:name“ konnte nicht von Google Fonts geladen werden. Prüfen Sie den Namen und den Internetzugang des Servers.",
-    "Nie udało się pobrać pliku czcionki.": "Die Schriftdatei konnte nicht geladen werden."
+    "Nie udało się pobrać pliku czcionki.": "Die Schriftdatei konnte nicht geladen werden.",
+    "Dodaj kursywę": "Kursiv hinzufügen",
+    "kursywa": "kursiv",
+    "Krój nagłówków": "Schriftart der Überschriften",
+    "Taki sam jak tekst": "Wie der Text"
 }

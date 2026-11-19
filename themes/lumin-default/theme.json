@@ -128,6 +128,29 @@
             ]
         },
         {
+            "key": "heading_font",
+            "group": "Typografia",
+            "label": "Krój nagłówków",
+            "type": "select",
+            "default": "var(--lm-font)",
+            "css": "--lm-heading-font",
+            "fonts": true,
+            "options": [
+                {
+                    "value": "var(--lm-font)",
+                    "label": "Taki sam jak tekst"
+                },
+                {
+                    "value": "Georgia, 'Times New Roman', serif",
+                    "label": "Szeryfowy (Georgia)"
+                },
+                {
+                    "value": "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+                    "label": "Systemowy"
+                }
+            ]
+        },
+        {
             "key": "container",
             "group": "Układ",
             "label": "Szerokość treści",

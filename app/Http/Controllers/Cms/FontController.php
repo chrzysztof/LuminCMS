@@ -18,7 +18,7 @@ class FontController extends Controller
     public function index(): Response
     {
         return Inertia::render('fonts/index', [
-            'fonts' => array_map(fn ($f) => ['family' => $f['family'], 'slug' => $f['slug'], 'weights' => $f['weights']], $this->fonts->all()),
+            'fonts' => array_map(fn ($f) => ['family' => $f['family'], 'slug' => $f['slug'], 'weights' => $f['weights'], 'italic' => $f['italic']], $this->fonts->all()),
             'css' => $this->fonts->css(),
             'weights' => FontLibrary::WEIGHTS,
         ]);
@@ -30,10 +30,11 @@ class FontController extends Controller
             'family' => ['required', 'string', 'max:60'],
             'weights' => ['array'],
             'weights.*' => ['integer'],
+            'italic' => ['boolean'],
         ]);
 
         try {
-            $this->fonts->import($data['family'], $data['weights'] ?? []);
+            $this->fonts->import($data['family'], $data['weights'] ?? [], (bool) ($data['italic'] ?? false));
         } catch (FontException $e) {
             return back()->withErrors(['family' => $e->getMessage()]);
         }

@@ -1439,5 +1439,9 @@
     "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Введіть назву шрифту з Google Fonts, напр. Poppins.",
     "Nie znaleziono w Google Fonts czcionki „:name”.": "Шрифт «:name» не знайдено в Google Fonts.",
     "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "Не вдалося завантажити шрифт «:name» з Google Fonts. Перевірте назву та доступ сервера до інтернету.",
-    "Nie udało się pobrać pliku czcionki.": "Не вдалося завантажити файл шрифту."
+    "Nie udało się pobrać pliku czcionki.": "Не вдалося завантажити файл шрифту.",
+    "Dodaj kursywę": "Додати курсив",
+    "kursywa": "курсив",
+    "Krój nagłówków": "Шрифт заголовків",
+    "Taki sam jak tekst": "Такий самий, як текст"
 }

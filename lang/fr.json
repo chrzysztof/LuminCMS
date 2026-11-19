@@ -1439,5 +1439,9 @@
     "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Saisissez le nom d'une police Google Fonts, p. ex. Poppins.",
     "Nie znaleziono w Google Fonts czcionki „:name”.": "La police « :name » est introuvable dans Google Fonts.",
     "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "Impossible de télécharger la police « :name » depuis Google Fonts. Vérifiez le nom et l'accès du serveur à internet.",
-    "Nie udało się pobrać pliku czcionki.": "Impossible de télécharger le fichier de police."
+    "Nie udało się pobrać pliku czcionki.": "Impossible de télécharger le fichier de police.",
+    "Dodaj kursywę": "Ajouter l'italique",
+    "kursywa": "italique",
+    "Krój nagłówków": "Police des titres",
+    "Taki sam jak tekst": "Comme le texte"
 }
