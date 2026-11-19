@@ -7,6 +7,7 @@ use App\Http\Controllers\Cms\ContentController;
 use App\Http\Controllers\Cms\ContentTypeController;
 use App\Http\Controllers\Cms\CustomizeController;
 use App\Http\Controllers\Cms\FieldGroupController;
+use App\Http\Controllers\Cms\FontController;
 use App\Http\Controllers\Cms\ImportExportController;
 use App\Http\Controllers\Cms\MediaController;
 use App\Http\Controllers\Cms\MediaSizeController;
@@ -111,6 +112,10 @@ Route::middleware(['auth', 'verified'])->prefix('cms')->name('cms.')->group(func
         Route::get('customize', [CustomizeController::class, 'edit'])->name('customize.edit');
         Route::put('customize', [CustomizeController::class, 'update'])->name('customize.update');
         Route::delete('customize', [CustomizeController::class, 'reset'])->name('customize.reset');
+
+        Route::get('fonts', [FontController::class, 'index'])->name('fonts.index');
+        Route::post('fonts', [FontController::class, 'store'])->name('fonts.store');
+        Route::delete('fonts/{slug}', [FontController::class, 'destroy'])->name('fonts.destroy');
 
         Route::get('menus', [MenuController::class, 'index'])->name('menus.index');
         Route::post('menus', [MenuController::class, 'store'])->name('menus.store');

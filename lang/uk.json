@@ -1426,5 +1426,18 @@
     "Min. wysokość": "Мін. висота",
     "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Значення з одиницею, напр. 1.5rem, 24px, 50%, auto.",
     "Wyczyść własne style": "Очистити власні стилі",
-    "Szukaj bloków...": "Шукати блоки..."
+    "Szukaj bloków...": "Шукати блоки...",
+    "Czcionki": "Шрифти",
+    "Zaimportuj czcionkę z Google Fonts. Pliki są pobierane na Twój serwer i stamtąd serwowane, więc odwiedzający nie łączą się z Google. Zaimportowaną czcionkę wybierzesz w Wygląd → Dostosuj (Krój pisma).": "Імпортуйте шрифт із Google Fonts. Файли завантажуються на ваш сервер і віддаються звідти, тож відвідувачі не підключаються до Google. Імпортований шрифт оберете в Вигляд → Налаштувати (Шрифт).",
+    "Importuj czcionkę": "Імпортувати шрифт",
+    "Nazwa czcionki": "Назва шрифту",
+    "Dokładna nazwa ze strony fonts.google.com, np. Poppins, Playfair Display, Open Sans.": "Точна назва з fonts.google.com, напр. Poppins, Playfair Display, Open Sans.",
+    "Grubości": "Товщини",
+    "Zaimportowane czcionki": "Імпортовані шрифти",
+    "Nie zaimportowano jeszcze żadnej czcionki.": "Ще не імпортовано жодного шрифту.",
+    "Usunąć czcionkę {name}? Strony używające jej wrócą do czcionki zastępczej.": "Видалити шрифт {name}? Сторінки, що його використовують, повернуться до шрифту за замовчуванням.",
+    "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Введіть назву шрифту з Google Fonts, напр. Poppins.",
+    "Nie znaleziono w Google Fonts czcionki „:name”.": "Шрифт «:name» не знайдено в Google Fonts.",
+    "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "Не вдалося завантажити шрифт «:name» з Google Fonts. Перевірте назву та доступ сервера до інтернету.",
+    "Nie udało się pobrać pliku czcionki.": "Не вдалося завантажити файл шрифту."
 }

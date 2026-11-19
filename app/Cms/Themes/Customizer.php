@@ -2,6 +2,7 @@
 
 namespace App\Cms\Themes;
 
+use App\Cms\Fonts\FontLibrary;
 use App\Cms\Settings\Settings;
 
 /**
@@ -10,12 +11,19 @@ use App\Cms\Settings\Settings;
  */
 class Customizer
 {
-    public function __construct(private readonly Settings $settings, private readonly ThemeManager $themes) {}
+    public function __construct(private readonly Settings $settings, private readonly ThemeManager $themes, private readonly FontLibrary $fonts) {}
 
     /** @return list<array<string, mixed>> */
     public function tokens(): array
     {
-        return $this->themes->active()->tokens();
+        return array_map(function ($token) {
+            // Pole z "fonts": true oferuje też czcionki zaimportowane z Google Fonts.
+            if (($token['type'] ?? null) === 'select' && ! empty($token['fonts'])) {
+                $token['options'] = [...$token['options'], ...$this->fonts->options()];
+            }
+
+            return $token;
+        }, $this->themes->active()->tokens());
     }
 
     /** Zapisane (zmienione względem domyślnych) wartości aktywnego motywu, tylko poprawne. */
@@ -81,7 +89,10 @@ class Customizer
             }
         }
 
-        return $lines === [] ? '' : ':root{'.implode('', $lines).'}';
+        $root = $lines === [] ? '' : ':root{'.implode('', $lines).'}';
+
+        // @font-face idzie przed zmiennymi; podgląd w Dostosuj podmienia tylko część od :root.
+        return $this->fonts->css().$root;
     }
 
     private function cssValue(array $token, string|float $value): string

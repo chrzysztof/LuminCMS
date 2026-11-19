@@ -65,7 +65,14 @@ export default function CustomizeIndex({
     const apply = useCallback(() => {
         const el =
             frame.current?.contentDocument?.getElementById('lm-theme-vars');
-        if (el) el.textContent = css;
+        if (!el) return;
+        // Przed zmiennymi stoją reguły @font-face zaimportowanych czcionek: zostają bez zmian.
+        if (el.dataset.lmHead === undefined) {
+            const text = el.textContent ?? '';
+            const at = text.indexOf(':root{');
+            el.dataset.lmHead = at >= 0 ? text.slice(0, at) : text;
+        }
+        el.textContent = el.dataset.lmHead + css;
     }, [css]);
 
     useEffect(apply, [apply]);

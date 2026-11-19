@@ -44,6 +44,8 @@ export const cmsUrl = {
     themeExport: (slug: string) => `/cms/themes/${slug}/export`,
     themeScreenshot: (slug: string) => `/cms/themes/${slug}/screenshot`,
     customize: '/cms/customize',
+    fonts: '/cms/fonts',
+    fontRemove: (slug: string) => `/cms/fonts/${slug}`,
     menus: '/cms/menus',
     menu: (id: number) => `/cms/menus/${id}`,
     menuShow: (id: number) => `/cms/menus?menu=${id}`,

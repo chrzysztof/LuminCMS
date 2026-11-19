@@ -1426,5 +1426,18 @@
     "Min. wysokość": "Min. výška",
     "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Hodnoty s jednotkou, např. 1.5rem, 24px, 50%, auto.",
     "Wyczyść własne style": "Vymazat vlastní styly",
-    "Szukaj bloków...": "Hledat bloky..."
+    "Szukaj bloków...": "Hledat bloky...",
+    "Czcionki": "Písma",
+    "Zaimportuj czcionkę z Google Fonts. Pliki są pobierane na Twój serwer i stamtąd serwowane, więc odwiedzający nie łączą się z Google. Zaimportowaną czcionkę wybierzesz w Wygląd → Dostosuj (Krój pisma).": "Importujte písmo z Google Fonts. Soubory se stáhnou na váš server a odtud se servírují, takže se návštěvníci nepřipojují ke Googlu. Importované písmo vyberete v Vzhled → Přizpůsobit (Typ písma).",
+    "Importuj czcionkę": "Importovat písmo",
+    "Nazwa czcionki": "Název písma",
+    "Dokładna nazwa ze strony fonts.google.com, np. Poppins, Playfair Display, Open Sans.": "Přesný název ze stránky fonts.google.com, např. Poppins, Playfair Display, Open Sans.",
+    "Grubości": "Tloušťky",
+    "Zaimportowane czcionki": "Importovaná písma",
+    "Nie zaimportowano jeszcze żadnej czcionki.": "Zatím nebylo importováno žádné písmo.",
+    "Usunąć czcionkę {name}? Strony używające jej wrócą do czcionki zastępczej.": "Odstranit písmo {name}? Stránky, které ho používají, se vrátí k záložnímu písmu.",
+    "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Zadejte název písma z Google Fonts, např. Poppins.",
+    "Nie znaleziono w Google Fonts czcionki „:name”.": "V Google Fonts nebylo nalezeno písmo „:name“.",
+    "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "Písmo „:name“ se nepodařilo stáhnout z Google Fonts. Zkontrolujte název a přístup serveru k internetu.",
+    "Nie udało się pobrać pliku czcionki.": "Soubor písma se nepodařilo stáhnout."
 }

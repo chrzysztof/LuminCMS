@@ -107,6 +107,7 @@
             "type": "select",
             "default": "'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', sans-serif",
             "css": "--lm-font",
+            "fonts": true,
             "options": [
                 {
                     "value": "'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', sans-serif",

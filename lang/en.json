@@ -1225,5 +1225,18 @@
     "Min. wysokość": "Min. height",
     "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Values with a unit, e.g. 1.5rem, 24px, 50%, auto.",
     "Wyczyść własne style": "Clear custom styles",
-    "Szukaj bloków...": "Search blocks..."
+    "Szukaj bloków...": "Search blocks...",
+    "Czcionki": "Fonts",
+    "Zaimportuj czcionkę z Google Fonts. Pliki są pobierane na Twój serwer i stamtąd serwowane, więc odwiedzający nie łączą się z Google. Zaimportowaną czcionkę wybierzesz w Wygląd → Dostosuj (Krój pisma).": "Import a font from Google Fonts. The files are downloaded to your server and served from there, so visitors never connect to Google. Pick the imported font in Appearance → Customize (Typeface).",
+    "Importuj czcionkę": "Import a font",
+    "Nazwa czcionki": "Font name",
+    "Dokładna nazwa ze strony fonts.google.com, np. Poppins, Playfair Display, Open Sans.": "The exact name from fonts.google.com, e.g. Poppins, Playfair Display, Open Sans.",
+    "Grubości": "Weights",
+    "Zaimportowane czcionki": "Imported fonts",
+    "Nie zaimportowano jeszcze żadnej czcionki.": "No fonts imported yet.",
+    "Usunąć czcionkę {name}? Strony używające jej wrócą do czcionki zastępczej.": "Delete the font {name}? Pages using it will fall back to a default font.",
+    "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Enter a Google Fonts font name, e.g. Poppins.",
+    "Nie znaleziono w Google Fonts czcionki „:name”.": "The font “:name” was not found in Google Fonts.",
+    "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "Could not download the font “:name” from Google Fonts. Check the name and the server's internet access.",
+    "Nie udało się pobrać pliku czcionki.": "Could not download the font file."
 }

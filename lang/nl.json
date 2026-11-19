@@ -1426,5 +1426,18 @@
     "Min. wysokość": "Min. hoogte",
     "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Waarden met eenheid, bijv. 1.5rem, 24px, 50%, auto.",
     "Wyczyść własne style": "Eigen stijlen wissen",
-    "Szukaj bloków...": "Blokken zoeken..."
+    "Szukaj bloków...": "Blokken zoeken...",
+    "Czcionki": "Lettertypen",
+    "Zaimportuj czcionkę z Google Fonts. Pliki są pobierane na Twój serwer i stamtąd serwowane, więc odwiedzający nie łączą się z Google. Zaimportowaną czcionkę wybierzesz w Wygląd → Dostosuj (Krój pisma).": "Importeer een lettertype uit Google Fonts. De bestanden worden naar uw server gedownload en van daaruit geleverd, dus bezoekers maken geen verbinding met Google. Kies het geïmporteerde lettertype in Weergave → Aanpassen (Lettertype).",
+    "Importuj czcionkę": "Lettertype importeren",
+    "Nazwa czcionki": "Naam van het lettertype",
+    "Dokładna nazwa ze strony fonts.google.com, np. Poppins, Playfair Display, Open Sans.": "De exacte naam van fonts.google.com, bijv. Poppins, Playfair Display, Open Sans.",
+    "Grubości": "Gewichten",
+    "Zaimportowane czcionki": "Geïmporteerde lettertypen",
+    "Nie zaimportowano jeszcze żadnej czcionki.": "Er is nog geen lettertype geïmporteerd.",
+    "Usunąć czcionkę {name}? Strony używające jej wrócą do czcionki zastępczej.": "Lettertype {name} verwijderen? Pagina's die het gebruiken vallen terug op een standaardlettertype.",
+    "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Voer de naam van een Google Fonts-lettertype in, bijv. Poppins.",
+    "Nie znaleziono w Google Fonts czcionki „:name”.": "Het lettertype ‘:name’ is niet gevonden in Google Fonts.",
+    "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "Het lettertype ‘:name’ kon niet worden gedownload van Google Fonts. Controleer de naam en de internettoegang van de server.",
+    "Nie udało się pobrać pliku czcionki.": "Het lettertypebestand kon niet worden gedownload."
 }

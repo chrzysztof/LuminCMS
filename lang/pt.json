@@ -1426,5 +1426,18 @@
     "Min. wysokość": "Altura mín.",
     "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Valores com unidade, p. ex. 1.5rem, 24px, 50%, auto.",
     "Wyczyść własne style": "Limpar estilos próprios",
-    "Szukaj bloków...": "Pesquisar blocos..."
+    "Szukaj bloków...": "Pesquisar blocos...",
+    "Czcionki": "Fontes",
+    "Zaimportuj czcionkę z Google Fonts. Pliki są pobierane na Twój serwer i stamtąd serwowane, więc odwiedzający nie łączą się z Google. Zaimportowaną czcionkę wybierzesz w Wygląd → Dostosuj (Krój pisma).": "Importe uma fonte do Google Fonts. Os ficheiros são descarregados para o seu servidor e servidos a partir dele, por isso os visitantes não se ligam à Google. Escolha a fonte importada em Aparência → Personalizar (Tipo de letra).",
+    "Importuj czcionkę": "Importar fonte",
+    "Nazwa czcionki": "Nome da fonte",
+    "Dokładna nazwa ze strony fonts.google.com, np. Poppins, Playfair Display, Open Sans.": "O nome exato de fonts.google.com, p. ex. Poppins, Playfair Display, Open Sans.",
+    "Grubości": "Espessuras",
+    "Zaimportowane czcionki": "Fontes importadas",
+    "Nie zaimportowano jeszcze żadnej czcionki.": "Ainda não foi importada nenhuma fonte.",
+    "Usunąć czcionkę {name}? Strony używające jej wrócą do czcionki zastępczej.": "Eliminar a fonte {name}? As páginas que a usam voltarão a uma fonte predefinida.",
+    "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Indique o nome de uma fonte do Google Fonts, p. ex. Poppins.",
+    "Nie znaleziono w Google Fonts czcionki „:name”.": "A fonte «:name» não foi encontrada no Google Fonts.",
+    "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "Não foi possível descarregar a fonte «:name» do Google Fonts. Verifique o nome e o acesso do servidor à internet.",
+    "Nie udało się pobrać pliku czcionki.": "Não foi possível descarregar o ficheiro da fonte."
 }

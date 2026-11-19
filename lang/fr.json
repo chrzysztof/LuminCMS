@@ -1426,5 +1426,18 @@
     "Min. wysokość": "Hauteur min.",
     "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Valeurs avec unité, p. ex. 1.5rem, 24px, 50 %, auto.",
     "Wyczyść własne style": "Effacer les styles personnalisés",
-    "Szukaj bloków...": "Rechercher des blocs..."
+    "Szukaj bloków...": "Rechercher des blocs...",
+    "Czcionki": "Polices",
+    "Zaimportuj czcionkę z Google Fonts. Pliki są pobierane na Twój serwer i stamtąd serwowane, więc odwiedzający nie łączą się z Google. Zaimportowaną czcionkę wybierzesz w Wygląd → Dostosuj (Krój pisma).": "Importez une police depuis Google Fonts. Les fichiers sont téléchargés sur votre serveur et servis depuis celui-ci, les visiteurs ne se connectent donc pas à Google. Choisissez la police importée dans Apparence → Personnaliser (Police).",
+    "Importuj czcionkę": "Importer une police",
+    "Nazwa czcionki": "Nom de la police",
+    "Dokładna nazwa ze strony fonts.google.com, np. Poppins, Playfair Display, Open Sans.": "Le nom exact de fonts.google.com, p. ex. Poppins, Playfair Display, Open Sans.",
+    "Grubości": "Graisses",
+    "Zaimportowane czcionki": "Polices importées",
+    "Nie zaimportowano jeszcze żadnej czcionki.": "Aucune police importée pour l'instant.",
+    "Usunąć czcionkę {name}? Strony używające jej wrócą do czcionki zastępczej.": "Supprimer la police {name} ? Les pages qui l'utilisent reviendront à une police de remplacement.",
+    "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Saisissez le nom d'une police Google Fonts, p. ex. Poppins.",
+    "Nie znaleziono w Google Fonts czcionki „:name”.": "La police « :name » est introuvable dans Google Fonts.",
+    "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "Impossible de télécharger la police « :name » depuis Google Fonts. Vérifiez le nom et l'accès du serveur à internet.",
+    "Nie udało się pobrać pliku czcionki.": "Impossible de télécharger le fichier de police."
 }

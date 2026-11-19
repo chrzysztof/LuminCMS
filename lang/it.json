@@ -1426,5 +1426,18 @@
     "Min. wysokość": "Altezza min.",
     "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Valori con unità, ad es. 1.5rem, 24px, 50%, auto.",
     "Wyczyść własne style": "Cancella stili personalizzati",
-    "Szukaj bloków...": "Cerca blocchi..."
+    "Szukaj bloków...": "Cerca blocchi...",
+    "Czcionki": "Caratteri",
+    "Zaimportuj czcionkę z Google Fonts. Pliki są pobierane na Twój serwer i stamtąd serwowane, więc odwiedzający nie łączą się z Google. Zaimportowaną czcionkę wybierzesz w Wygląd → Dostosuj (Krój pisma).": "Importa un carattere da Google Fonts. I file vengono scaricati sul tuo server e serviti da lì, quindi i visitatori non si collegano a Google. Scegli il carattere importato in Aspetto → Personalizza (Carattere).",
+    "Importuj czcionkę": "Importa carattere",
+    "Nazwa czcionki": "Nome del carattere",
+    "Dokładna nazwa ze strony fonts.google.com, np. Poppins, Playfair Display, Open Sans.": "Il nome esatto da fonts.google.com, ad es. Poppins, Playfair Display, Open Sans.",
+    "Grubości": "Spessori",
+    "Zaimportowane czcionki": "Caratteri importati",
+    "Nie zaimportowano jeszcze żadnej czcionki.": "Nessun carattere importato finora.",
+    "Usunąć czcionkę {name}? Strony używające jej wrócą do czcionki zastępczej.": "Eliminare il carattere {name}? Le pagine che lo usano torneranno a un carattere predefinito.",
+    "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Inserisci il nome di un carattere di Google Fonts, ad es. Poppins.",
+    "Nie znaleziono w Google Fonts czcionki „:name”.": "Il carattere «:name» non è stato trovato in Google Fonts.",
+    "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "Impossibile scaricare il carattere «:name» da Google Fonts. Controlla il nome e l'accesso a internet del server.",
+    "Nie udało się pobrać pliku czcionki.": "Impossibile scaricare il file del carattere."
 }

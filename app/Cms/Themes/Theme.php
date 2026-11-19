@@ -136,7 +136,7 @@ class Theme
                     ->values()->all();
 
                 if ($options !== [] && in_array($t['default'] ?? null, array_column($options, 'value'), true)) {
-                    $tokens[] = $base + ['default' => $t['default'], 'options' => $options];
+                    $tokens[] = $base + ['default' => $t['default'], 'options' => $options, 'fonts' => ! empty($t['fonts'])];
                 }
             } elseif ($base['type'] === 'size' && is_numeric($t['default'] ?? null) && is_numeric($t['min'] ?? null) && is_numeric($t['max'] ?? null)) {
                 $tokens[] = $base + [

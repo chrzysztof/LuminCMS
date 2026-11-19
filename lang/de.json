@@ -1426,5 +1426,18 @@
     "Min. wysokość": "Min. Höhe",
     "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Werte mit Einheit, z. B. 1.5rem, 24px, 50 %, auto.",
     "Wyczyść własne style": "Eigene Stile löschen",
-    "Szukaj bloków...": "Blöcke suchen..."
+    "Szukaj bloków...": "Blöcke suchen...",
+    "Czcionki": "Schriftarten",
+    "Zaimportuj czcionkę z Google Fonts. Pliki są pobierane na Twój serwer i stamtąd serwowane, więc odwiedzający nie łączą się z Google. Zaimportowaną czcionkę wybierzesz w Wygląd → Dostosuj (Krój pisma).": "Importieren Sie eine Schriftart aus Google Fonts. Die Dateien werden auf Ihren Server geladen und von dort ausgeliefert, Besucher verbinden sich also nicht mit Google. Die importierte Schrift wählen Sie unter Design → Anpassen (Schriftart).",
+    "Importuj czcionkę": "Schriftart importieren",
+    "Nazwa czcionki": "Name der Schriftart",
+    "Dokładna nazwa ze strony fonts.google.com, np. Poppins, Playfair Display, Open Sans.": "Genauer Name von fonts.google.com, z. B. Poppins, Playfair Display, Open Sans.",
+    "Grubości": "Schriftstärken",
+    "Zaimportowane czcionki": "Importierte Schriftarten",
+    "Nie zaimportowano jeszcze żadnej czcionki.": "Es wurde noch keine Schriftart importiert.",
+    "Usunąć czcionkę {name}? Strony używające jej wrócą do czcionki zastępczej.": "Schriftart {name} löschen? Seiten, die sie verwenden, fallen auf die Ersatzschrift zurück.",
+    "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Geben Sie den Namen einer Google-Fonts-Schriftart an, z. B. Poppins.",
+    "Nie znaleziono w Google Fonts czcionki „:name”.": "Die Schriftart „:name“ wurde in Google Fonts nicht gefunden.",
+    "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "Die Schriftart „:name“ konnte nicht von Google Fonts geladen werden. Prüfen Sie den Namen und den Internetzugang des Servers.",
+    "Nie udało się pobrać pliku czcionki.": "Die Schriftdatei konnte nicht geladen werden."
 }

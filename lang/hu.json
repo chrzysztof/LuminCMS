@@ -1426,5 +1426,18 @@
     "Min. wysokość": "Min. magasság",
     "Wartości z jednostką, np. 1.5rem, 24px, 50%, auto.": "Mértékegységgel, pl. 1.5rem, 24px, 50%, auto.",
     "Wyczyść własne style": "Egyéni stílusok törlése",
-    "Szukaj bloków...": "Blokkok keresése..."
+    "Szukaj bloków...": "Blokkok keresése...",
+    "Czcionki": "Betűtípusok",
+    "Zaimportuj czcionkę z Google Fonts. Pliki są pobierane na Twój serwer i stamtąd serwowane, więc odwiedzający nie łączą się z Google. Zaimportowaną czcionkę wybierzesz w Wygląd → Dostosuj (Krój pisma).": "Importáljon betűtípust a Google Fontsból. A fájlok a szerverre töltődnek le és onnan szolgálódnak ki, így a látogatók nem kapcsolódnak a Google-höz. Az importált betűtípust a Megjelenés → Testreszabás (Betűtípus) alatt választhatja ki.",
+    "Importuj czcionkę": "Betűtípus importálása",
+    "Nazwa czcionki": "Betűtípus neve",
+    "Dokładna nazwa ze strony fonts.google.com, np. Poppins, Playfair Display, Open Sans.": "A fonts.google.com oldalon szereplő pontos név, pl. Poppins, Playfair Display, Open Sans.",
+    "Grubości": "Vastagságok",
+    "Zaimportowane czcionki": "Importált betűtípusok",
+    "Nie zaimportowano jeszcze żadnej czcionki.": "Még nem importált betűtípust.",
+    "Usunąć czcionkę {name}? Strony używające jej wrócą do czcionki zastępczej.": "Törli a(z) {name} betűtípust? Az azt használó oldalak az alapértelmezett betűtípusra állnak vissza.",
+    "Podaj nazwę czcionki z Google Fonts, np. Poppins.": "Adja meg egy Google Fonts betűtípus nevét, pl. Poppins.",
+    "Nie znaleziono w Google Fonts czcionki „:name”.": "A(z) „:name” betűtípus nem található a Google Fontsban.",
+    "Nie udało się pobrać czcionki „:name” z Google Fonts. Sprawdź nazwę i dostęp serwera do internetu.": "A(z) „:name” betűtípust nem sikerült letölteni a Google Fontsból. Ellenőrizze a nevet és a szerver internet-hozzáférését.",
+    "Nie udało się pobrać pliku czcionki.": "A betűtípusfájlt nem sikerült letölteni."
 }

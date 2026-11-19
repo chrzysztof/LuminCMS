@@ -17,6 +17,7 @@ import {
     LayoutTemplate,
     PanelsTopLeft,
     Palette,
+    Type,
     Paintbrush,
     Menu as MenuIcon,
 } from 'lucide-react';
@@ -103,6 +104,7 @@ export function AppSidebar() {
                   icon: PanelsTopLeft,
               },
               { title: t('Dostosuj'), href: cmsUrl.customize, icon: Palette },
+              { title: t('Czcionki'), href: cmsUrl.fonts, icon: Type },
           ]
         : [];
     const settingsItems: NavItem[] = [
